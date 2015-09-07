@@ -15,6 +15,9 @@
 		D40D24001B9951A3007D2F44 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D40D23FF1B9951A3007D2F44 /* Images.xcassets */; };
 		D40D24031B9951A3007D2F44 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D40D24011B9951A3007D2F44 /* LaunchScreen.xib */; };
 		D40D240F1B9951A3007D2F44 /* ProcedurezTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */; };
+		D40D241C1B9D3072007D2F44 /* Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241B1B9D3072007D2F44 /* Procedure.swift */; };
+		D40D241E1B9D3080007D2F44 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241D1B9D3080007D2F44 /* Step.swift */; };
+		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,9 @@
 		D40D24081B9951A3007D2F44 /* ProcedurezTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProcedurezTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40D240D1B9951A3007D2F44 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcedurezTests.swift; sourceTree = "<group>"; };
+		D40D241B1B9D3072007D2F44 /* Procedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Procedure.swift; sourceTree = "<group>"; };
+		D40D241D1B9D3080007D2F44 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
+		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +70,7 @@
 		D40D23E51B9951A3007D2F44 = {
 			isa = PBXGroup;
 			children = (
+				D40D241F1B9D30F8007D2F44 /* CoreData.framework */,
 				D40D23F01B9951A3007D2F44 /* Procedurez */,
 				D40D240B1B9951A3007D2F44 /* ProcedurezTests */,
 				D40D23EF1B9951A3007D2F44 /* Products */,
@@ -81,13 +89,9 @@
 		D40D23F01B9951A3007D2F44 /* Procedurez */ = {
 			isa = PBXGroup;
 			children = (
-				D40D23F31B9951A3007D2F44 /* AppDelegate.swift */,
-				D40D23F81B9951A3007D2F44 /* MasterViewController.swift */,
-				D40D23FA1B9951A3007D2F44 /* DetailViewController.swift */,
-				D40D23FC1B9951A3007D2F44 /* Main.storyboard */,
-				D40D23FF1B9951A3007D2F44 /* Images.xcassets */,
-				D40D24011B9951A3007D2F44 /* LaunchScreen.xib */,
-				D40D23F51B9951A3007D2F44 /* Procedurez.xcdatamodeld */,
+				D40D241A1B9D2FE2007D2F44 /* Controllers */,
+				D40D24191B9D2FDC007D2F44 /* Views */,
+				D40D24181B9D2FD1007D2F44 /* Models */,
 				D40D23F11B9951A3007D2F44 /* Supporting Files */,
 			);
 			path = Procedurez;
@@ -96,6 +100,7 @@
 		D40D23F11B9951A3007D2F44 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D40D23FF1B9951A3007D2F44 /* Images.xcassets */,
 				D40D23F21B9951A3007D2F44 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -116,6 +121,35 @@
 				D40D240D1B9951A3007D2F44 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D40D24181B9D2FD1007D2F44 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D40D23F51B9951A3007D2F44 /* Procedurez.xcdatamodeld */,
+				D40D241B1B9D3072007D2F44 /* Procedure.swift */,
+				D40D241D1B9D3080007D2F44 /* Step.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		D40D24191B9D2FDC007D2F44 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D40D23FC1B9951A3007D2F44 /* Main.storyboard */,
+				D40D24011B9951A3007D2F44 /* LaunchScreen.xib */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		D40D241A1B9D2FE2007D2F44 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D40D23F31B9951A3007D2F44 /* AppDelegate.swift */,
+				D40D23F81B9951A3007D2F44 /* MasterViewController.swift */,
+				D40D23FA1B9951A3007D2F44 /* DetailViewController.swift */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,7 +255,9 @@
 				D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */,
 				D40D23F41B9951A3007D2F44 /* AppDelegate.swift in Sources */,
 				D40D23F91B9951A3007D2F44 /* MasterViewController.swift in Sources */,
+				D40D241C1B9D3072007D2F44 /* Procedure.swift in Sources */,
 				D40D23FB1B9951A3007D2F44 /* DetailViewController.swift in Sources */,
+				D40D241E1B9D3080007D2F44 /* Step.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +455,7 @@
 				D40D24141B9951A3007D2F44 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D40D24151B9951A3007D2F44 /* Build configuration list for PBXNativeTarget "ProcedurezTests" */ = {
 			isa = XCConfigurationList;
@@ -427,6 +464,7 @@
 				D40D24171B9951A3007D2F44 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
