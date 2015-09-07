@@ -13,10 +13,6 @@ import CoreData
 
 class Procedure: NSManagedObject {
     
-    struct Keys {
-        static let Name = "name"
-    }
-    
     @NSManaged var name: String
     
     @NSManaged var steps: [Step]
@@ -27,7 +23,17 @@ class Procedure: NSManagedObject {
     }
     
     // Use a convenience initializer to prepare parent and properties.
-    init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
+    init(context: NSManagedObjectContext) {
+        
+        // Fetch the entity named Pin.
+        let entity =  NSEntityDescription.entityForName("Procedure", inManagedObjectContext: context)!
+        
+        // Initiate the parent class with the entity and context.
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
+    // Use a convenience initializer to prepare parent and properties.
+    init(title: String, context: NSManagedObjectContext) {
         
         // Fetch the entity named Pin.
         let entity =  NSEntityDescription.entityForName("Procedure", inManagedObjectContext: context)!
@@ -35,7 +41,7 @@ class Procedure: NSManagedObject {
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
-        name = dictionary[Keys.Name] as! String
+        name = title
     }
 }
 

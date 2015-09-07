@@ -6,6 +6,7 @@
     </entity>
     <entity name="Step" syncable="YES">
         <attribute name="details" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="done" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="position" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="children" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Step" inverseName="parent" inverseEntity="Step" syncable="YES"/>
@@ -13,7 +14,7 @@
         <relationship name="procedure" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Procedure" inverseName="steps" inverseEntity="Procedure" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Step" positionX="261" positionY="198" width="128" height="135"/>
+        <element name="Step" positionX="261" positionY="198" width="128" height="150"/>
         <element name="Procedure" positionX="279" positionY="261" width="128" height="75"/>
     </elements>
 </model>

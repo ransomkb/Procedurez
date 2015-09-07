@@ -23,6 +23,7 @@ class Step: NSManagedObject {
     @NSManaged var position: Int
     @NSManaged var name: String
     @NSManaged var details: String
+    @NSManaged var done: Bool
     
     @NSManaged var parent: Step
     @NSManaged var children: [Step]
