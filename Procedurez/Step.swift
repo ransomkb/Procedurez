@@ -45,6 +45,7 @@ class Step: NSManagedObject {
         position = dictionary[Keys.Position] as! Int
         name = dictionary[Keys.Name] as! String
         details = dictionary[Keys.Details] as! String
+        done = false
     }
 }
 

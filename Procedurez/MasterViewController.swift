@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+    
+    var alertMessage: String?
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
@@ -45,11 +47,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let context = self.fetchedResultsController.managedObjectContext
         let entity = self.fetchedResultsController.fetchRequest.entity!
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context) as! NSManagedObject
+        
+        let editName = "Swipe Left to Right to Edit Name."
              
         // If appropriate, configure the new managed object.
         // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
         // IMPORTANT: this may be wrong. Check
-        newManagedObject.setValue(Procedure(), forKey: "name")
+        newManagedObject.setValue(editName, forKey: "name")
              
         // Save the context.
         var error: NSError? = nil
@@ -199,6 +203,30 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
          self.tableView.reloadData()
      }
      */
-
+    
+    // IMPORTANT: probably will not use
+    // Use UIAlertController to keep user informed.
+    func alertUser() {
+        
+        // Create an instance of alert controller.
+        let alertController = UIAlertController(title: "Add Procedure", message: "Enter the Name", preferredStyle: .Alert)
+        
+        
+        // Set up an OK action button on alert.
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        
+        // Add OK action button to alert.
+        alertController.addAction(okAction)
+        
+        // Dispatch alert to main queue.
+        dispatch_async(dispatch_get_main_queue(), {
+            
+            // Present alert controller.
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
+    }
+    
 }
 
