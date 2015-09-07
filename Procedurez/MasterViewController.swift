@@ -65,6 +65,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
 
+    @IBAction func swipeRight(sender: AnyObject) {
+    }
+    
+    @IBAction func swipeLeft(sender: AnyObject) {
+    }
+    
+    
+    
     // MARK: - Segues
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
