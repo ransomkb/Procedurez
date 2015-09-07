@@ -8,10 +8,11 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
+   
 
+    
 
     var detailItem: AnyObject? {
         didSet {
@@ -19,12 +20,19 @@ class DetailViewController: UIViewController {
             self.configureView()
         }
     }
+    
+    
+    // Save the new or updated Step.
+    @IBAction func saveStep(sender: AnyObject) {
+        
+    }
+    
 
     func configureView() {
         // Update the user interface for the detail item.
         if let detail: AnyObject = self.detailItem {
             if let label = self.detailDescriptionLabel {
-                label.text = detail.valueForKey("timeStamp")!.description
+                label.text = detail.valueForKey("name")!.description
             }
         }
     }

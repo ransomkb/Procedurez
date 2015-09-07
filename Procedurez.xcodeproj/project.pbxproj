@@ -15,9 +15,9 @@
 		D40D24001B9951A3007D2F44 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D40D23FF1B9951A3007D2F44 /* Images.xcassets */; };
 		D40D24031B9951A3007D2F44 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D40D24011B9951A3007D2F44 /* LaunchScreen.xib */; };
 		D40D240F1B9951A3007D2F44 /* ProcedurezTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */; };
-		D40D241C1B9D3072007D2F44 /* Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241B1B9D3072007D2F44 /* Procedure.swift */; };
 		D40D241E1B9D3080007D2F44 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241D1B9D3080007D2F44 /* Step.swift */; };
 		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
+		D40D24221B9D5914007D2F44 /* Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D24211B9D5914007D2F44 /* Procedure.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,9 +43,9 @@
 		D40D24081B9951A3007D2F44 /* ProcedurezTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProcedurezTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40D240D1B9951A3007D2F44 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcedurezTests.swift; sourceTree = "<group>"; };
-		D40D241B1B9D3072007D2F44 /* Procedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Procedure.swift; sourceTree = "<group>"; };
 		D40D241D1B9D3080007D2F44 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D40D24211B9D5914007D2F44 /* Procedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Procedure.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,8 +127,8 @@
 			isa = PBXGroup;
 			children = (
 				D40D23F51B9951A3007D2F44 /* Procedurez.xcdatamodeld */,
-				D40D241B1B9D3072007D2F44 /* Procedure.swift */,
 				D40D241D1B9D3080007D2F44 /* Step.swift */,
+				D40D24211B9D5914007D2F44 /* Procedure.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -253,9 +253,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */,
+				D40D24221B9D5914007D2F44 /* Procedure.swift in Sources */,
 				D40D23F41B9951A3007D2F44 /* AppDelegate.swift in Sources */,
 				D40D23F91B9951A3007D2F44 /* MasterViewController.swift in Sources */,
-				D40D241C1B9D3072007D2F44 /* Procedure.swift in Sources */,
 				D40D23FB1B9951A3007D2F44 /* DetailViewController.swift in Sources */,
 				D40D241E1B9D3080007D2F44 /* Step.swift in Sources */,
 			);

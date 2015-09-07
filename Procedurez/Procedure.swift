@@ -5,8 +5,6 @@
 //  Created by Ransom Barber on 9/7/15.
 //  Copyright (c) 2015 Ransom Barber. All rights reserved.
 //
-// Model for entity object
-
 
 import Foundation
 import CoreData
@@ -18,7 +16,7 @@ class Procedure: NSManagedObject {
     struct Keys {
         static let Name = "name"
     }
-
+    
     @NSManaged var name: String
     
     @NSManaged var steps: [Step]
@@ -36,7 +34,8 @@ class Procedure: NSManagedObject {
         
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-
+        
         name = dictionary[Keys.Name] as! String
     }
 }
+

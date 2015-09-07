@@ -24,7 +24,6 @@ class Step: NSManagedObject {
     @NSManaged var name: String
     @NSManaged var details: String
     
-    @NSManaged var procedure: Procedure
     @NSManaged var parent: Step
     @NSManaged var children: [Step]
     
