@@ -37,11 +37,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             self.detailViewController = controllers[controllers.count-1].topViewController as? DetailViewController
         }
         
+        // Register the custom cell.
+        self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
+        
+        
         // Make the style easier on the eyes by removing the separator.
         tableView.separatorStyle = .None
         
-        // Give each row more height.
-        tableView.rowHeight = 50.0
+        // Give each row more height. (now done in xib)
+        //tableView.rowHeight = 50.0
     }
 
     override func didReceiveMemoryWarning() {
@@ -99,7 +103,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+        
+        // Dequeue custom cell as TableViewCell.
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
         self.configureCell(cell, atIndexPath: indexPath)
         return cell
     }
