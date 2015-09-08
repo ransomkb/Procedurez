@@ -36,6 +36,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let controllers = split.viewControllers
             self.detailViewController = controllers[controllers.count-1].topViewController as? DetailViewController
         }
+        
+        // Make the style easier on the eyes by removing the separator.
+        tableView.separatorStyle = .None
+        
+        // Give each row more height.
+        tableView.rowHeight = 50.0
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,12 +71,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
 
-    @IBAction func swipeRight(sender: AnyObject) {
-    }
-    
-    @IBAction func swipeLeft(sender: AnyObject) {
-    }
-    
     
     
     // MARK: - Segues
@@ -128,6 +128,29 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
         cell.textLabel!.text = object.valueForKey("name")!.description
     }
+    
+    // MARK: - Table view delegate
+    
+    // Return a color for the index.
+    func colorForIndex(index: Int) -> UIColor {
+        
+        // Determine the number of items.
+        let itemCount = tableView(tableView, numberOfRowsInSection: 0)
+        
+        // Calculate the amount of green to use.
+        let value = (CGFloat(index) / CGFloat(itemCount)) * 0.6
+        
+        return UIColor(red: 0.0, green: value, blue: 1.0, alpha: 1.0)
+    }
+    
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        // Set the background color of each cell.
+        cell.backgroundColor = colorForIndex(indexPath.row)
+        cell.textLabel?.textColor = UIColor.whiteColor()
+    }
+    
 
     // MARK: - Fetched results controller
 
