@@ -42,6 +42,8 @@ class Procedure: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         name = title
+        
+        println("Procedure init with title, name: \(name)")
     }
 }
 

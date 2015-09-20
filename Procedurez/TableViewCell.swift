@@ -11,6 +11,10 @@ import QuartzCore
 
 class TableViewCell: UITableViewCell {
 
+    @IBOutlet weak var cellContentView: UIView!
+    @IBOutlet weak var nameLabel: UILabel!
+    //@IBOutlet weak var detailsLabel: UILabel!
+    
     let gradientLayer = CAGradientLayer()
     
     required init(coder aDecoder: NSCoder) {
@@ -19,6 +23,8 @@ class TableViewCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        nameLabel = UILabel()
         
         // Create the gradient layer for the cell.
         gradientLayer.frame = bounds

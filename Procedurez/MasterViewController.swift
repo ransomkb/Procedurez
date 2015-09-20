@@ -15,7 +15,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
+    
+    let masterCellIdentifier = "TableViewCell"
 
+    struct Keys {
+        static let Position = "position"
+        static let Name = "name"
+        static let Details = "details"
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,6 +35,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        println("View Did Load: Start")
+        
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
 
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
@@ -37,15 +47,23 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             self.detailViewController = controllers[controllers.count-1].topViewController as? DetailViewController
         }
         
+        //self.tableView.delegate = self
+        //self.tableView.dataSource = self
+        
         // Register the custom cell.
-        self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
+        self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: masterCellIdentifier)
         
         
         // Make the style easier on the eyes by removing the separator.
         tableView.separatorStyle = .None
         
+        // Configure the cell details for the table view.
+        //configureTableView()
+        
         // Give each row more height. (now done in xib)
         //tableView.rowHeight = 50.0
+        
+        println("View Did Load: End")
     }
 
     override func didReceiveMemoryWarning() {
@@ -58,12 +76,17 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let entity = self.fetchedResultsController.fetchRequest.entity!
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context) as! NSManagedObject
         
-        let editName = "Swipe Left to Right to Edit Name."
+        let editName = "Tap to Edit Name."
+        let stepDictionary = [Keys.Position:1, Keys.Name:"Tap to add Step", Keys.Details:"Edit Details"]
+        var stepArray = [Step]()
+        let step = Step(dictionary: stepDictionary, context: context)
+        stepArray.append(step)
              
         // If appropriate, configure the new managed object.
         // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
         // IMPORTANT: this may be wrong. Check
         newManagedObject.setValue(editName, forKey: "name")
+        newManagedObject.setValue(stepArray, forKey: "steps")
              
         // Save the context.
         var error: NSError? = nil
@@ -80,18 +103,26 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Segues
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        println("Preparing for Segue to Detail")
         if segue.identifier == "showDetail" {
+            println("Have a segue identifier called showDetail")
             if let indexPath = self.tableView.indexPathForSelectedRow() {
             let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
+                println("Destination view controller set up")
             }
         }
     }
 
     // MARK: - Table View
+    // maybe won't use
+    func configureTableView() {
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 160.0
+    }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count ?? 0
@@ -99,15 +130,28 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        
+        println("Number of Rows in Section: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
+    }
+    
+    // IMPORTANT: fix this
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        //tableView.rowHeight = UITableViewAutomaticDimension
+        println("\(tableView.rowHeight)")
+        return 44.0 //tableView.rowHeight
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        // Dequeue custom cell as TableViewCell.
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
-        self.configureCell(cell, atIndexPath: indexPath)
-        return cell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as? UITableViewCell
+        
+        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+        cell!.textLabel?.text = object.valueForKey("name")!.description
+        
+        return cell!
+        
+        //return configureCell(indexPath)
     }
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -130,9 +174,28 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
 
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-        cell.textLabel!.text = object.valueForKey("name")!.description
+    func configureCell(indexPath: NSIndexPath) -> TableViewCell {
+        
+        // Dequeue custom cell as TableViewCell.
+        if let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier(masterCellIdentifier, forIndexPath: indexPath) as? TableViewCell {
+            println("Cell is a TableViewCell")
+                        
+            
+        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+        let text = object.valueForKey("name")!.description
+        if let label = cell.nameLabel {
+            
+            println("Have a namelabel for cell")
+            label.text = text
+        } else {
+            println("no namelabel in cell")
+            cell.textLabel?.text = text
+        }
+        
+        return cell
+        }
+        let oldCell = TableViewCell()
+        return oldCell
     }
     
     // MARK: - Table view delegate
@@ -146,7 +209,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         // Calculate the amount of green to use.
         let value = (CGFloat(index) / CGFloat(itemCount)) * 0.6
         
-        return UIColor(red: 0.0, green: value, blue: 1.0, alpha: 1.0)
+        return UIColor(red: 0.0, green: value, blue: 0.9, alpha: 1.0)
     }
     
     
@@ -219,7 +282,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             case .Delete:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             case .Update:
-                self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, atIndexPath: indexPath!)
+                let cell = configureCell(indexPath!)
             case .Move:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
                 tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
@@ -238,6 +301,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
      
      func controllerDidChangeContent(controller: NSFetchedResultsController) {
          // In the simplest, most efficient, case, reload the table view.
+        // IMPORTANT: added the end updates as no changes immediately when adding otherwise.
          self.tableView.endUpdates()
          self.tableView.reloadData()
      }
