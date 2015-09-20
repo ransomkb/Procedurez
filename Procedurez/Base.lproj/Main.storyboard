@@ -148,7 +148,7 @@
                                 <gestureRecognizers/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
-                                    <segue destination="vC3-pB-5Vb" kind="showDetail" id="4a9-F0-4nZ"/>
+                                    <segue destination="vC3-pB-5Vb" kind="showDetail" identifier="showCustomDetail" id="4a9-F0-4nZ"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="1fI-P7-ver" style="IBUITableViewCellStyleDefault" id="x5B-zd-NwI">
@@ -166,7 +166,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="vC3-pB-5Vb" kind="showDetail" id="H0M-VY-8tG"/>
+                                    <segue destination="vC3-pB-5Vb" kind="showDetail" identifier="showDetail" id="H0M-VY-8tG"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -200,6 +200,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Tll-UG-LXB"/>
+        <segue reference="4a9-F0-4nZ"/>
     </inferredMetricsTieBreakers>
 </document>

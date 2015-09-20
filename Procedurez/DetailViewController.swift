@@ -28,8 +28,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
 
     func configureView() {
+        println("Configuring detail view")
         // Update the user interface for the detail item.
         if let detail: AnyObject = self.detailItem {
+            println("Do have a detail item")
             if let label = self.detailDescriptionLabel {
                 label.text = "Procedure"//detail.valueForKey("timeStamp")!.description
             }

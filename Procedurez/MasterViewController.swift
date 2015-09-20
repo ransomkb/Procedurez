@@ -114,6 +114,10 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 controller.navigationItem.leftItemsSupplementBackButton = true
                 println("Destination view controller set up")
             }
+        } else if segue.identifier == "showCustomDetail" {
+            println("No segue id called showDetail, but have showCustomDetail.")
+        } else {
+            println("Neither segue identifier is found")
         }
     }
 
