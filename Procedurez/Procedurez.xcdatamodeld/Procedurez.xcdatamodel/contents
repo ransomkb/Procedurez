@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Procedure" syncable="YES">
+        <attribute name="details" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="steps" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Step" inverseName="procedure" inverseEntity="Step" syncable="YES"/>
     </entity>
@@ -14,7 +15,7 @@
         <relationship name="procedure" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Procedure" inverseName="steps" inverseEntity="Procedure" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Procedure" positionX="279" positionY="261" width="128" height="90"/>
         <element name="Step" positionX="261" positionY="198" width="128" height="150"/>
-        <element name="Procedure" positionX="279" positionY="261" width="128" height="75"/>
     </elements>
 </model>

@@ -14,6 +14,7 @@ import CoreData
 class Procedure: NSManagedObject {
     
     @NSManaged var name: String
+    @NSManaged var details: String
     
     @NSManaged var steps: [Step]
     
@@ -42,6 +43,7 @@ class Procedure: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         name = title
+        details = ""
         
         println("Procedure init with title, name: \(name)")
     }
