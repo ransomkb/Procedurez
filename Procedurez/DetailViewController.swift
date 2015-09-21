@@ -15,6 +15,9 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     @IBOutlet weak var detailsTextView: UITextView!
     
+    @IBOutlet weak var saveButton: UIButton!
+    
+    
     @IBOutlet weak var detailDescriptionLabel: UILabel!
     
     var managedObjectContext: NSManagedObjectContext? = nil
@@ -93,6 +96,9 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             print("Unresolved error \(error), \(error!.userInfo)")
             abort()
         }
+        
+        hideUI()
+
     }
     
     override func viewDidLoad() {
@@ -201,8 +207,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         print("Now detailItem has \(self.detailItem?.children.count) children")
     }
-
     
+    func hideUI() {
+        print("Hiding the UI")
+        saveButton.hidden = !saveButton.hidden
+        nameTextField.hidden = !nameTextField.hidden
+        detailsTextView.hidden = !detailsTextView.hidden
+    }
+
+    // IMPORTANT: maybe don't need
     func configureStep() {
         let context = self.fetchedResultsController.managedObjectContext
         let stepDictionary = [Keys.Position:1, Keys.Title:"Tap to add Step", Keys.Details:"Edit Details"]

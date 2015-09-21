@@ -73,7 +73,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.66988142378692261" green="0.94533073908226584" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="mIp-wN-CGT" firstAttribute="leading" secondItem="MPr-Mp-8zy" secondAttribute="trailing" constant="16" id="17g-yu-RTm"/>
                             <constraint firstItem="tqn-hY-Pja" firstAttribute="leading" secondItem="ejD-ID-3zR" secondAttribute="leading" id="1aL-vE-GOL"/>
@@ -98,6 +98,7 @@
                     <connections>
                         <outlet property="detailsTextView" destination="YPo-mA-HIO" id="r6M-zV-h0u"/>
                         <outlet property="nameTextField" destination="mIp-wN-CGT" id="iGT-cM-9rG"/>
+                        <outlet property="saveButton" destination="ejD-ID-3zR" id="D1b-KZ-TmW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
