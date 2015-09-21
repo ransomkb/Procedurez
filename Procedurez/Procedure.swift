@@ -13,7 +13,7 @@ import CoreData
 
 class Procedure: NSManagedObject {
     
-    @NSManaged var name: String
+    @NSManaged var title: String
     @NSManaged var details: String
     
     @NSManaged var steps: [Step]
@@ -23,7 +23,7 @@ class Procedure: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
-    // Use a convenience initializer to prepare parent and properties.
+    // Use a convenience initializer.
     init(context: NSManagedObjectContext) {
         
         // Fetch the entity named Pin.
@@ -33,7 +33,7 @@ class Procedure: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
-    // Use a convenience initializer to prepare parent and properties.
+    // Use a convenience initializer to prepare properties.
     init(title: String, context: NSManagedObjectContext) {
         
         // Fetch the entity named Pin.
@@ -42,10 +42,10 @@ class Procedure: NSManagedObject {
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
-        name = title
+        self.title = title
         details = ""
         
-        println("Procedure init with title, name: \(name)")
+        print("Procedure init with title, name: \(self.title)")
     }
 }
 

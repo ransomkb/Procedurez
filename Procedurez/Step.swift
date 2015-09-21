@@ -10,26 +10,37 @@
 import Foundation
 import CoreData
 
-@objc(Step)
+//@objc(Step)
 
 class Step: NSManagedObject {
     
     struct Keys {
         static let Position = "position"
-        static let Name = "name"
+        static let Title = "title"
         static let Details = "details"
     }
     
     @NSManaged var position: Int
-    @NSManaged var name: String
+    @NSManaged var title: String
     @NSManaged var details: String
     @NSManaged var done: Bool
     
+    @NSManaged var procedure: Procedure
     @NSManaged var parent: Step
     @NSManaged var children: [Step]
     
     // Initiate the parent class with the entity and context.
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
+    // Use a convenience initializer.
+    init(context: NSManagedObjectContext) {
+        
+        // Fetch the entity named Pin.
+        let entity =  NSEntityDescription.entityForName("Step", inManagedObjectContext: context)!
+        
+        // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
     
@@ -42,8 +53,8 @@ class Step: NSManagedObject {
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
 
-        position = dictionary[Keys.Position] as! Int
-        name = dictionary[Keys.Name] as! String
+        //position = 1 //dictionary[Keys.Position] as! Int
+        title = dictionary[Keys.Title] as! String
         details = dictionary[Keys.Details] as! String
         done = false
     }
