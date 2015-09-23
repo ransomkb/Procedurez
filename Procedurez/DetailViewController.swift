@@ -9,21 +9,26 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
+class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
-    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var titleTextField: UITextField!
     
     @IBOutlet weak var detailsTextView: UITextView!
     
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var editButton: UIButton!
     
-    
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var detailsLabel: UILabel!
     
     var managedObjectContext: NSManagedObjectContext? = nil
     
+    let detailCellIdentifier = "DetailCell"
+    
     var isStep = true
     var entityName = "Step"
+    
     var sortDescriptorKey = "position"
     //var procedure: Procedure?
     //var step: Step?
@@ -44,31 +49,42 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
 
     func configureView() {
         print("Configuring detail view")
-        // Update the user interface for the detail item.
         
-        if let _: AnyObject = self.detailItem {
+        // Update the user interface for the detail item.
+        if let _: AnyObject = detailItem {
             print("Do have a detail item")
             
-            if let label = self.detailDescriptionLabel {
-                label.text = "Step"//detail.valueForKey("timeStamp")!.description
-            }
-            
-            if let name = self.nameTextField {
-                print("Setting name text field value")
-                if let proTitle = self.detailItem?.title {
-                    print("Step has a title")
-                    name.text = proTitle
-                }
-            }
-            
-            if let details = self.detailsTextView {
+            if let det = detailItem?.details {
+                print("Step has details")
                 
-                print("Setting details text view value")
-                if let det = self.detailItem?.details {
-                    print("Step has details")
-                    details.text = det
+                if let detailsTV = detailsTextView {
+                    print("Setting details text view value")
+                    detailsTV.text = det
+                }
+                
+                if let detailsL = detailsLabel {
+                    print("Setting details label value")
+                    detailsL.text = det
                 }
             }
+            
+            if let proTitle = self.detailItem?.title {
+                print("Step has a title")
+                
+                if let titTF = titleTextField {
+                    print("Setting title text field value")
+                    
+                    titTF.text = proTitle
+                }
+                
+                if let titL = titleLabel {
+                    print("Setting title label value")
+                    
+                    titL.text = proTitle
+                }
+            }
+            
+            //IMPORTANT: EXAMPLE OF KVC: detail.valueForKey("timeStamp")!.description
         }
         
         print("Now detailItem has \(self.detailItem?.children.count) children")
@@ -81,9 +97,11 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         
         print("Do have a procedure; saving title")
-        self.detailItem!.title = self.nameTextField.text!
+        self.detailItem!.title = self.titleTextField.text!
         self.detailItem!.details = self.detailsTextView.text!
         
+        titleLabel.text = self.detailItem?.title
+        detailsLabel.text = self.detailItem?.details
         
         // Save the context.
         var error: NSError? = nil
@@ -101,13 +119,19 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
 
     }
     
+    @IBAction func editData(sender: AnyObject) {
+        hideUI()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("View did load")
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
         
-        self.nameTextField.delegate = self
+        self.titleTextField.delegate = self
         self.detailsTextView.delegate = self
         
         self.configureView()
@@ -121,8 +145,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        print("View will appear")
         // Subscribe to keyboard notifications to bring up keyboard when typing in textField begins.
         //self.subscribeToKeyboardNotifications()
+        if (self.titleTextField.text != "Tap to Edit Name") {
+            hideUI()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -131,56 +159,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         // Unsubscribe from keyboard notifications when segueing.
         //self.unsubscribeFromKeyboardNotifications()
     }
-
     
-    // MARK: - Fetched results controller
     
-    var fetchedResultsController: NSFetchedResultsController {
-        if _fetchedResultsController != nil {
-            return _fetchedResultsController!
-        }
-        
-        let fetchRequest = NSFetchRequest()
-        // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.managedObjectContext!)
-        fetchRequest.entity = entity
-        
-        // Set the batch size to a suitable number.
-        fetchRequest.fetchBatchSize = 20
-        
-        // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: self.sortDescriptorKey, ascending: false)
-        _ = [sortDescriptor]
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        // Edit the section name key path and cache name if appropriate.
-        // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
-        aFetchedResultsController.delegate = self
-        _fetchedResultsController = aFetchedResultsController
-        
-        var error: NSError? = nil
-        do {
-            try _fetchedResultsController!.performFetch()
-        } catch let error1 as NSError {
-            error = error1
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            print("Unresolved error \(error), \(error!.userInfo)")
-            abort()
-        }
-        
-        return _fetchedResultsController!
-    }
-    var _fetchedResultsController: NSFetchedResultsController? = nil
+    // MARK: - Misc
     
-
     func insertNewObject(sender: AnyObject) {
         print("Inserting new Step object")
         let context = self.fetchedResultsController.managedObjectContext
         let entity = self.fetchedResultsController.fetchRequest.entity!
-        let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context) 
+        let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context)
         
         let editName = "Tap to Edit Name."
         
@@ -211,10 +198,14 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     func hideUI() {
         print("Hiding the UI")
         saveButton.hidden = !saveButton.hidden
-        nameTextField.hidden = !nameTextField.hidden
+        titleTextField.hidden = !titleTextField.hidden
         detailsTextView.hidden = !detailsTextView.hidden
+        editButton.hidden = !editButton.hidden
+        titleLabel.hidden = !titleLabel.hidden
+        detailsLabel.hidden = !detailsLabel.hidden
     }
 
+    
     // IMPORTANT: maybe don't need
     func configureStep() {
         let context = self.fetchedResultsController.managedObjectContext
@@ -235,13 +226,188 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             abort()
         }
     }
+
+    
+    // MARK: - Table View
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return self.fetchedResultsController.sections?.count ?? 0
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let sectionInfo = self.fetchedResultsController.sections![section]
+        
+        print("Number of Rows in Section: \(sectionInfo.numberOfObjects)")
+        return sectionInfo.numberOfObjects
+    }
+    
+    // IMPORTANT: fix this
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        //tableView.rowHeight = UITableViewAutomaticDimension
+        print("\(tableView.rowHeight)")
+        return 44.0 //tableView.rowHeight
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) //as? UITableViewCell
+        
+        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+        cell.textLabel?.text = object.valueForKey("title")!.description
+        
+        return cell
+        //return configureCell(indexPath)
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            let context = self.fetchedResultsController.managedObjectContext
+            context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
+            
+            var error: NSError? = nil
+            do {
+                try context.save()
+            } catch let error1 as NSError {
+                error = error1
+                // Replace this implementation with code to handle the error appropriately.
+                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                print("Unresolved error \(error), \(error!.userInfo)")
+                abort()
+            }
+        }
+    }
+    
+    func configureCell(indexPath: NSIndexPath) -> TableViewCell {
+        
+        // Dequeue custom cell as TableViewCell.
+        if let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) as? TableViewCell {
+            print("Cell is a TableViewCell")
+            
+            
+            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+            let text = object.valueForKey("title")!.description
+            if let label = cell.nameLabel {
+                
+                print("Have a namelabel for cell")
+                label.text = text
+            } else {
+                print("no namelabel in cell")
+                cell.textLabel?.text = text
+            }
+            
+            return cell
+        }
+        let oldCell = TableViewCell()
+        return oldCell
+    }
+    
+    
+    // MARK: - Fetched results controller
+    
+    var fetchedResultsController: NSFetchedResultsController {
+        if _fetchedResultsController != nil {
+            return _fetchedResultsController!
+        }
+        
+        let fetchRequest = NSFetchRequest()
+        // Edit the entity name as appropriate.
+        let entity = NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.managedObjectContext!)
+        fetchRequest.entity = entity
+        
+        // Set the batch size to a suitable number.
+        fetchRequest.fetchBatchSize = 20
+        
+        // Edit the sort key as appropriate.
+        let sortDescriptor = NSSortDescriptor(key: self.sortDescriptorKey, ascending: false)
+        //_ = [sortDescriptor]
+        let predicate = NSPredicate(format: "parent == %@", self.detailItem!)
+        
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.predicate = predicate
+        
+        // Edit the section name key path and cache name if appropriate.
+        // nil for section name key path means "no sections".
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
+        aFetchedResultsController.delegate = self
+        _fetchedResultsController = aFetchedResultsController
+        
+        var error: NSError? = nil
+        do {
+            try _fetchedResultsController!.performFetch()
+        } catch let error1 as NSError {
+            error = error1
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            print("Unresolved error \(error), \(error!.userInfo)")
+            abort()
+        }
+        
+        return _fetchedResultsController!
+    }
+    var _fetchedResultsController: NSFetchedResultsController? = nil
+    
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        self.tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        switch type {
+        case .Insert:
+            self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        case .Delete:
+            self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        default:
+            return
+        }
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case .Insert:
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+        case .Delete:
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+        case .Update:
+            _ = configureCell(indexPath!)
+        case .Move:
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            //        default:
+            //            return
+        }
+        
+    }
+    
+    //    func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    //            }
+    
+    // IMPORTANT: not using this because wish to try refreshing for background color.
+    //    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    //        self.tableView.endUpdates()
+    //    }
+    
+    
+    // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        // In the simplest, most efficient, case, reload the table view.
+        // IMPORTANT: added the end updates as no changes immediately when adding otherwise.
+        self.tableView.endUpdates()
+        self.tableView.reloadData()
+    }
     
     // MARK: - TextField related
     
     // Clear the default text when text field is selected.
     func textFieldDidBeginEditing(textField: UITextField) {
-        if (self.nameTextField.text == "Tap to Edit Name") {
-            self.nameTextField.text = ""
+        if (self.titleTextField.text == "Tap to Edit Name") {
+            self.titleTextField.text = ""
         }
     }
     
@@ -258,41 +424,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             self.detailsTextView.text == ""
         }
     }
-    
-    
-    
-    // Return a float value of the height of the keyboard being used.
-//    func getKeyBoardHeight(notificaton: NSNotification) -> CGFloat {
-//        let userInfo = notificaton.userInfo
-//        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
-//        return keyboardSize.CGRectValue().height
-//    }
-    
-    // Slide the whole view up to show the text field when the bottom text field is selected.
-//    func keyboardWillShow(notification: NSNotification) {
-//        if nameTextField.isFirstResponder() {
-//            self.view.frame.origin.y -= getKeyBoardHeight(notification)
-//        }
-//    }
-//    
-//    // Slide the whole view down to original position when the bottom text field is selected, and then the return key is tapped.
-//    func keyboardWillHide(notification: NSNotification) {
-//        if nameTextField.isFirstResponder() {
-//            self.view.frame.origin.y += getKeyBoardHeight(notification)
-//        }
-//    }
-    
-    // Subscribe to keyboard notifications to show and hide the keyboard appropriately.
-//    func subscribeToKeyboardNotifications() {
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
-//    }
-//    
-//    // Unsubscribe from keyboard notifications when segueing to another view controller.
-//    func unsubscribeFromKeyboardNotifications() {
-//        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
-//        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
-//    }
-    
+        
 }
 

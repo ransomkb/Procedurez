@@ -117,6 +117,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 controller.managedObjectContext = self.managedObjectContext
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
+                
                 print("Destination view controller set up")
             }
         } else if segue.identifier == "showCustomDetail" {
@@ -130,7 +131,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // maybe won't use
     func configureTableView() {
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 160.0
+        tableView.estimatedRowHeight = 80.0
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
