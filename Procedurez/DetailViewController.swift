@@ -179,12 +179,13 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context)
         
         let editName = "Tap to Edit Name"
-        
+        //let editDetails = "Add a short description"
         
         // If appropriate, configure the new managed object.
         // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
         // IMPORTANT: this may be wrong. Check
         newManagedObject.setValue(editName, forKey: "title")
+        //newManagedObject.setValue(editDetails, forKeyPath: "details")
         newManagedObject.setValue(self.detailItem, forKey: "parent")
         newManagedObject.setValue(!self.isDone, forKeyPath: self.sortDescriptorKey)
         
