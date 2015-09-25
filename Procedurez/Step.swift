@@ -20,7 +20,7 @@ class Step: NSManagedObject {
         static let Details = "details"
     }
     
-    @NSManaged var position: Int
+    @NSManaged var position: Int32
     @NSManaged var title: String
     @NSManaged var details: String
     @NSManaged var done: Bool
@@ -42,6 +42,10 @@ class Step: NSManagedObject {
         
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        title = "Tap to Edit Name"
+        details = "Add a short description"
+        done = false
+        
     }
     
     // Use a convenience initializer to prepare parent and properties.
