@@ -40,13 +40,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = controllers[controllers.count-1] as? DetailViewController //Removed when going to Swift 2: topViewController
+            self.detailViewController?.managedObjectContext = self.managedObjectContext
         }
         
-        //self.tableView.delegate = self
-        //self.tableView.dataSource = self
-        
         // Register the custom cell.
-        self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: masterCellIdentifier)
+        //self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: masterCellIdentifier)
         
         
         // Make the style easier on the eyes by removing the separator.
@@ -145,6 +143,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         return sectionInfo.numberOfObjects
     }
     
+
     // IMPORTANT: fix this
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         //tableView.rowHeight = UITableViewAutomaticDimension

@@ -21,6 +21,7 @@ class Step: NSManagedObject {
     }
     
     @NSManaged var position: Int32
+    @NSManaged var sectionIdentifier: String
     @NSManaged var title: String
     @NSManaged var details: String
     @NSManaged var done: Bool
@@ -28,6 +29,7 @@ class Step: NSManagedObject {
     @NSManaged var procedure: Procedure
     @NSManaged var parent: Step
     @NSManaged var children: [Step]
+
     
     // Initiate the parent class with the entity and context.
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
@@ -42,10 +44,14 @@ class Step: NSManagedObject {
         
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        // IMPORTANT: does not seem to print; remove?
+        print("Step created without dictionary")
+        
         title = "Tap to Edit Name"
         details = "Add a short description"
         done = false
-        
+        sectionIdentifier = "Do"
     }
     
     // Use a convenience initializer to prepare parent and properties.
@@ -56,11 +62,30 @@ class Step: NSManagedObject {
         
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        print("Step created with dictionary")
 
         //position = 1 //dictionary[Keys.Position] as! Int
         title = dictionary[Keys.Title] as! String
         details = dictionary[Keys.Details] as! String
         done = false
+        sectionIdentifier = "Do"
     }
+    
+    
+    internal func updateSectionIdentifier() {
+        sectionIdentifier = sectionForCurrentState()
+        print("Step sectionIdentifier: \(sectionIdentifier)")
+    }
+    
+    private func sectionForCurrentState() -> String {
+        if done.boolValue {
+            return "Done"
+        } else {
+            return "Do"
+        }
+    }
+
+    
 }
 

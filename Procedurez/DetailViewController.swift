@@ -26,12 +26,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     let detailCellIdentifier = "DetailCell"
     
-    var isDone = true
+    var isDone = false
     var isStep = true
     var isMovingStep = false
     var entityName = "Step"
     
-    var sectionSortDescriptorKey = "done"
+    var sectionSortDescriptorKey = "sectionIdentifier"
     var sortDescriptorKey = "position"
     //var procedure: Procedure?
     //var step: Step?
@@ -41,8 +41,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         static let Title = "title"
         static let Details = "details"
     }
-
-
+    
     var detailItem: Step? {
         didSet {
             // Update the view.
@@ -61,6 +60,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 print("Step has details")
                 
                 if let detailsTV = detailsTextView {
+                    
                     print("Setting details text view value")
                     detailsTV.text = det
                 }
@@ -128,6 +128,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     
     
+    
     // MARK - View
     
     override func viewDidLoad() {
@@ -140,6 +141,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         self.titleTextField.delegate = self
         self.detailsTextView.delegate = self
+        
+        self.tableView.separatorStyle = .None
         
         self.configureView()
     }
@@ -180,6 +183,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         let editName = "Tap to Edit Name"
         //let editDetails = "Add a short description"
+        print("isDone: \(isDone)")
+        //isDone = !isDone
         
         // If appropriate, configure the new managed object.
         // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
@@ -187,7 +192,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         newManagedObject.setValue(editName, forKey: "title")
         //newManagedObject.setValue(editDetails, forKeyPath: "details")
         newManagedObject.setValue(self.detailItem, forKey: "parent")
-        newManagedObject.setValue(!self.isDone, forKeyPath: self.sortDescriptorKey)
+        newManagedObject.setValue(isDone, forKey: "done")
+        newManagedObject.setValue("Do", forKey: "sectionIdentifier")
         
         let stepName = newManagedObject.valueForKey("title") as! String
         print("Created a step with name: \(stepName)")
@@ -196,6 +202,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         var error: NSError? = nil
         do {
             try context.save()
+            //updatePositions()
         } catch let error1 as NSError {
             error = error1
             // Replace this implementation with code to handle the error appropriately.
@@ -273,6 +280,17 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return sectionInfo.numberOfObjects
     }
     
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let sections = fetchedResultsController.sections {
+            let currentSection = sections[section]
+            print("Current Section: \(currentSection.name)")
+            return currentSection.name
+        }
+        
+        return nil
+    }
+
+    
     // IMPORTANT: fix this
 //    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 //        //tableView.rowHeight = UITableViewAutomaticDimension
@@ -284,14 +302,37 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Index path: \(indexPath)")
         print("Row: \(indexPath.row)")
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) //as? UITableViewCell
-        
         let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
+        
         print("This cell object has position: \(object.position)")
         print("This cell object has title: \(object.title)")
+        print("This cell object has done value: \(object.done)")
+        print("This cell object has sectionIdentifier: \(object.sectionIdentifier)")
+        //object.updateSectionIdentifier()
+        //print("This cell object now has sectionIdentifier: \(object.sectionIdentifier)")
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) //as? UITableViewCell
+        
+        let cellBackgroundView = UIImageView(image: UIImage(named: setBackgroundImage(object, indexPathRow:indexPath.row)))
+        
+        cell.backgroundView = cellBackgroundView
+        
+        // Remove the selection highlighting.
+        cell.selectionStyle = .None
+        
+        //if !object.done {
+            //if indexPath.row == 0 || indexPath.row > 3 {
+                cell.textLabel?.textColor = UIColor.whiteColor()
+                cell.detailTextLabel?.textColor = UIColor.whiteColor()
+            //}
+        //}
         
         cell.textLabel?.text = object.valueForKey("title")!.description
         cell.detailTextLabel?.text = object.valueForKey("details")?.description
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: "handleRightSwipe:")
+        swipeRight.direction = UISwipeGestureRecognizerDirection.Right
+        cell.addGestureRecognizer(swipeRight)
         
         return cell
         //return configureCell(indexPath)
@@ -307,9 +348,11 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             let context = self.fetchedResultsController.managedObjectContext
             context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
             
+            
             var error: NSError? = nil
             do {
                 try context.save()
+                updatePositions()
             } catch let error1 as NSError {
                 error = error1
                 // Replace this implementation with code to handle the error appropriately.
@@ -331,17 +374,18 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             steps.insert(step, atIndex: destinationIndexPath.row)
             
             //updatePositions()
-            var iter : Int32 = 0
-            for step in steps as! [Step] {
-                print("Step array position: \(iter)")
-                print("Step title: \(step.title)")
-                step.position = iter
-                ++iter
-            }
+//            var iter : Int32 = 0
+//            for step in steps as! [Step] {
+//                print("Step array position: \(iter)")
+//                print("Step title: \(step.title)")
+//                step.position = iter
+//                ++iter
+//            }
             
             var error: NSError? = nil
             do {
                 try self.managedObjectContext!.save()
+                updatePositions()
             } catch let error1 as NSError {
                 error = error1
                 // Replace this implementation with code to handle the error appropriately.
@@ -356,8 +400,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             tableView.reloadRowsAtIndexPaths(tableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
         })
-
-        
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -403,8 +445,35 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return oldCell
     }
     
+    func setBackgroundImage(step: Step, indexPathRow row: Int) -> String {
+        
+        switch UIDevice.currentDevice().userInterfaceIdiom {
+        case .Pad:
+            if step.done {
+                return "PadGreen"
+            } else if step.position <= 5 {
+                let padCellImage = PadCellImage(rawValue: row)
+                return (padCellImage?.title())!
+            } else {
+                return "PadPurple"
+            }
+        case .Phone:
+            if step.done {
+                return "PhoneGreen"
+            } else if step.position <= 5{
+                let phoneCellImage = PhoneCellImage(rawValue: row)
+                return (phoneCellImage?.title())!
+            } else {
+                return "PhonePurple"
+            }
+        case .Unspecified:
+            return "PhoneBlack"
+        }
+    }
+    
     func updatePositions() {
         print("Updating positions")
+        if let _ = self.managedObjectContext {
         if let steps = self.fetchedResultsController.fetchedObjects {
             
             isMovingStep = true
@@ -414,11 +483,33 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             for step in steps as! [Step] {
                 print("Step array position: \(iter)")
                 print("Step title: \(step.title)")
+                print("Step done: \(step.done)")
                 step.position = iter
                 ++iter
             }
             
             isMovingStep = false
+            }
+        } else {
+            return
+        }
+    }
+    
+    func handleRightSwipe(gesture: UISwipeGestureRecognizer) {
+    print("Handling swipe")
+        
+        let point = gesture.locationInView(self.tableView)
+        print("Swipe Point: \(point)")
+        let indexPath = self.tableView.indexPathForRowAtPoint(point)
+        print("Swipe Point index path: \(indexPath)")
+        
+        switch gesture.direction {
+        case UISwipeGestureRecognizerDirection.Right:
+            let step = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Step
+            step.done = !step.done.boolValue
+            step.updateSectionIdentifier()
+            break
+        default: return
         }
     }
     
@@ -431,6 +522,21 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         
         let fetchRequest = NSFetchRequest()
+        
+        // Deal with fatal error of unexpected nil
+        if let _ = self.entityName as String? {
+            print("Self.entityName is fine")
+        } else {
+            print("Self.entityName is NOT fine")
+        }
+        
+        if let _ = self.managedObjectContext {
+            print("self.managedObjectContext is fine")
+        } else {
+            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            self.managedObjectContext = delegate.managedObjectContext
+        }
+        
         // Edit the entity name as appropriate.
         let entity = NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.managedObjectContext!)
         fetchRequest.entity = entity
@@ -439,7 +545,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         fetchRequest.fetchBatchSize = 20
         
         // Edit the sort key as appropriate.
-        let sectionSortDescriptor = NSSortDescriptor(key: self.sectionSortDescriptorKey, ascending: true)
+        let sectionSortDescriptor = NSSortDescriptor(key: "sectionIdentifier", ascending: true)
         let sortDescriptor = NSSortDescriptor(key: self.sortDescriptorKey, ascending: true)
         //_ = [sortDescriptor]
         let predicate = NSPredicate(format: "parent == %@", self.detailItem!)
@@ -449,7 +555,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: sectionSortDescriptorKey, cacheName: nil)
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
