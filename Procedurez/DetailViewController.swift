@@ -446,12 +446,13 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     
     func setBackgroundImage(step: Step, indexPathRow row: Int) -> String {
+        step.objectID.URIRepresentation().lastPathComponent
         
         switch UIDevice.currentDevice().userInterfaceIdiom {
         case .Pad:
             if step.done {
                 return "PadGreen"
-            } else if step.position <= 5 {
+            } else if row <= 5 {
                 let padCellImage = PadCellImage(rawValue: row)
                 return (padCellImage?.title())!
             } else {
@@ -460,7 +461,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         case .Phone:
             if step.done {
                 return "PhoneGreen"
-            } else if step.position <= 5{
+            } else if row <= 5{
                 let phoneCellImage = PhoneCellImage(rawValue: row)
                 return (phoneCellImage?.title())!
             } else {
@@ -517,6 +518,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     // MARK: - Fetched results controller
     
     var fetchedResultsController: NSFetchedResultsController {
+        
+        print("Accessing the Details Fetched Results Controller")
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
@@ -533,6 +536,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         if let _ = self.managedObjectContext {
             print("self.managedObjectContext is fine")
         } else {
+            print("self.managedObjectContext is not fine")
+            print("Using that of AppDelegate")
             let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
             self.managedObjectContext = delegate.managedObjectContext
         }
@@ -611,8 +616,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            _ = configureCell(indexPath!)
+        case .Update: break
+            //_ = configureCell(indexPath!)
         case .Move:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)

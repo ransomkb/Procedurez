@@ -18,6 +18,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     let masterCellIdentifier = "TableViewCell"
 
+    @IBOutlet weak var actionButton: UIBarButtonItem!
+    @IBOutlet weak var settingsButton: UIBarButtonItem!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -33,14 +35,47 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         print("View Did Load: Start")
         
+        if let fetched = self.fetchedResultsController.fetchedObjects {
+            if fetched.count <= 0 {
+                insertNewObject(self)
+            } else {
+                print("Fetched objects is more than 0")
+            }
+        }
+        
+        if let _ = self.fetchedResultsController.fetchedObjects?.isEmpty {
+            print("Still empty")
+        }
+        
+        self.settingsButton.title = NSString(string: "\u{2699}") as String
+        if let font = UIFont(name: "Helvetica", size: 22.0) {
+            self.settingsButton.setTitleTextAttributes([NSFontAttributeName: font], forState: UIControlState.Normal)
+        }
+        
+        
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
 
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
-        self.navigationItem.rightBarButtonItem = addButton
+        //self.navigationItem.rightBarButtonItem = addButton
+        
+        let rightBarButtonItems: [UIBarButtonItem] = [addButton, settingsButton, actionButton]
+        
+        self.navigationItem.rightBarButtonItems = rightBarButtonItems
+        
         if let split = self.splitViewController {
             let controllers = split.viewControllers
-            self.detailViewController = controllers[controllers.count-1] as? DetailViewController //Removed when going to Swift 2: topViewController
-            self.detailViewController?.managedObjectContext = self.managedObjectContext
+            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+            
+            if let detailController = self.detailViewController {
+                detailController.managedObjectContext = self.managedObjectContext
+                
+                if let fetched = self.fetchedResultsController.fetchedObjects {
+                    print("master fetcher has objects")
+                    let step = fetched[0] as? Step
+                    print("Have a first step")
+                    detailController.detailItem = step
+                }
+            }
         }
         
         // Register the custom cell.
@@ -235,7 +270,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Fetched results controller
 
     var fetchedResultsController: NSFetchedResultsController {
-        print("Accessing the fetched results controller")
+        print("Accessing the Master fetched results controller")
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
@@ -300,8 +335,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            _ = configureCell(indexPath!)
+        case .Update: break
+            //_ = configureCell(indexPath!)
         case .Move:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)

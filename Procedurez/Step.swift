@@ -16,8 +16,12 @@ class Step: NSManagedObject {
     
     struct Keys {
         static let Position = "position"
+        static let SectionIdentifier = "sectionIdentifier"
         static let Title = "title"
         static let Details = "details"
+        static let Procedure = "procedure"
+        static let Parent = "parent"
+        static let Children = "children"
     }
     
     @NSManaged var position: Int32
@@ -65,6 +69,10 @@ class Step: NSManagedObject {
         
         print("Step created with dictionary")
 
+        // IMPORTANT: maybe this should be an integer in json
+        if let pos = dictionary[Keys.Position] {
+            position = Int32(pos as! String)!
+        }
         //position = 1 //dictionary[Keys.Position] as! Int
         title = dictionary[Keys.Title] as! String
         details = dictionary[Keys.Details] as! String
@@ -84,8 +92,7 @@ class Step: NSManagedObject {
         } else {
             return "Do"
         }
-    }
-
+    }    
     
 }
 
