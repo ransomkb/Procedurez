@@ -92,7 +92,43 @@ class Step: NSManagedObject {
         } else {
             return "Do"
         }
-    }    
+    }
+    
+    //Creates a string in a JSON dictionary format.
+    func getJSONDictionary() -> String {
+        var json: String
+        
+        json = "{\"title\":\"\(title)\", " +
+            "\"details\":\"\(details)\", " +
+            "\"position\":\(position), " +
+            "\"sectionIdentifier\":\"\(sectionIdentifier)\", " +
+            "\"steps\": \(getJSONArrayOfSteps())}"
+        
+        return json
+    }
+
+    //Creates a string of Step object data in a JSON array format.
+    func getJSONArrayOfSteps() -> String {
+        var json = "["
+        var counter = 0
+        
+        if !children.isEmpty {
+            for child in children {
+                json += "\(child.getJSONDictionary())}"
+                
+                if counter < children.count-1 {
+                    json += ", "
+                }
+                
+                ++counter
+            }
+        }
+        
+        json += "]"
+        
+        return json
+    }
+
     
 }
 

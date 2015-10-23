@@ -9,18 +9,55 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-    
-    var alertMessage: String?
-
-    var detailViewController: DetailViewController? = nil
-    var managedObjectContext: NSManagedObjectContext? = nil
-    
-    let masterCellIdentifier = "TableViewCell"
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISplitViewControllerDelegate {
 
     @IBOutlet weak var actionButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     
+    // Determines whether the master view is shown first or not on an iPhone
+    private var collapseDetailViewController = true
+    
+    var alertMessage: String?
+    
+    var detailViewController: DetailViewController? = nil
+    var managedObjectContext: NSManagedObjectContext? = nil
+    
+    let masterCellIdentifier = "TableViewCell"
+    
+    lazy var temporaryContext: NSManagedObjectContext? = {
+        
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        // Set the temporary context
+        var temporaryContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
+        temporaryContext.persistentStoreCoordinator = delegate.managedObjectContext!.persistentStoreCoordinator
+        return temporaryContext
+    }()
+    
+    // Lazy computed property returning a fetched results controller for Photo entities sorted by title.
+    lazy var shareFetchedResultsController: NSFetchedResultsController = {
+        
+        let fetchRequest = NSFetchRequest(entityName: "Step")
+        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+            managedObjectContext: self.temporaryContext!,
+            sectionNameKeyPath: nil,
+            cacheName: nil)
+        
+        return fetchedResultsController
+        }()
+    
+    @IBAction func shareProcedure(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func openSettings(sender: AnyObject) {
+        
+    }
+    
+    // seems to be removed from xcode 8
     override func awakeFromNib() {
         super.awakeFromNib()
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
@@ -33,7 +70,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        print("View Did Load: Start")
+        print("Master View Did Load: Start")
+        
+        splitViewController?.delegate = self
         
         if let fetched = self.fetchedResultsController.fetchedObjects {
             if fetched.count <= 0 {
@@ -52,19 +91,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             self.settingsButton.setTitleTextAttributes([NSFontAttributeName: font], forState: UIControlState.Normal)
         }
         
-        
-        self.navigationItem.leftBarButtonItem = self.editButtonItem()
-
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
-        //self.navigationItem.rightBarButtonItem = addButton
         
-        let rightBarButtonItems: [UIBarButtonItem] = [addButton, settingsButton, actionButton]
+        let leftBarButtonItems: [UIBarButtonItem] = [settingsButton, self.editButtonItem()]
+        let rightBarButtonItems: [UIBarButtonItem] = [addButton, actionButton]
         
+        //self.navigationItem.leftBarButtonItem = self.editButtonItem()
+        self.navigationItem.leftBarButtonItems = leftBarButtonItems
         self.navigationItem.rightBarButtonItems = rightBarButtonItems
         
         if let split = self.splitViewController {
+            print("is a splitviewcontroller")
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+            
             
             if let detailController = self.detailViewController {
                 detailController.managedObjectContext = self.managedObjectContext
@@ -76,6 +116,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                     detailController.detailItem = step
                 }
             }
+            
+            
         }
         
         // Register the custom cell.
@@ -91,7 +133,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         // Give each row more height. (now done in xib)
         //tableView.rowHeight = 50.0
         
-        print("View Did Load: End")
+        // IMPORTANT: check this make the constant correct and fix the implementation
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            self.clearsSelectionOnViewWillAppear = false
+            self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
+        }
+        
+        print("Master View Did Load: End")
     }
 
     override func didReceiveMemoryWarning() {
@@ -100,10 +148,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func viewWillAppear(animated: Bool) {
+        
+        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
+        print("Master view will appear: start")
         
         print("Reloading data in Master View")
         self.tableView.reloadData()
+        print("Master view will appear: end")
+        
     }
 
     func insertNewObject(sender: AnyObject) {
@@ -219,6 +272,19 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             }
         }
     }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        // Set the background color of each cell.
+        cell.backgroundColor = colorForIndex(indexPath.row)
+        cell.textLabel?.textColor = UIColor.whiteColor()
+    }
+    
+    // Allow the detail view to be shown.
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        collapseDetailViewController = false
+    }
+    
 
     func configureCell(indexPath: NSIndexPath) -> TableViewCell {
         
@@ -244,6 +310,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         return oldCell
     }
     
+    // MARK: - Split view delegate
+    
+    // Ensure the first view on the iPhone is the master view when this returns true.
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+        return collapseDetailViewController
+    }
+    
     // MARK: - Table view delegate
     
     // Return a color for the index.
@@ -258,13 +331,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         return UIColor(red: 0.0, green: value, blue: 0.9, alpha: 1.0)
     }
     
-    
-    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        
-        // Set the background color of each cell.
-        cell.backgroundColor = colorForIndex(indexPath.row)
-        cell.textLabel?.textColor = UIColor.whiteColor()
-    }
     
 
     // MARK: - Fetched results controller
@@ -364,6 +430,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
          self.tableView.reloadData()
      }
     
+    // MARK: - Misc
+    
+    func createJSONData(procedure: Procedure) {
+        // Instantiate a fetch request for all the Steps of the selected Procedure.
+        let fetchRequest = NSFetchRequest(entityName: "Step")
+        let predicate = NSPredicate(format: "parent == %@", procedure)
+        fetchRequest.predicate = predicate
+        
+        do {
+            try temporaryContext?.executeFetchRequest(fetchRequest)
+        } catch {
+            print("Unable to fetch the Step entities for sharing due to error: \(error)")
+        }
+    }
     
     // IMPORTANT: probably will not use
     // Use UIAlertController to keep user informed.

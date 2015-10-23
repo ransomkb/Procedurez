@@ -47,5 +47,36 @@ class Procedure: NSManagedObject {
         
         print("Procedure init with title, name: \(self.title)")
     }
+    
+    //Creates a string in a JSON dictionary format.
+    func getJSONDictionary() -> String {
+        var json: String
+        
+        json = "{\"title\":\"\(title)\", \"details\":\"\(details)\", \"steps\": \(getJSONArrayOfSteps())}"
+        
+        return json
+    }
+    
+    //Creates a string of Step object data in a JSON array format.
+    func getJSONArrayOfSteps() -> String {
+        var json = "["
+        var counter = 0
+        
+        if !steps.isEmpty {
+            for s in steps {
+                json += "\(s.getJSONDictionary())}"
+                
+                if counter < steps.count-1 {
+                    json += ", "
+                }
+                
+                ++counter
+            }
+        }
+
+        json += "]"
+        return json
+    }
+    
 }
 

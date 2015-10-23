@@ -4,7 +4,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Master-->
@@ -280,15 +279,21 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Procedures" id="Zdf-7t-Un8">
-                        <rightBarButtonItems>
-                            <barButtonItem title="Item" id="RsA-92-MYr"/>
-                            <barButtonItem systemItem="action" id="R1v-He-tqn"/>
-                        </rightBarButtonItems>
+                        <barButtonItem key="leftBarButtonItem" title="Item" id="vEM-2A-7B9">
+                            <connections>
+                                <action selector="openSettings:" destination="7bK-jq-Zjz" id="gnX-xZ-SpJ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="R1v-He-tqn">
+                            <connections>
+                                <action selector="shareProcedure:" destination="7bK-jq-Zjz" id="H9q-G9-P55"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="actionButton" destination="R1v-He-tqn" id="zrU-ZX-Ved"/>
-                        <outlet property="settingsButton" destination="RsA-92-MYr" id="KYk-AU-Oca"/>
+                        <outlet property="settingsButton" destination="vEM-2A-7B9" id="NDF-k6-Daj"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>

@@ -134,7 +134,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("View did load")
+        print("Detail View did load: start")
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
@@ -145,6 +145,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         self.tableView.separatorStyle = .None
         
         self.configureView()
+        print("Detail View did load: end")
     }
 
     override func didReceiveMemoryWarning() {
@@ -155,7 +156,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        print("View will appear")
+        print("Detail View will appear: start")
         // Subscribe to keyboard notifications to bring up keyboard when typing in textField begins.
         //self.subscribeToKeyboardNotifications()
         if (self.titleTextField.text != "Tap to Edit Name") && !saveButton.hidden {
@@ -163,6 +164,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         
         updatePositions()
+        print("Detail View will appear: end")
     }
     
     override func viewWillDisappear(animated: Bool) {
