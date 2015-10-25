@@ -114,7 +114,7 @@ class Step: NSManagedObject {
         
         if !children.isEmpty {
             for child in children {
-                json += "\(child.getJSONDictionary())}"
+                json += "\(child.getJSONDictionary())"
                 
                 if counter < children.count-1 {
                     json += ", "

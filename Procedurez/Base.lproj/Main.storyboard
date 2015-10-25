@@ -182,12 +182,19 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Steps" id="mOI-FS-AaM"/>
+                    <navigationItem key="navigationItem" title="Steps" id="mOI-FS-AaM">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="j6W-4R-we7">
+                            <connections>
+                                <action selector="shareProcedure:" destination="JEX-9P-axG" id="bl4-Lo-TSE"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="detailsLabel" destination="Rmk-kR-mEy" id="wez-zG-GkB"/>
                         <outlet property="detailsTextView" destination="YPo-mA-HIO" id="r6M-zV-h0u"/>
                         <outlet property="editButton" destination="Sgl-sa-krw" id="xJg-4C-TQl"/>
                         <outlet property="saveButton" destination="ejD-ID-3zR" id="D1b-KZ-TmW"/>
+                        <outlet property="shareButton" destination="j6W-4R-we7" id="Iax-dO-dbp"/>
                         <outlet property="tableView" destination="zWG-ki-G7k" id="uM5-h7-ovw"/>
                         <outlet property="titleLabel" destination="e7J-Rr-5oC" id="JdM-f8-2VS"/>
                         <outlet property="titleTextField" destination="mIp-wN-CGT" id="9PG-QM-zTz"/>
@@ -284,15 +291,9 @@
                                 <action selector="openSettings:" destination="7bK-jq-Zjz" id="gnX-xZ-SpJ"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="R1v-He-tqn">
-                            <connections>
-                                <action selector="shareProcedure:" destination="7bK-jq-Zjz" id="H9q-G9-P55"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="actionButton" destination="R1v-He-tqn" id="zrU-ZX-Ved"/>
                         <outlet property="settingsButton" destination="vEM-2A-7B9" id="NDF-k6-Daj"/>
                     </connections>
                 </tableViewController>

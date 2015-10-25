@@ -11,7 +11,6 @@ import CoreData
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISplitViewControllerDelegate {
 
-    @IBOutlet weak var actionButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     
     // Determines whether the master view is shown first or not on an iPhone
@@ -48,10 +47,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         return fetchedResultsController
         }()
-    
-    @IBAction func shareProcedure(sender: AnyObject) {
-        
-    }
     
     @IBAction func openSettings(sender: AnyObject) {
         
@@ -94,7 +89,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         
         let leftBarButtonItems: [UIBarButtonItem] = [settingsButton, self.editButtonItem()]
-        let rightBarButtonItems: [UIBarButtonItem] = [addButton, actionButton]
+        let rightBarButtonItems: [UIBarButtonItem] = [addButton]
         
         //self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.leftBarButtonItems = leftBarButtonItems
@@ -197,7 +192,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if segue.identifier == "showDetail" {
             print("Have a segue identifier called showDetail")
             if let indexPath = self.tableView.indexPathForSelectedRow {
-            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
+                let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = object
                 controller.managedObjectContext = self.managedObjectContext
@@ -432,16 +427,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     // MARK: - Misc
     
+    // IMPORTANT: finish this; maybe use, maybe not.
     func createJSONData(procedure: Procedure) {
-        // Instantiate a fetch request for all the Steps of the selected Procedure.
-        let fetchRequest = NSFetchRequest(entityName: "Step")
-        let predicate = NSPredicate(format: "parent == %@", procedure)
-        fetchRequest.predicate = predicate
-        
-        do {
-            try temporaryContext?.executeFetchRequest(fetchRequest)
-        } catch {
-            print("Unable to fetch the Step entities for sharing due to error: \(error)")
+        if let indexPath = self.tableView.indexPathForSelectedRow {
+            let selectedStep = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
+            // Instantiate a fetch request for all the Steps of the selected Procedure.
+            let fetchRequest = NSFetchRequest(entityName: "Procedure")
+            let predicate = NSPredicate(format: "title == %@", selectedStep.title)
+            fetchRequest.predicate = predicate
+            
+            do {
+                try temporaryContext?.executeFetchRequest(fetchRequest)
+            } catch {
+                print("Unable to fetch the Step entities for sharing due to error: \(error)")
+            }
         }
     }
     

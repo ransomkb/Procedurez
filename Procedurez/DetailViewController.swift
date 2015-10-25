@@ -11,6 +11,7 @@ import CoreData
 
 class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleTextField: UITextField!
     
@@ -33,7 +34,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     var sectionSortDescriptorKey = "sectionIdentifier"
     var sortDescriptorKey = "position"
-    //var procedure: Procedure?
+    var procedure: Procedure?
     //var step: Step?
     
     struct Keys {
@@ -93,7 +94,18 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Now detailItem has \(self.detailItem?.children.count) children")
     }
     
-   
+   // IMPORTANT: TAKE OUT THE INDEXPATH STUFF AND USE SELF STEP
+    @IBAction func shareProcedure(sender: AnyObject) {
+        print("Sharing Procedure; Step objectID: \(detailItem?.objectID)")
+        // Create the JSON data (procedure is actually a Step as detailItem is one).
+        if let procedure = detailItem {
+            let json = procedure.getJSONDictionary()
+            print(json)
+        } else {
+            print("Procedure for detailItem is nil")
+        }
+    }
+    
     @IBAction func saveData(sender: AnyObject) {
         print("Saving the Data")
         let context = self.fetchedResultsController.managedObjectContext
@@ -137,7 +149,16 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Detail View did load: start")
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
-        self.navigationItem.rightBarButtonItem = addButton
+        
+        // Add a share button if this is the first Step
+        let rightBarButtonItems: [UIBarButtonItem]!
+        if (detailItem?.parent == nil) {
+            rightBarButtonItems = [addButton, shareButton]
+        } else {
+            rightBarButtonItems = [addButton]
+        }
+        
+        self.navigationItem.rightBarButtonItems = rightBarButtonItems
         
         self.titleTextField.delegate = self
         self.detailsTextView.delegate = self

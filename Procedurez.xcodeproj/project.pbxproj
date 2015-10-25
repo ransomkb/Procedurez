@@ -18,6 +18,7 @@
 		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
 		D40D24221B9D5914007D2F44 /* Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D24211B9D5914007D2F44 /* Procedure.swift */; };
 		D40D24241B9D7422007D2F44 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D24231B9D7422007D2F44 /* TableViewCell.swift */; };
+		D44CF41D1BDC9039009E31FB /* FileSaveHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		D4BC9D1E1BBA6B5F00527235 /* StepChildSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC9D1D1BBA6B5F00527235 /* StepChildSection.swift */; settings = {ASSET_TAGS = (); }; };
 		D4BC9D3C1BBA6FEE00527235 /* PadBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D201BBA6FEE00527235 /* PadBlack.png */; settings = {ASSET_TAGS = (); }; };
 		D4BC9D3D1BBA6FEE00527235 /* PadBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D211BBA6FEE00527235 /* PadBlue.png */; settings = {ASSET_TAGS = (); }; };
@@ -78,6 +79,7 @@
 		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D40D24211B9D5914007D2F44 /* Procedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Procedure.swift; sourceTree = "<group>"; };
 		D40D24231B9D7422007D2F44 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSaveHelper.swift; sourceTree = "<group>"; };
 		D4BC9D1D1BBA6B5F00527235 /* StepChildSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepChildSection.swift; sourceTree = "<group>"; };
 		D4BC9D201BBA6FEE00527235 /* PadBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PadBlack.png; sourceTree = "<group>"; };
 		D4BC9D211BBA6FEE00527235 /* PadBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PadBlue.png; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 				D40D23F81B9951A3007D2F44 /* MasterViewController.swift */,
 				D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */,
 				D40D24231B9D7422007D2F44 /* TableViewCell.swift */,
+				D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D44CF41D1BDC9039009E31FB /* FileSaveHelper.swift in Sources */,
 				D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */,
 				D40D24221B9D5914007D2F44 /* Procedure.swift in Sources */,
 				D40D23F41B9951A3007D2F44 /* AppDelegate.swift in Sources */,
