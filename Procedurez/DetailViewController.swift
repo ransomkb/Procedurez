@@ -94,13 +94,34 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Now detailItem has \(self.detailItem?.children.count) children")
     }
     
-   // IMPORTANT: TAKE OUT THE INDEXPATH STUFF AND USE SELF STEP
+   // Share the Procedure with others via email.
     @IBAction func shareProcedure(sender: AnyObject) {
         print("Sharing Procedure; Step objectID: \(detailItem?.objectID)")
         // Create the JSON data (procedure is actually a Step as detailItem is one).
         if let procedure = detailItem {
-            let json = procedure.getJSONDictionary()
+            let json = replaceDoubleQuotes(procedure.getJSONDictionary())
             print(json)
+            
+            
+            print("json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(json))")
+            
+            if let data = json.dataUsingEncoding(NSUTF8StringEncoding) {
+                print("Data is of type NSData: \(data.isKindOfClass(NSData))")
+                
+                print("data of json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(data))")
+                
+                
+                let jsonFile = FileSaveHelper(fileName: (detailItem?.title)!, fileExtension: .JSON, subDirectory: "FilesToShare", directory: .DocumentDirectory)
+                
+                do {
+                    //try jsonFile.saveFile(dataForJson: data)
+                    try jsonFile.saveFile(string: json)
+                } catch {
+                    print(error)
+                }
+                
+                print("JSON file to share exists: \(jsonFile.fileExists)")
+            }
         } else {
             print("Procedure for detailItem is nil")
         }
@@ -111,8 +132,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         let context = self.fetchedResultsController.managedObjectContext
         
         print("Do have a procedure; saving title")
+        print(self.titleTextField.text!)
         self.detailItem!.title = self.titleTextField.text!
         self.detailItem!.details = self.detailsTextView.text!
+        print(self.detailItem!.title)
         
         titleLabel.text = self.detailItem?.title
         detailsLabel.text = self.detailItem?.details
@@ -692,6 +715,11 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         if (self.detailsTextView.text == "Add a short description") {
             self.detailsTextView.text == ""
         }
+    }
+    
+    // MARK: - String related
+    func replaceDoubleQuotes(jsonString: String) -> String {
+        return String(jsonString.characters.map{ $0 == "\"" ? "'" : $0 })
     }
         
 }

@@ -69,6 +69,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         splitViewController?.delegate = self
         
+        let testFile = FileSaveHelper(fileName: "testFile", fileExtension: .TXT, subDirectory: "SavingFiles", directory: .DocumentDirectory)
+        print("Directory Exists: \(testFile.directoryExists)")
+        print("File Exists: \(testFile.fileExists)")
+        
+        
         if let fetched = self.fetchedResultsController.fetchedObjects {
             if fetched.count <= 0 {
                 insertNewObject(self)
@@ -133,6 +138,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             self.clearsSelectionOnViewWillAppear = false
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
+        
+        let fileText = "Saved a file in Swift!"
+        do {
+            try testFile.saveFile(string: fileText)
+        } catch {
+            print(error)
+        }
+        
+        print("File Exists: \(testFile.fileExists)")
         
         print("Master View Did Load: End")
     }
