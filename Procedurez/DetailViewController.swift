@@ -99,7 +99,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Sharing Procedure; Step objectID: \(detailItem?.objectID)")
         // Create the JSON data (procedure is actually a Step as detailItem is one).
         if let procedure = detailItem {
-            let json = replaceDoubleQuotes(procedure.getJSONDictionary())
+            let json = procedure.getJSONDictionary()
             print(json)
             
             
@@ -718,6 +718,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     
     // MARK: - String related
+    // Probably will only be used in Step
     func replaceDoubleQuotes(jsonString: String) -> String {
         return String(jsonString.characters.map{ $0 == "\"" ? "'" : $0 })
     }

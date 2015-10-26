@@ -98,8 +98,8 @@ class Step: NSManagedObject {
     func getJSONDictionary() -> String {
         var json: String
         
-        json = "{\"title\":\"\(title)\", " +
-            "\"details\":\"\(details)\", " +
+        json = "{\"title\":\"\(replaceDoubleQuotes(title))\", " +
+            "\"details\":\"\(replaceDoubleQuotes(details))\", " +
             "\"position\":\(position), " +
             "\"sectionIdentifier\":\"\(sectionIdentifier)\", " +
             "\"steps\": \(getJSONArrayOfSteps())}"
@@ -128,7 +128,11 @@ class Step: NSManagedObject {
         
         return json
     }
-
+    
+    // MARK: - String related
+    func replaceDoubleQuotes(jsonString: String) -> String {
+        return String(jsonString.characters.map{ $0 == "\"" ? "'" : $0 })
+    }
     
 }
 
