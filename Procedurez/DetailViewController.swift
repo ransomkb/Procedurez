@@ -121,10 +121,23 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 }
                 
                 print("JSON file to share exists: \(jsonFile.fileExists)")
+                
+                var activityItems = [NSData]()
+                
+                // Get the file contents off the hard drive
+                if let data = NSData(contentsOfFile: jsonFile.fullyQualifiedPath) {
+                    print("Adding the json file to the activityItems array.")
+                    activityItems.append(data)
+                    
+                    // Set up Activity View Controller
+                    let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+                    self.presentViewController(nextController, animated: true, completion: nil)
+                }
             }
         } else {
             print("Procedure for detailItem is nil")
         }
+        
     }
     
     @IBAction func saveData(sender: AnyObject) {

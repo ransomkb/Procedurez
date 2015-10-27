@@ -28,8 +28,8 @@ class FileSaveHelper {
     private let fileManager = NSFileManager.defaultManager()
     private let fileName: String
     private let filePath:String
-    private let fullyQualifiedPath: String
     private let subDirectory: String
+    let fullyQualifiedPath: String
     
     var fileExists: Bool {
         get {
