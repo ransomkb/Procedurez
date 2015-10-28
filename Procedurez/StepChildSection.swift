@@ -8,6 +8,8 @@
 
 import Foundation
 
+// IMPORTANT: this may not be needed or used
+
 enum StepChildSection: String {
     case ToDo = "10"
     case Done = "20"

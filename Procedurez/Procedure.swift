@@ -9,6 +9,8 @@
 import Foundation
 import CoreData
 
+// IMPORTANT: maybe will not be using this
+
 @objc(Procedure)
 
 class Procedure: NSManagedObject {
