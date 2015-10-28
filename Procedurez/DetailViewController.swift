@@ -597,8 +597,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         } else {
             print("self.managedObjectContext is not fine")
             print("Using that of AppDelegate")
-            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            self.managedObjectContext = delegate.managedObjectContext
+            //let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            self.managedObjectContext = CoreDataStackManager.sharedInstance().managedObjectContext
         }
         
         // Edit the entity name as appropriate.

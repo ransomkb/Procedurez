@@ -25,11 +25,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     lazy var temporaryContext: NSManagedObjectContext? = {
         
-        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        //let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         // Set the temporary context
         var temporaryContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
-        temporaryContext.persistentStoreCoordinator = delegate.managedObjectContext!.persistentStoreCoordinator
+        temporaryContext.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().managedObjectContext!.persistentStoreCoordinator
         return temporaryContext
     }()
     
