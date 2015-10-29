@@ -27,6 +27,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     let detailCellIdentifier = "DetailCell"
     
+    var alertMessage: String?
+    
     var isDone = false
     var isStep = true
     var isMovingStep = false
@@ -727,6 +729,17 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return true
     }
     
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        
+        if (range.length + range.location > textField.text?.characters.count )
+        {
+            return false;
+        }
+        
+        let newLength = (textField.text?.characters.count)! + string.characters.count - range.length
+        return newLength <= 50
+    }
+    
     // MARK: - TextView related
     
     func textViewDidBeginEditing(textView: UITextView) {
@@ -735,11 +748,50 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        
+        if (range.length + range.location > textView.text?.characters.count )
+        {
+            return false;
+        }
+        
+        let newLength = (textView.text?.characters.count)! + text.characters.count - range.length
+        return newLength <= 140
+    }
+    
     // MARK: - String related
     // Probably will only be used in Step
     func replaceDoubleQuotes(jsonString: String) -> String {
         return String(jsonString.characters.map{ $0 == "\"" ? "'" : $0 })
     }
+    
+    // Use an UIAlertController to inform user of issue.
+    func alertUser() {
+        
+        // Use the main queue to ensure speed.
+        dispatch_async(dispatch_get_main_queue(), {
+            
+            // Create an instance of UIAlertController.
+            let alertController = UIAlertController(title: "Problem", message: self.alertMessage, preferredStyle: .Alert)
+            
+            // Set the alert message.
+            if let message = self.alertMessage {
+                alertController.message = message
+            }
+            
+            // Create action button with OK button to dismiss alert.
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
+                
+            }
+            
+            // Add the OK action.
+            alertController.addAction(okAction)
+            
+            // Present the alert controller.
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
+    }
+
         
 }
 
