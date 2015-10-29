@@ -122,16 +122,19 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 
                 print("JSON file to share exists: \(jsonFile.fileExists)")
                 
-                var activityItems = [NSData]()
+                let activityItems = [json]
                 
                 // Get the file contents off the hard drive
-                if let data = NSData(contentsOfFile: jsonFile.fullyQualifiedPath) {
+                if let _ = NSData(contentsOfFile: jsonFile.fullyQualifiedPath) {
                     print("Adding the json file to the activityItems array.")
-                    activityItems.append(data)
+                    //activityItems.append(data)
                     
-                    // Set up Activity View Controller
-                    let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-                    self.presentViewController(nextController, animated: true, completion: nil)
+                    // Present UIActivityViewController on main queue.
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        // Set up Activity View Controller
+                        let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+                        self.presentViewController(nextController, animated: true, completion: nil)
+                    })
                 }
             }
         } else {
@@ -528,6 +531,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             }
         case .Unspecified:
             return "PhoneBlack"
+        default:
+            return "PhoneBlack"
         }
     }
     
@@ -726,7 +731,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     func textViewDidBeginEditing(textView: UITextView) {
         if (self.detailsTextView.text == "Add a short description") {
-            self.detailsTextView.text == ""
+            self.detailsTextView.text = ""
         }
     }
     
