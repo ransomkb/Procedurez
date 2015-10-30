@@ -110,17 +110,17 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     //var rawAnimalsJSON = NSData(contentsOfFile: pathForProcedureJSON!)
     func importJSON() {
         print("Importing ProcedureJSON")
+        
         let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
         
-        /* Error object */
-        //var parsingAnimalsError: NSError? = nil
-        
-        /* Parse the data into usable form */
-        let parsedProcedureJSON = try! NSJSONSerialization.JSONObjectWithData(rawProcedureJSON!, options: .AllowFragments) as! NSDictionary
-        
-        //let parsedProcedureJSON = par
-        
-        parseJSONAsDictionary(parsedProcedureJSON)
+        do {
+            /* Parse the data into usable form */
+            let parsedProcedureJSON = try NSJSONSerialization.JSONObjectWithData(rawProcedureJSON!, options: .AllowFragments) as! NSDictionary
+            
+            parseJSONAsDictionary(parsedProcedureJSON)
+        } catch {
+            print("Caught an error while parsing JSON: \(error)")
+        }
     }
     
     

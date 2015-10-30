@@ -17,7 +17,10 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var importTextView: UITextView!
     
     @IBAction func saveJSONString(sender: AnyObject) {
+        JSONString = importTextView.text
+        NetLoader.sharedInstance().json = JSONString
         
+        NetLoader.sharedInstance().importJSON()
     }
     
     override func viewDidLoad() {
