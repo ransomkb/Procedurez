@@ -9,14 +9,40 @@
 import UIKit
 import Foundation
 
-class ImportStringViewController: UIViewController {
+class ImportStringViewController: UIViewController, UITextViewDelegate {
     
     var JSONString: String?
     
     @IBOutlet weak var explanationLabel: UILabel!
-    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var importTextView: UITextView!
     
     @IBAction func saveJSONString(sender: AnyObject) {
         
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Resign first responder when tapping anywhere else.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+        
+        self.importTextView.delegate = self
+        importTextView.text = "Paste Copied JSON Here"
+    }
+    
+    // MARK: - TextView related
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        print("Did Begin Editing")
+        if (self.importTextView.text == "Paste Copied JSON Here") {
+            self.importTextView.text = ""
+        }
+    }
+    
+    func dismissKeyboard() {
+        // Resign the first responder.
+        view.endEditing(true)
+    }
+    
 }

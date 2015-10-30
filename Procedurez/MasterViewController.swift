@@ -49,7 +49,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }()
     
     @IBAction func openSettings(sender: AnyObject) {
+        print("openSettings Action Occurring. Preparing to Show ImportStringViewController")
         
+//        if let split = self.splitViewController {
+//            print("is a splitviewcontroller")
+//            let controllers = split.viewControllers
+//            _ = (controllers[controllers.count-1] as! UINavigationController).topViewController as? ImportStringViewController
+//        }
     }
     
     // seems to be removed from xcode 8
@@ -116,8 +122,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                     detailController.detailItem = step
                 }
             }
-            
-            
         }
         
         // Register the custom cell.
@@ -215,10 +219,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 
                 print("Destination view controller set up")
             }
-        } else if segue.identifier == "showCustomDetail" {
-            print("No segue id called showDetail, but have showCustomDetail.")
-        } else {
-            print("Neither segue identifier is found")
+        } else if segue.identifier == "ShowImportStringController" {
+            print("ShowImportStringController Segue.")
         }
     }
 
