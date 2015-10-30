@@ -12,6 +12,8 @@ import Foundation
 class ImportStringViewController: UIViewController, UITextViewDelegate {
     
     var JSONString: String?
+    var alertMessage: String?
+
     
     @IBOutlet weak var explanationLabel: UILabel!
     @IBOutlet weak var importTextView: UITextView!
@@ -20,7 +22,15 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         JSONString = importTextView.text
         NetLoader.sharedInstance().json = JSONString
         
-        NetLoader.sharedInstance().importJSON()
+        NetLoader.sharedInstance().importJSON(JSONString!) { (success, errorString) -> Void in
+            if success {
+                self.alertMessage = "Import Succeeded"
+                self.alertUser()
+            } else {
+                self.alertMessage = errorString
+                self.alertUser()
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -47,5 +57,34 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         // Resign the first responder.
         view.endEditing(true)
     }
+    
+    
+    // Use an UIAlertController to inform user of issue.
+    func alertUser() {
+        
+        // Use the main queue to ensure speed.
+        dispatch_async(dispatch_get_main_queue(), {
+            
+            // Create an instance of UIAlertController.
+            let alertController = UIAlertController(title: "Alert", message: self.alertMessage, preferredStyle: .Alert)
+            
+            // Set the alert message.
+            if let message = self.alertMessage {
+                alertController.message = message
+            }
+            
+            // Create action button with OK button to dismiss alert.
+            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
+                
+            }
+            
+            // Add the OK action.
+            alertController.addAction(okAction)
+            
+            // Present the alert controller.
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
+    }
+
     
 }

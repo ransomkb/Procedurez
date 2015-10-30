@@ -108,23 +108,40 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     /* Raw JSON data (...simliar to the format you might receive from the network) */
     //var rawAnimalsJSON = NSData(contentsOfFile: pathForProcedureJSON!)
-    func importJSON() {
+    func importJSON(jsonString: String, completionhandler: (success: Bool, errorString: String?) -> Void) {
         print("Importing ProcedureJSON")
         
         let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
         
-        do {
-            /* Parse the data into usable form */
-            let parsedProcedureJSON = try NSJSONSerialization.JSONObjectWithData(rawProcedureJSON!, options: .AllowFragments) as! NSDictionary
+        NetLoader.parseJSONWithCompletionHandler(rawProcedureJSON!) { (parsedResult, error) -> Void in
             
-            parseJSONAsDictionary(parsedProcedureJSON)
-        } catch {
-            print("Caught an error while parsing JSON: \(error)")
+            if let error = error {
+                print("Error in Parsing with rawProcedureJSON data.")
+                completionhandler(success: false, errorString: error.localizedDescription)
+            } else {
+                print("Parsed JSON data successfully.")
+                self.parseJSONAsDictionary(parsedResult as! NSDictionary, completionhandler: { (success, errorString) -> Void in
+                    if let error = errorString {
+                        completionhandler(success: false, errorString: error)
+                    } else {
+                        completionhandler(success: true, errorString: nil)
+                    }
+                })
+            }
         }
+        
+//        do {
+//            /* Parse the data into usable form */
+//            let parsedProcedureJSON = try NSJSONSerialization.JSONObjectWithData(rawProcedureJSON!, options: .AllowFragments) as! NSDictionary
+//            
+//            parseJSONAsDictionary(parsedProcedureJSON)
+//        } catch {
+//            print("Caught an error while parsing JSON: \(error)")
+//        }
     }
     
     
-    func parseJSONAsDictionary(dict: NSDictionary) {
+    func parseJSONAsDictionary(dict: NSDictionary, completionhandler: (success: Bool, errorString: String?) -> Void) {
         /* Start playing with JSON here... */
         let dictionary = dict as! [String: AnyObject]
         
@@ -148,6 +165,15 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             let sArray = st as! [[String: AnyObject]]
             print("Array of Steps: \(sArray)")
         }
+        
+        completionhandler(success: true, errorString: nil)
+        
+//        if let error = errorString as String {
+//            print("Error in Parsing with rawProcedureJSON data.")
+//            completionhandler(success: false, errorString: error.localized)
+//        } else {
+//            print("Parsed JSON data successfully.")
+//        }
         
     }
 

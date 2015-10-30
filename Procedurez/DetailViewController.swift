@@ -104,6 +104,14 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             let json = procedure.getJSONDictionary()
             print(json)
             
+            let activityItems = [json]
+            
+            // Present UIActivityViewController on main queue.
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                // Set up Activity View Controller
+                let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+                self.presentViewController(nextController, animated: true, completion: nil)
+            })
             
             print("json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(json))")
             
@@ -126,21 +134,16 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 
                 // IMPORTANT: Practice with importing, too. Change this when all is working.
                 NetLoader.sharedInstance().json = json
-                NetLoader.sharedInstance().importJSON()
+                //NetLoader.sharedInstance().importJSON()
                 
-                let activityItems = [json]
+                
                 
                 // Get the file contents off the hard drive
                 if let _ = NSData(contentsOfFile: jsonFile.fullyQualifiedPath) {
                     print("Adding the json file to the activityItems array.")
                     //activityItems.append(data)
                     
-                    // Present UIActivityViewController on main queue.
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        // Set up Activity View Controller
-                        let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-                        self.presentViewController(nextController, animated: true, completion: nil)
-                    })
+                   
                 }
             }
         } else {
