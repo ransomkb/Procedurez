@@ -120,10 +120,16 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 completionhandler(success: false, errorString: error.localizedDescription)
             } else {
                 print("Parsed JSON data successfully.")
-                self.parseJSONAsDictionary(parsedResult as! NSDictionary, completionhandler: { (success, errorString) -> Void in
+                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, completionhandler: { (success, errorString) -> Void in
                     if let error = errorString {
                         completionhandler(success: false, errorString: error)
                     } else {
+                        do {
+                            try self.sharedContext.save()
+                        } catch {
+                            fatalError("Failure to save context: \(error)")
+                        }
+
                         completionhandler(success: true, errorString: nil)
                     }
                 })
@@ -141,32 +147,87 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     
-    func parseJSONAsDictionary(dict: NSDictionary, completionhandler: (success: Bool, errorString: String?) -> Void) {
+    func parseJSONAsDictionary(dict: NSDictionary, parent: Step?, completionhandler: (success: Bool, errorString: String?) -> Void) {
         /* Start playing with JSON here... */
+        print("Parsing a JSON Dictionary to creat a Step in a Procedure.")
+        
         let dictionary = dict as! [String: AnyObject]
         
         if let title = dictionary["title"] {
             print("Title: \(title)")
+            
+            if let details = dictionary["details"] {
+                print("Details: \(details)")
+                
+                if let sectionIdentifier = dictionary["sectionIdentifier"] {
+                    print("SectionIdentifier: \(sectionIdentifier)")
+                    
+                    if let position = dictionary["position"] {
+                        print("Position: \(position)")
+                        if let st = dictionary["steps"] {
+                         // Get Main Queue for context.
+                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                
+                                let step = Step(dictionary: dictionary, context: self.sharedContext)
+                                
+                                if let p = parent {
+                                    step.parent = p
+                                }
+                                
+                                let sArray = st as! [[String: AnyObject]]
+                                // print("Array of Steps: \(sArray)")
+                                
+                                for d in sArray {
+                                    self.parseJSONAsDictionary(d, parent: step, completionhandler: { (success, errorString) -> Void in
+                                        if success {
+                                            print("Made a Step")
+                                        } else {
+                                            print("Had an error")
+                                        }
+                                    })
+                                }
+                                
+                                
+                                // Create a Photo class and entity value for each photo in the array using its dictionary.
+                                //                            _ = sArray.map() {(dictionary: [String : AnyObject]) -> Step in
+                                //
+                                //
+                                //                                // Set the pin variable in photo to that passed through this function.
+                                //                                photo.pin = pin
+                                //                                print("Photo image path: \(photo.imagePath)")
+                                //                                return step
+                                //                            }
+                                
+                                // IMPORTANT: uncomment this to save context, after finish iterating stuff.
+                                //                            do {
+                                //                                try self.sharedContext.save()
+                                //                            } catch {
+                                //                                fatalError("Failure to save context: \(error)")
+                                //                            }
+                            })
+                            
+                            completionhandler(success: true, errorString: nil)
+                        } else {
+                            let eString = "Dictionary had no steps key."
+                            completionhandler(success: false, errorString: eString)
+                        }
+                    } else {
+                        let eString = "Dictionary had no position key."
+                        completionhandler(success: false, errorString: eString)
+                    }
+                } else {
+                    let eString = "Dictionary had no sectionIdentifier key."
+                    completionhandler(success: false, errorString: eString)
+                }
+            } else {
+                let eString = "Dictionary had no details key."
+                completionhandler(success: false, errorString: eString)
+            }
+        } else {
+            let eString = "Dictionary had no title key."
+            completionhandler(success: false, errorString: eString)
         }
         
-        if let details = dictionary["details"] {
-            print("Details: \(details)")
-        }
-        
-        if let sectionIdentifier = dictionary["sectionIdentifier"] {
-            print("SectionIdentifier: \(sectionIdentifier)")
-        }
-        
-        if let position = dictionary["position"] {
-            print("Position: \(position)")
-        }
-        
-        if let st = dictionary["steps"] {
-            let sArray = st as! [[String: AnyObject]]
-            print("Array of Steps: \(sArray)")
-        }
-        
-        completionhandler(success: true, errorString: nil)
         
 //        if let error = errorString as String {
 //            print("Error in Parsing with rawProcedureJSON data.")

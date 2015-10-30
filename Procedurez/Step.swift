@@ -71,7 +71,7 @@ class Step: NSManagedObject {
 
         // IMPORTANT: maybe this should be an integer in json
         if let pos = dictionary[Keys.Position] {
-            position = Int32(pos as! String)!
+            position = Int32(pos as! Int)
         }
         //position = 1 //dictionary[Keys.Position] as! Int
         title = dictionary[Keys.Title] as! String
