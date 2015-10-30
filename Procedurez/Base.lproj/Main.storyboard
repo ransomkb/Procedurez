@@ -318,6 +318,118 @@
             </objects>
             <point key="canvasLocation" x="-45" y="129"/>
         </scene>
+        <!--Import String View Controller-->
+        <scene sceneID="N94-IG-yh7">
+            <objects>
+                <viewController storyboardIdentifier="ImportStringViewController" id="KAt-fE-U0m" customClass="ImportStringViewController" customModule="Procedurez" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vFF-ce-RFz"/>
+                        <viewControllerLayoutGuide type="bottom" id="tPc-nT-wyW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZjW-EE-XSz">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Past Copied JSON Here" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="7bE-nb-DlA">
+                                <rect key="frame" x="20" y="155" width="560" height="425"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.88801681600000004" green="0.98073802180000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNw-fg-Zsd">
+                                <rect key="frame" x="20" y="20" width="46" height="30"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="Qfg-S4-4ZG"/>
+                                </constraints>
+                                <state key="normal" title="Save"/>
+                                <connections>
+                                    <action selector="saveJSONString:" destination="KAt-fE-U0m" eventType="touchUpInside" id="UuV-L8-kFz"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pda-55-pPG">
+                                <rect key="frame" x="503" y="20" width="77" height="30"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="77" id="uBX-O8-kHh"/>
+                                </constraints>
+                                <state key="normal" title="Down Load"/>
+                                <connections>
+                                    <segue destination="5E9-WY-nMy" kind="show" identifier="ShowWebView" id="5EL-hM-8EJ"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Import Explanation" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FxM-dw-5rh">
+                                <rect key="frame" x="74" y="29" width="421" height="118"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="118" id="enH-CO-roy"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="iNw-fg-Zsd" firstAttribute="leading" secondItem="ZjW-EE-XSz" secondAttribute="leadingMargin" id="4py-aG-war"/>
+                            <constraint firstItem="Pda-55-pPG" firstAttribute="leading" secondItem="FxM-dw-5rh" secondAttribute="trailing" constant="8" symbolic="YES" id="6JG-3l-a6r"/>
+                            <constraint firstItem="Pda-55-pPG" firstAttribute="trailing" secondItem="ZjW-EE-XSz" secondAttribute="trailingMargin" id="7Gb-BZ-gJc"/>
+                            <constraint firstItem="FxM-dw-5rh" firstAttribute="leading" secondItem="iNw-fg-Zsd" secondAttribute="trailing" constant="8" symbolic="YES" id="AJ4-y8-SQa"/>
+                            <constraint firstItem="iNw-fg-Zsd" firstAttribute="baseline" secondItem="Pda-55-pPG" secondAttribute="baseline" id="MKU-FU-lxN"/>
+                            <constraint firstItem="iNw-fg-Zsd" firstAttribute="top" secondItem="vFF-ce-RFz" secondAttribute="bottom" id="PA4-RJ-NbQ"/>
+                            <constraint firstItem="7bE-nb-DlA" firstAttribute="trailing" secondItem="Pda-55-pPG" secondAttribute="trailing" id="PlH-pT-oG8"/>
+                            <constraint firstItem="FxM-dw-5rh" firstAttribute="top" secondItem="vFF-ce-RFz" secondAttribute="bottom" constant="9" id="TLC-gf-RFV"/>
+                            <constraint firstItem="7bE-nb-DlA" firstAttribute="top" secondItem="FxM-dw-5rh" secondAttribute="bottom" constant="8" symbolic="YES" id="Yfc-GJ-28x"/>
+                            <constraint firstItem="iNw-fg-Zsd" firstAttribute="leading" secondItem="7bE-nb-DlA" secondAttribute="leading" id="dhk-84-ghc"/>
+                            <constraint firstAttribute="bottom" secondItem="7bE-nb-DlA" secondAttribute="bottom" constant="20" symbolic="YES" id="kha-Xr-gwT"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="explanationLabel" destination="FxM-dw-5rh" id="NBY-Hj-IAS"/>
+                        <outlet property="textView" destination="7bE-nb-DlA" id="vvH-e4-BNU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aaw-qI-Mn4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-45" y="953"/>
+        </scene>
+        <!--Web View Controller-->
+        <scene sceneID="fmg-cY-38K">
+            <objects>
+                <viewController storyboardIdentifier="WebViewController" id="5E9-WY-nMy" customClass="WebViewController" customModule="Procedurez" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cWF-fN-j4z"/>
+                        <viewControllerLayoutGuide type="bottom" id="a0F-Pu-Mdb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="a72-5s-ckc">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tr9-3k-HNq">
+                                <rect key="frame" x="20" y="28" width="560" height="552"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                            </webView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tr9-3k-HNq" firstAttribute="trailing" secondItem="a72-5s-ckc" secondAttribute="trailingMargin" id="0cM-vq-3hL"/>
+                            <constraint firstItem="tr9-3k-HNq" firstAttribute="leading" secondItem="a72-5s-ckc" secondAttribute="leadingMargin" id="EwE-M4-8JB"/>
+                            <constraint firstAttribute="bottom" secondItem="tr9-3k-HNq" secondAttribute="bottom" constant="20" symbolic="YES" id="HKS-at-ygv"/>
+                            <constraint firstItem="tr9-3k-HNq" firstAttribute="top" secondItem="cWF-fN-j4z" secondAttribute="bottom" constant="8" symbolic="YES" id="gP1-rn-kwf"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="tr9-3k-HNq" id="SYS-6L-zNV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Sa-AV-885" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="709" y="953"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="4a9-F0-4nZ"/>

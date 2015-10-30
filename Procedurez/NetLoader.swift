@@ -109,13 +109,16 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     /* Raw JSON data (...simliar to the format you might receive from the network) */
     //var rawAnimalsJSON = NSData(contentsOfFile: pathForProcedureJSON!)
     func importJSON() {
-        let rawAnimalsJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
+        print("Importing ProcedureJSON")
+        let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
         
         /* Error object */
         //var parsingAnimalsError: NSError? = nil
         
         /* Parse the data into usable form */
-        let parsedProcedureJSON = try! NSJSONSerialization.JSONObjectWithData(rawAnimalsJSON!, options: .AllowFragments) as! NSDictionary
+        let parsedProcedureJSON = try! NSJSONSerialization.JSONObjectWithData(rawProcedureJSON!, options: .AllowFragments) as! NSDictionary
+        
+        //let parsedProcedureJSON = par
         
         parseJSONAsDictionary(parsedProcedureJSON)
     }
@@ -126,24 +129,24 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         let dictionary = dict as! [String: AnyObject]
         
         if let title = dictionary["title"] {
-            print(title)
+            print("Title: \(title)")
         }
         
         if let details = dictionary["details"] {
-            print(details)
+            print("Details: \(details)")
         }
         
         if let sectionIdentifier = dictionary["sectionIdentifier"] {
-            print(sectionIdentifier)
+            print("SectionIdentifier: \(sectionIdentifier)")
         }
         
         if let position = dictionary["position"] {
-            print(position)
+            print("Position: \(position)")
         }
         
         if let st = dictionary["steps"] {
             let sArray = st as! [[String: AnyObject]]
-            print(sArray)
+            print("Array of Steps: \(sArray)")
         }
         
     }

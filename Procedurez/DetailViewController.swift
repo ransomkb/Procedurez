@@ -124,6 +124,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 
                 print("JSON file to share exists: \(jsonFile.fileExists)")
                 
+                // IMPORTANT: Practice with importing, too. Change this when all is working.
+                NetLoader.sharedInstance().json = json
+                NetLoader.sharedInstance().importJSON()
+                
                 let activityItems = [json]
                 
                 // Get the file contents off the hard drive
