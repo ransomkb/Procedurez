@@ -16,7 +16,9 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     var session: NSURLSession
     var searchTask: NSURLSessionDataTask?
-    var alertMessage: String?
+    var alertMessage: String = ""
+    
+    var json: String?
     
     // Computed property for a shared context of Core Data.
     var sharedContext: NSManagedObjectContext {
@@ -98,6 +100,54 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         // Return original error as there was no json data.
         return error
     }
+    
+    // MARK: - JSONParsing stuff
+    
+    /* Path for JSON files bundled with the Playground */
+    //var pathForProcedureJSON = NSBundle.mainBundle().pathForResource("Text Field JSON 1", ofType: "json")
+    
+    /* Raw JSON data (...simliar to the format you might receive from the network) */
+    //var rawAnimalsJSON = NSData(contentsOfFile: pathForProcedureJSON!)
+    func importJSON() {
+        let rawAnimalsJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        /* Error object */
+        //var parsingAnimalsError: NSError? = nil
+        
+        /* Parse the data into usable form */
+        let parsedProcedureJSON = try! NSJSONSerialization.JSONObjectWithData(rawAnimalsJSON!, options: .AllowFragments) as! NSDictionary
+        
+        parseJSONAsDictionary(parsedProcedureJSON)
+    }
+    
+    
+    func parseJSONAsDictionary(dict: NSDictionary) {
+        /* Start playing with JSON here... */
+        let dictionary = dict as! [String: AnyObject]
+        
+        if let title = dictionary["title"] {
+            print(title)
+        }
+        
+        if let details = dictionary["details"] {
+            print(details)
+        }
+        
+        if let sectionIdentifier = dictionary["sectionIdentifier"] {
+            print(sectionIdentifier)
+        }
+        
+        if let position = dictionary["position"] {
+            print(position)
+        }
+        
+        if let st = dictionary["steps"] {
+            let sArray = st as! [[String: AnyObject]]
+            print(sArray)
+        }
+        
+    }
+
 
 
     // Parse JSON data using a completion handler to return the results.
