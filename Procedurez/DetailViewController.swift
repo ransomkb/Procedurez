@@ -165,6 +165,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         titleLabel.text = self.detailItem?.title
         detailsLabel.text = self.detailItem?.details
         
+        updatePositions()
+        
         // Save the context.
         var error: NSError? = nil
         do {
@@ -178,7 +180,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         
         self.tableView.editing = false
-        updatePositions()
+        //updatePositions()
         hideUI()
     }
     
@@ -232,7 +234,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             hideUI()
         }
         
-        updatePositions()
+        //updatePositions()
         print("Detail View will appear: end")
     }
     
@@ -419,11 +421,11 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             let context = self.fetchedResultsController.managedObjectContext
             context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
             
+            updatePositions()
             
             var error: NSError? = nil
             do {
                 try context.save()
-                updatePositions()
             } catch let error1 as NSError {
                 error = error1
                 // Replace this implementation with code to handle the error appropriately.
@@ -445,18 +447,18 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             steps.insert(step, atIndex: destinationIndexPath.row)
             
             //updatePositions()
-//            var iter : Int32 = 0
-//            for step in steps as! [Step] {
-//                print("Step array position: \(iter)")
-//                print("Step title: \(step.title)")
-//                step.position = iter
-//                ++iter
-//            }
+            var iter : Int32 = 0
+            for step in steps as! [Step] {
+                print("Step array position: \(iter)")
+                print("Step title: \(step.title)")
+                step.position = iter
+                ++iter
+            }
             
             var error: NSError? = nil
             do {
                 try self.managedObjectContext!.save()
-                updatePositions()
+                //updatePositions()
             } catch let error1 as NSError {
                 error = error1
                 // Replace this implementation with code to handle the error appropriately.
