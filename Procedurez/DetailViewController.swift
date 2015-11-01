@@ -110,6 +110,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 // Set up Activity View Controller
                 let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+                nextController.popoverPresentationController?.sourceView = self.view
+                nextController.popoverPresentationController?.sourceRect = sender.frame
                 self.presentViewController(nextController, animated: true, completion: nil)
             })
             
