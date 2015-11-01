@@ -215,6 +215,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         self.titleTextField.delegate = self
         self.detailsTextView.delegate = self
         
+        self.titleTextField.autocapitalizationType = UITextAutocapitalizationType.Words
         self.tableView.separatorStyle = .None
         
         self.configureView()
@@ -756,6 +757,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     func textViewDidBeginEditing(textView: UITextView) {
         if (self.detailsTextView.text == "Add a short description") {
             self.detailsTextView.text = ""
+            
         }
     }
     
