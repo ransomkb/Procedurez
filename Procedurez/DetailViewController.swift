@@ -111,7 +111,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 // Set up Activity View Controller
                 let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
                 nextController.popoverPresentationController?.sourceView = self.view
-                nextController.popoverPresentationController?.sourceRect = sender.frame
+                //nextController.popoverPresentationController?.sourceRect = sender.frame
                 self.presentViewController(nextController, animated: true, completion: nil)
             })
             
