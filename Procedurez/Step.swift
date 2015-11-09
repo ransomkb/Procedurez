@@ -131,7 +131,7 @@ class Step: NSManagedObject {
     
     // MARK: - String related
     func replaceDoubleQuotes(jsonString: String) -> String {
-        return String(jsonString.characters.map{ $0 == "\"" ? "'" : $0 })
+        return String(jsonString.characters.map{ $0 == "\"" ? "\'" : $0 })
     }
     
 }

@@ -396,12 +396,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         // Remove the selection highlighting.
         cell.selectionStyle = .None
         
-        //if !object.done {
-            //if indexPath.row == 0 || indexPath.row > 3 {
-                cell.textLabel?.textColor = UIColor.whiteColor()
-                cell.detailTextLabel?.textColor = UIColor.whiteColor()
-            //}
-        //}
+        cell.textLabel?.textColor = UIColor.whiteColor()
+        cell.detailTextLabel?.textColor = UIColor.whiteColor()
         
         cell.textLabel?.text = object.valueForKey("title")!.description
         cell.detailTextLabel?.text = object.valueForKey("details")?.description

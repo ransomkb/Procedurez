@@ -75,10 +75,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         splitViewController?.delegate = self
         
-        let testFile = FileSaveHelper(fileName: "testFile", fileExtension: .TXT, subDirectory: "SavingFiles", directory: .DocumentDirectory)
-        print("Directory Exists: \(testFile.directoryExists)")
-        print("File Exists: \(testFile.fileExists)")
-        
+//        let testFile = FileSaveHelper(fileName: "testFile", fileExtension: .TXT, subDirectory: "SavingFiles", directory: .DocumentDirectory)
+//        print("Directory Exists: \(testFile.directoryExists)")
+//        print("File Exists: \(testFile.fileExists)")
         
         if let fetched = self.fetchedResultsController.fetchedObjects {
             if fetched.count <= 0 {
@@ -111,7 +110,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
             
-            
             if let detailController = self.detailViewController {
                 detailController.managedObjectContext = self.managedObjectContext
                 
@@ -143,14 +141,16 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
         
-        let fileText = "Saved a file in Swift!"
-        do {
-            try testFile.saveFile(string: fileText)
-        } catch {
-            print(error)
-        }
+//        let fileText = "Saved a file in Swift!"
+//        do {
+//            try testFile.saveFile(string: fileText)
+//        } catch {
+//            print(error)
+//        }
         
-        print("File Exists: \(testFile.fileExists)")
+        //print("File Exists: \(testFile.fileExists)")
+        
+        checkInstructions()
         
         print("Master View Did Load: End")
     }
@@ -201,6 +201,34 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
 
+    func checkInstructions() {
+        if let _ = fetchedResultsController.fetchedObjects {
+            for p in fetchedResultsController.fetchedObjects as! [Step] {
+                
+                if p.title == "How to Use This App" {
+                    print("Instructions are already loaded.")
+                    return
+                }
+            }
+        }
+        
+        // Load the Instructions.
+        let jsonData = NetLoader.Caches.procedureCache.dataWithIdentifier("LoadMe")!
+        print("Master has jsonData from LoadMe file: ") // \(jsonData)
+        NetLoader.sharedInstance().loadHowTo(jsonData) { (success, errorString) -> Void in
+            if success {
+                let successMessage = "Master: Could load jsonData into Core Data"
+                print(successMessage)
+                self.alertMessage = successMessage
+                self.alertUser()
+            } else {
+                let errorMessage = "Master: Error loading jsonData: \(errorString)"
+                print(errorMessage)
+                self.alertMessage = errorMessage
+                self.alertUser()
+            }
+        }
+    }
     
     
     // MARK: - Segues
@@ -465,7 +493,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     func alertUser() {
         
         // Create an instance of alert controller.
-        let alertController = UIAlertController(title: "Add Procedure", message: "Enter the Name", preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Add Procedure", message: self.alertMessage, preferredStyle: .Alert)
         
         
         // Set up an OK action button on alert.

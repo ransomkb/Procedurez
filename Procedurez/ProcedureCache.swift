@@ -21,20 +21,31 @@ class ProcedureCache {
             return nil
         }
         
-        let path = pathForIdentifier(identifier!)
-        print("Getting procedure with identifier: \(path)")
-        
-        // why do we need this?
-        //var data: NSData?
+        if let path = pathForIdentifier(identifier!) {
+            print("Getting procedure with identifier: \(path)")
+            
+            do {
+                let jsonData = try NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe)
+                print("Got the jsonData from the file.")
+                
+                return jsonData
+            } catch {
+                print("Caught error when fetching jsonData from path: \(error)")
+                return nil
+            }
         
         // First try the memory cache
-        if let dataJson = inMemoryCache.objectForKey(path) as? NSData {
-            return dataJson
-        }
+//        if let dataJson = inMemoryCache.objectForKey(path) as? NSData {
+//            print("Found the data in the cache.")
+//            return dataJson
+//        }
         
         // Next Try the hard drive
-        if let data = NSData(contentsOfFile: path) {
-            return data
+//        if let data = NSData(contentsOfFile: path) {
+//            print("Found the data on the hard drive.")
+//            return data
+//        }
+            
         }
         
         return nil
@@ -52,9 +63,10 @@ class ProcedureCache {
         if data == nil {
             
             print("Removing the object at path: \(path)")
-            inMemoryCache.removeObjectForKey(path)
+            inMemoryCache.removeObjectForKey(path!)
             do {
-                try NSFileManager.defaultManager().removeItemAtPath(path)
+                // Maybe change this to nsbundle
+                try NSFileManager.defaultManager().removeItemAtPath(path!)
                 } catch {
                     print("Caught error when removing data: \(error)")
             }
@@ -62,19 +74,23 @@ class ProcedureCache {
         }
         
         // Otherwise, keep the image in memory
-        inMemoryCache.setObject(data!, forKey: path)
+        inMemoryCache.setObject(data!, forKey: path!)
         
         // And in documents directory
         //let data = UIImagePNGRepresentation(image!)
-        data!.writeToFile(path, atomically: true)
+        data!.writeToFile(path!, atomically: true)
     }
     
     // MARK: - Helper
     
-    func pathForIdentifier(identifier: String) -> String {
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! //as! NSURL
-        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
+    func pathForIdentifier(identifier: String) -> String? {
+//        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! //as! NSURL
+//        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
         
-        return fullURL.path!
+        if let path = NSBundle.mainBundle().pathForResource(identifier, ofType: "json") {
+            return path
+        }
+        
+        return nil
     }
 }

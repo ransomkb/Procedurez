@@ -103,17 +103,12 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: - JSONParsing stuff
     
-    /* Path for JSON files bundled with the Playground */
-    //var pathForProcedureJSON = NSBundle.mainBundle().pathForResource("Text Field JSON 1", ofType: "json")
-    
-    /* Raw JSON data (...simliar to the format you might receive from the network) */
-    //var rawAnimalsJSON = NSData(contentsOfFile: pathForProcedureJSON!)
-    func importJSON(jsonString: String, completionhandler: (success: Bool, errorString: String?) -> Void) {
-        print("Importing ProcedureJSON")
+    // IMPORTANT: get the LoadMe file from the bundle. parse the jason and set the first how to.
+    func loadHowTo(jsonData: NSData, completionhandler: (success: Bool, errorString: String?) -> Void) {
         
-        let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
+        print("Trying to load How to Use Procedure.")
         
-        NetLoader.parseJSONWithCompletionHandler(rawProcedureJSON!) { (parsedResult, error) -> Void in
+        NetLoader.parseJSONWithCompletionHandler(jsonData) { (parsedResult, error) -> Void in
             
             if let error = error {
                 print("Error in Parsing with rawProcedureJSON data.")
@@ -129,12 +124,58 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                         } catch {
                             fatalError("Failure to save context: \(error)")
                         }
-
+                        
                         completionhandler(success: true, errorString: nil)
                     }
                 })
             }
         }
+
+    }
+    
+    /* Path for JSON files bundled with the Playground */
+    //var pathForProcedureJSON = NSBundle.mainBundle().pathForResource("Text Field JSON 1", ofType: "json")
+    
+    
+    /* Raw JSON data (...simliar to the format you might receive from the network) */
+    //var rawAnimalsJSON = NSData(contentsOfFile: pathForProcedureJSON!)
+    
+    
+    func importJSON(jsonString: String, completionhandler: (success: Bool, errorString: String?) -> Void) {
+        print("Importing ProcedureJSON")
+        
+        let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        self.loadHowTo(rawProcedureJSON!) { (success, errorString) -> Void in
+            if success {
+                completionhandler(success: true, errorString: nil)
+            } else {
+                completionhandler(success: false, errorString: errorString)
+            }
+        }
+        
+//        NetLoader.parseJSONWithCompletionHandler(rawProcedureJSON!) { (parsedResult, error) -> Void in
+//            
+//            if let error = error {
+//                print("Error in Parsing with rawProcedureJSON data.")
+//                completionhandler(success: false, errorString: error.localizedDescription)
+//            } else {
+//                print("Parsed JSON data successfully.")
+//                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, completionhandler: { (success, errorString) -> Void in
+//                    if let error = errorString {
+//                        completionhandler(success: false, errorString: error)
+//                    } else {
+//                        do {
+//                            try self.sharedContext.save()
+//                        } catch {
+//                            fatalError("Failure to save context: \(error)")
+//                        }
+//
+//                        completionhandler(success: true, errorString: nil)
+//                    }
+//                })
+//            }
+//        }
         
 //        do {
 //            /* Parse the data into usable form */

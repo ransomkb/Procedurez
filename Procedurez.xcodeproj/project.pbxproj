@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D400BC851BF052E50035BC70 /* LoadMe.json in Resources */ = {isa = PBXBuildFile; fileRef = D400BC841BF052E50035BC70 /* LoadMe.json */; };
 		D40D23F41B9951A3007D2F44 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D23F31B9951A3007D2F44 /* AppDelegate.swift */; };
 		D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D40D23F51B9951A3007D2F44 /* Procedurez.xcdatamodeld */; };
 		D40D23F91B9951A3007D2F44 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D23F81B9951A3007D2F44 /* MasterViewController.swift */; };
@@ -70,6 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D400BC841BF052E50035BC70 /* LoadMe.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LoadMe.json; sourceTree = "<group>"; };
 		D40D23EE1B9951A3007D2F44 /* Procedurez.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Procedurez.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40D23F21B9951A3007D2F44 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D40D23F31B9951A3007D2F44 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				D4BC9D1F1BBA6FEE00527235 /* RepeaterImages */,
 				D40D23FF1B9951A3007D2F44 /* Images.xcassets */,
 				D40D23F21B9951A3007D2F44 /* Info.plist */,
+				D400BC841BF052E50035BC70 /* LoadMe.json */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				D4BC9D4F1BBA6FEE00527235 /* RepeatersLaunch640x960.png in Resources */,
 				D4BC9D561BBA6FEE00527235 /* RepSpot58G.png in Resources */,
 				D4BC9D4C1BBA6FEE00527235 /* Repeaters57G.png in Resources */,
+				D400BC851BF052E50035BC70 /* LoadMe.json in Resources */,
 				D4BC9D511BBA6FEE00527235 /* RepPadLaunch768.png in Resources */,
 				D4BC9D501BBA6FEE00527235 /* RepLaunch4inch.png in Resources */,
 				D4BC9D441BBA6FEE00527235 /* PhoneBlue.png in Resources */,
