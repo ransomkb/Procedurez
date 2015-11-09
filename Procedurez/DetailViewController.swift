@@ -775,7 +775,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     // MARK: - String related
     // Probably will only be used in Step
     func replaceDoubleQuotes(jsonString: String) -> String {
-        return String(jsonString.characters.map{ $0 == "\"" ? "'" : $0 })
+        return String(jsonString.characters.map{ $0 == "\"" ? "\'" : $0 })
     }
     
     // Use an UIAlertController to inform user of issue.
