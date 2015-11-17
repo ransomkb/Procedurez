@@ -19,6 +19,8 @@
 		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
 		D40D24221B9D5914007D2F44 /* Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D24211B9D5914007D2F44 /* Procedure.swift */; };
 		D40D24241B9D7422007D2F44 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D24231B9D7422007D2F44 /* TableViewCell.swift */; };
+		D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */; };
+		D43CCDD41BF0E3200054BB9B /* ParseProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */; };
 		D44CF41D1BDC9039009E31FB /* FileSaveHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */; };
 		D46334311BE316DC00442F24 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334301BE316DC00442F24 /* WebViewController.swift */; };
 		D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334321BE3171A00442F24 /* ImportStringViewController.swift */; };
@@ -87,6 +89,8 @@
 		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D40D24211B9D5914007D2F44 /* Procedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Procedure.swift; sourceTree = "<group>"; };
 		D40D24231B9D7422007D2F44 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaTableViewController.swift; sourceTree = "<group>"; };
+		D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseProcedure.swift; sourceTree = "<group>"; };
 		D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSaveHelper.swift; sourceTree = "<group>"; };
 		D46334301BE316DC00442F24 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		D46334321BE3171A00442F24 /* ImportStringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportStringViewController.swift; sourceTree = "<group>"; };
@@ -210,6 +214,7 @@
 			children = (
 				D40D23F51B9951A3007D2F44 /* Procedurez.xcdatamodeld */,
 				D40D241D1B9D3080007D2F44 /* Step.swift */,
+				D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */,
 				D4A958021BE0A92B00C5B7FF /* NetLoader.swift */,
 				D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */,
 				D4BC9D581BBA787E00527235 /* PhoneCellImage.swift */,
@@ -241,6 +246,7 @@
 				D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */,
 				D46334301BE316DC00442F24 /* WebViewController.swift */,
 				D46334321BE3171A00442F24 /* ImportStringViewController.swift */,
+				D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -412,6 +418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D43CCDD41BF0E3200054BB9B /* ParseProcedure.swift in Sources */,
 				D4A958091BE0CE4000C5B7FF /* ProcedureCache.swift in Sources */,
 				D44CF41D1BDC9039009E31FB /* FileSaveHelper.swift in Sources */,
 				D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */,
@@ -428,6 +435,7 @@
 				D4A958051BE0A93C00C5B7FF /* NetLoaderConstants.swift in Sources */,
 				D4DA19CA1BAE4E2700E62391 /* DetailViewController.swift in Sources */,
 				D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */,
+				D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */,
 				D46334311BE316DC00442F24 /* WebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

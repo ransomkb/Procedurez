@@ -13,7 +13,8 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     
     var JSONString: String?
     var alertMessage: String?
-
+    
+    //var isSegue: Bool = false
     
     @IBOutlet weak var explanationLabel: UILabel!
     @IBOutlet weak var importTextView: UITextView!
@@ -42,6 +43,26 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         
         self.importTextView.delegate = self
         importTextView.text = "Paste Copied JSON Here"
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if NetLoader.sharedInstance().isSegue {
+            print("Segued to ImportString via Cell")
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+                NetLoader.sharedInstance().searchParse({ (success, errorString) -> Void in
+                    if success {
+                        print("Got the Procedure Steps")
+                        self.importTextView.text = NetLoader.sharedInstance().parseProcedure?.steps
+                    } else {
+                        print(errorString)
+                    }
+                })
+            }
+        } else {
+            print("Segued to ImportString via Add button")
+        }
     }
     
     // MARK: - TextView related

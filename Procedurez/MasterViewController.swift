@@ -51,11 +51,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     @IBAction func openSettings(sender: AnyObject) {
         print("openSettings Action Occurring. Preparing to Show ImportStringViewController")
         
-//        if let split = self.splitViewController {
-//            print("is a splitviewcontroller")
-//            let controllers = split.viewControllers
-//            _ = (controllers[controllers.count-1] as! UINavigationController).topViewController as? ImportStringViewController
-//        }
+        let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
+        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
+        masterNavigationController.pushViewController(controller, animated: true)
     }
     
     // seems to be removed from xcode 8
@@ -247,8 +245,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 
                 print("Destination view controller set up")
             }
-        } else if segue.identifier == "ShowImportStringController" {
-            print("ShowImportStringController Segue.")
         }
     }
 
