@@ -28,6 +28,7 @@
 		D4A958051BE0A93C00C5B7FF /* NetLoaderConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */; };
 		D4A958071BE0AE3A00C5B7FF /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */; };
 		D4A958091BE0CE4000C5B7FF /* ProcedureCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958081BE0CE4000C5B7FF /* ProcedureCache.swift */; };
+		D4B42A0C1C040F450027687B /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B42A0B1C040F450027687B /* Reachability.swift */; };
 		D4BC9D1E1BBA6B5F00527235 /* StepChildSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC9D1D1BBA6B5F00527235 /* StepChildSection.swift */; };
 		D4BC9D3C1BBA6FEE00527235 /* PadBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D201BBA6FEE00527235 /* PadBlack.png */; };
 		D4BC9D3D1BBA6FEE00527235 /* PadBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D211BBA6FEE00527235 /* PadBlue.png */; };
@@ -98,6 +99,7 @@
 		D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetLoaderConstants.swift; sourceTree = "<group>"; };
 		D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		D4A958081BE0CE4000C5B7FF /* ProcedureCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcedureCache.swift; sourceTree = "<group>"; };
+		D4B42A0B1C040F450027687B /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		D4BC9D1D1BBA6B5F00527235 /* StepChildSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepChildSection.swift; sourceTree = "<group>"; };
 		D4BC9D201BBA6FEE00527235 /* PadBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PadBlack.png; sourceTree = "<group>"; };
 		D4BC9D211BBA6FEE00527235 /* PadBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PadBlue.png; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				D4A958081BE0CE4000C5B7FF /* ProcedureCache.swift */,
 				D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */,
 				D40D23F31B9951A3007D2F44 /* AppDelegate.swift */,
+				D4B42A0B1C040F450027687B /* Reachability.swift */,
 				D40D23F81B9951A3007D2F44 /* MasterViewController.swift */,
 				D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */,
 				D40D24231B9D7422007D2F44 /* TableViewCell.swift */,
@@ -436,6 +439,7 @@
 				D4DA19CA1BAE4E2700E62391 /* DetailViewController.swift in Sources */,
 				D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */,
 				D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */,
+				D4B42A0C1C040F450027687B /* Reachability.swift in Sources */,
 				D46334311BE316DC00442F24 /* WebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

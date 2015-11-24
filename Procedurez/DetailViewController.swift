@@ -182,7 +182,9 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         
         self.tableView.editing = false
-        //updatePositions()
+        
+        titleTextField.resignFirstResponder()
+        detailsTextView.resignFirstResponder()
         hideUI()
     }
     
@@ -384,6 +386,11 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("This cell object has title: \(object.title)")
         print("This cell object has done value: \(object.done)")
         print("This cell object has sectionIdentifier: \(object.sectionIdentifier)")
+        print("This cell object has children: \(object.children)")
+        
+        if object.children.isEmpty {
+            print("No children")
+        }
         //object.updateSectionIdentifier()
         //print("This cell object now has sectionIdentifier: \(object.sectionIdentifier)")
         
@@ -405,6 +412,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         let swipeRight = UISwipeGestureRecognizer(target: self, action: "handleRightSwipe:")
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
         cell.addGestureRecognizer(swipeRight)
+        
+        if object.children.isEmpty {
+            print("No children")
+            
+            cell.accessoryType = .None
+        }
         
         return cell
         //return configureCell(indexPath)

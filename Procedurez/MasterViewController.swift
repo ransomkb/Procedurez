@@ -49,11 +49,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }()
     
     @IBAction func openSettings(sender: AnyObject) {
-        print("openSettings Action Occurring. Preparing to Show ImportStringViewController")
-        
-        let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
-        masterNavigationController.pushViewController(controller, animated: true)
+        if Reachability.isConnectedToNetwork() == true {
+            print("Internet connection OK")
+            print("openSettings Action Occurring. Preparing to Show MetaTableViewController")
+            
+            let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
+            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
+            masterNavigationController.pushViewController(controller, animated: true)
+        } else {
+            print("Internet connection FAILED")
+            
+            // Alert user
+            let alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+        }
     }
     
     // seems to be removed from xcode 8
@@ -468,21 +477,21 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Misc
     
     // IMPORTANT: finish this; maybe use, maybe not.
-    func createJSONData(procedure: Procedure) {
-        if let indexPath = self.tableView.indexPathForSelectedRow {
-            let selectedStep = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
-            // Instantiate a fetch request for all the Steps of the selected Procedure.
-            let fetchRequest = NSFetchRequest(entityName: "Procedure")
-            let predicate = NSPredicate(format: "title == %@", selectedStep.title)
-            fetchRequest.predicate = predicate
-            
-            do {
-                try temporaryContext?.executeFetchRequest(fetchRequest)
-            } catch {
-                print("Unable to fetch the Step entities for sharing due to error: \(error)")
-            }
-        }
-    }
+//    func createJSONData(procedure: Procedure) {
+//        if let indexPath = self.tableView.indexPathForSelectedRow {
+//            let selectedStep = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
+//            // Instantiate a fetch request for all the Steps of the selected Procedure.
+//            let fetchRequest = NSFetchRequest(entityName: "Procedure")
+//            let predicate = NSPredicate(format: "title == %@", selectedStep.title)
+//            fetchRequest.predicate = predicate
+//            
+//            do {
+//                try temporaryContext?.executeFetchRequest(fetchRequest)
+//            } catch {
+//                print("Unable to fetch the Step entities for sharing due to error: \(error)")
+//            }
+//        }
+//    }
     
     // IMPORTANT: probably will not use
     // Use UIAlertController to keep user informed.
