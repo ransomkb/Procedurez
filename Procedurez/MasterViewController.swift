@@ -49,20 +49,26 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }()
     
     @IBAction func openSettings(sender: AnyObject) {
-        if Reachability.isConnectedToNetwork() == true {
-            print("Internet connection OK")
-            print("openSettings Action Occurring. Preparing to Show MetaTableViewController")
-            
-            let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
-            masterNavigationController.pushViewController(controller, animated: true)
-        } else {
-            print("Internet connection FAILED")
-            
-            // Alert user
-            let alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
-            alert.show()
-        }
+//        if Reachability.isConnectedToNetwork() == true {
+//            print("Internet connection OK")
+//            print("openSettings Action Occurring. Preparing to Show MetaTableViewController")
+//            
+//            let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
+//            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
+//            masterNavigationController.pushViewController(controller, animated: true)
+//        } else {
+//            print("Internet connection FAILED")
+//            
+//            // Alert user
+//            let alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+//            alert.show()
+//        }
+        
+        print("openSettings Action Occurring. Preparing to Show MetaTableViewController")
+        
+        let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
+        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
+        masterNavigationController.pushViewController(controller, animated: true)
     }
     
     // seems to be removed from xcode 8

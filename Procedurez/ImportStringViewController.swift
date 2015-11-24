@@ -57,6 +57,12 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
                         self.importTextView.text = NetLoader.sharedInstance().parseProcedure?.steps
                     } else {
                         print(errorString)
+                        
+                        // Alert user
+//                        let alert = UIAlertView(title: "Problem With Request", message: "Error Message: \(errorString).", delegate: nil, cancelButtonTitle: "OK")
+//                        alert.show()
+                        self.alertMessage = errorString
+                        self.alertUser()
                     }
                 })
             }
@@ -87,7 +93,7 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         dispatch_async(dispatch_get_main_queue(), {
             
             // Create an instance of UIAlertController.
-            let alertController = UIAlertController(title: "Alert", message: self.alertMessage, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Issue Occurred", message: self.alertMessage, preferredStyle: .Alert)
             
             // Set the alert message.
             if let message = self.alertMessage {

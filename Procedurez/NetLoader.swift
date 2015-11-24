@@ -286,22 +286,31 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         
         print("Handling Error")
         
+        let nsError = error
+        
         // Check that there is a dictionary of json data.
-        if let parsedResult = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as? [String : AnyObject] {
-            
-            // Check that there is a key correspoding to the error status message.
-            if let errorMessage = parsedResult[Keys.ErrorStatusMessage] as? String {
+//        if let parsedResult = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as? [String : AnyObject] {
+        do {
+            if let jsonData = data {
                 
-                // Localize the error message.
-                let userInfo = [NSLocalizedDescriptionKey : errorMessage]
+                let parsedResult = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.AllowFragments) as? [String : AnyObject]
                 
-                // Return the error details.
-                return NSError(domain: "PinPhotos Error", code: 1, userInfo: userInfo)
+                // Check that there is a key correspoding to the error status message.
+                if let errorMessage = parsedResult![Keys.ErrorStatusMessage] as? String {
+                    
+                    // Localize the error message.
+                    let userInfo = [NSLocalizedDescriptionKey : errorMessage]
+                    
+                    // Return the error details.
+                    return NSError(domain: "PinPhotos Error", code: 1, userInfo: userInfo)
+                }
             }
+        } catch {
+            // Return original error as there was no json data.
+           print("Internet connection FAILED: \(error)")
         }
         
-        // Return original error as there was no json data.
-        return error
+        return nsError
     }
     
     // Class method for replacing a variable with a string value in a task method

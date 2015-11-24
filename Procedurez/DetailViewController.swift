@@ -231,23 +231,13 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
         print("Detail View will appear: start")
-        // Subscribe to keyboard notifications to bring up keyboard when typing in textField begins.
-        //self.subscribeToKeyboardNotifications()
+        
         if (self.titleTextField.text != "Tap to Edit Name") && !saveButton.hidden {
             hideUI()
         }
         
-        //updatePositions()
         print("Detail View will appear: end")
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        // Unsubscribe from keyboard notifications when segueing.
-        //self.unsubscribeFromKeyboardNotifications()
     }
     
     
@@ -322,28 +312,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             abort()
         }
     }
-
-    // MARK: - Segues
     
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        print("Preparing for Segue to Detail")
-//        if segue.identifier == "ShowChildren" {
-//            print("Have a segue identifier called ShowChildren")
-//            if let indexPath = self.tableView.indexPathForSelectedRow {
-//                let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
-//                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
-//                controller.detailItem = object
-//                controller.managedObjectContext = self.managedObjectContext
-//                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-//                controller.navigationItem.leftItemsSupplementBackButton = true
-//                
-//                print("Destination view controller set up")
-//            }
-//        } else {
-//            print("ShowChildren segue identifier was not found")
-//        }
-//    }
-
     
     // MARK: - Table View
     
@@ -367,14 +336,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         return nil
     }
-
-    
-    // IMPORTANT: fix this
-//    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        //tableView.rowHeight = UITableViewAutomaticDimension
-//        print("\(tableView.rowHeight)")
-//        return 44.0 //tableView.rowHeight
-//    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         print("Index path: \(indexPath)")
@@ -388,9 +349,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("This cell object has sectionIdentifier: \(object.sectionIdentifier)")
         print("This cell object has children: \(object.children)")
         
-        if object.children.isEmpty {
-            print("No children")
-        }
         //object.updateSectionIdentifier()
         //print("This cell object now has sectionIdentifier: \(object.sectionIdentifier)")
         
@@ -420,7 +378,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         
         return cell
-        //return configureCell(indexPath)
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

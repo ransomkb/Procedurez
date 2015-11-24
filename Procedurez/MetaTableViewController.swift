@@ -11,6 +11,8 @@ import UIKit
 
 class MetaTableViewController: UITableViewController {
     
+    var alertMessage: String?
+    
     var proceduresMeta: [ParseProcedure] = []
     
     @IBOutlet weak var tableViewCell: UITableViewCell!
@@ -29,6 +31,13 @@ class MetaTableViewController: UITableViewController {
                     self.tableView.reloadData()
                 } else {
                     print(errorString)
+                    
+                    // Alert user
+//                    let alert = UIAlertView(title: "Problem With Request", message: "Error Message: \(errorString).", delegate: nil, cancelButtonTitle: "OK")
+//                    alert.show()
+                    
+                    self.alertMessage = errorString
+                    self.alertUser()
                 }
             }
         }
@@ -105,9 +114,28 @@ class MetaTableViewController: UITableViewController {
             }
         }
     }
+    // Use UIAlertController to keep user informed.
+    func alertUser() {
+        
+        // Create an instance of alert controller.
+        let alertController = UIAlertController(title: "Issue Occurred", message: self.alertMessage, preferredStyle: .Alert)
+        
+        
+        // Set up an OK action button on alert.
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        
+        // Add OK action button to alert.
+        alertController.addAction(okAction)
+        
+        // Dispatch alert to main queue.
+        dispatch_async(dispatch_get_main_queue(), {
+            
+            // Present alert controller.
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
+    }
 
-    
-    // Use other thread for some tasks.
-    // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {}
     
 }
