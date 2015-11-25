@@ -14,8 +14,6 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     var JSONString: String?
     var alertMessage: String?
     
-    //var isSegue: Bool = false
-    
     @IBOutlet weak var explanationLabel: UILabel!
     @IBOutlet weak var importTextView: UITextView!
     

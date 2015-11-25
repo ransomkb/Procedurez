@@ -16,7 +16,6 @@ extension NetLoader {
     }
     
     struct Keys {
-        //static let Title = "title"
         static let ErrorStatusMessage = "errorStatusMessage"
         
         // Keys
@@ -28,7 +27,7 @@ extension NetLoader {
         // RequestValues
         static let ApplicationID = "n099noVFfXjlZsqRvh0ncOniIQPE1HVUf3XaRtam"
         static let RESTAPIKey = "lcwf2OOoMeaXCSwbXuYn7AkKn0EjdRt6EiPhNzwQ"
-        //static let ClientKey = "HfOWHa3Y1HKLpmK9mdJ7qny99zRBcXo3OniJx4yV"
+        
         static let ParseAppIDField = "X-Parse-Application-Id"
         static let RESTAPIField = "X-Parse-REST-API-Key"
         static let ApplicationJSON = "application/json"
@@ -40,25 +39,6 @@ extension NetLoader {
     }
     
     struct JSONResponseKeys {
-        // for Udacity
-//        static let Status = "status"
-//        static let Error = "error"
-//        
-//        // for Flickr
-//        static let Stat = "stat"
-//        static let Code = "code"
-//        static let Message = "message"
-//        
-//        static let Account = "account"
-//        static let Registered = "registered"
-//        static let AccountKey = "key"
-//        
-//        static let Session = "session"
-//        static let SessionID = "id"
-//        static let User = "user"
-//        static let LastName = "last_name"
-//        static let FirstName = "first_name"
-        
         static let Results = "results"
     }
     

@@ -8,6 +8,7 @@
 
 import Foundation
 
+// For getting the appropriate image for the table cell backgrounds
 enum PhoneCellImage: Int {
     case PhoneRed = 0, PhoneOrange, PhoneYellow, PhoneGreen, PhoneBlue, PhonePurple, PhoneBlack
     

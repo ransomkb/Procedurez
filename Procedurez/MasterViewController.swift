@@ -24,16 +24,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     let masterCellIdentifier = "TableViewCell"
     
     lazy var temporaryContext: NSManagedObjectContext? = {
-        
-        //let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         // Set the temporary context
         var temporaryContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
         temporaryContext.persistentStoreCoordinator = CoreDataStackManager.sharedInstance().managedObjectContext!.persistentStoreCoordinator
         return temporaryContext
     }()
     
-    // Lazy computed property returning a fetched results controller for Photo entities sorted by title.
+    // Lazy computed property returning a fetched results controller for Step entities sorted by title.
     lazy var shareFetchedResultsController: NSFetchedResultsController = {
         
         let fetchRequest = NSFetchRequest(entityName: "Step")
@@ -49,21 +46,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }()
     
     @IBAction func openSettings(sender: AnyObject) {
-//        if Reachability.isConnectedToNetwork() == true {
-//            print("Internet connection OK")
-//            print("openSettings Action Occurring. Preparing to Show MetaTableViewController")
-//            
-//            let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
-//            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
-//            masterNavigationController.pushViewController(controller, animated: true)
-//        } else {
-//            print("Internet connection FAILED")
-//            
-//            // Alert user
-//            let alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
-//            alert.show()
-//        }
-        
         print("openSettings Action Occurring. Preparing to Show MetaTableViewController")
         
         let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
@@ -82,15 +64,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
         print("Master View Did Load: Start")
         
         splitViewController?.delegate = self
-        
-//        let testFile = FileSaveHelper(fileName: "testFile", fileExtension: .TXT, subDirectory: "SavingFiles", directory: .DocumentDirectory)
-//        print("Directory Exists: \(testFile.directoryExists)")
-//        print("File Exists: \(testFile.fileExists)")
         
         if let fetched = self.fetchedResultsController.fetchedObjects {
             if fetched.count <= 0 {
@@ -114,7 +90,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let leftBarButtonItems: [UIBarButtonItem] = [settingsButton, self.editButtonItem()]
         let rightBarButtonItems: [UIBarButtonItem] = [addButton]
         
-        //self.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.navigationItem.leftBarButtonItems = leftBarButtonItems
         self.navigationItem.rightBarButtonItems = rightBarButtonItems
         
@@ -135,46 +110,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             }
         }
         
-        // Register the custom cell.
-        //self.tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: masterCellIdentifier)
-        
-        
         // Make the style easier on the eyes by removing the separator.
         tableView.separatorStyle = .None
         
-        // Configure the cell details for the table view.
-        //configureTableView()
-        
-        // Give each row more height. (now done in xib)
-        //tableView.rowHeight = 50.0
-        
-        // IMPORTANT: check this make the constant correct and fix the implementation
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             self.clearsSelectionOnViewWillAppear = false
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
-        
-//        let fileText = "Saved a file in Swift!"
-//        do {
-//            try testFile.saveFile(string: fileText)
-//        } catch {
-//            print(error)
-//        }
-        
-        //print("File Exists: \(testFile.fileExists)")
         
         checkInstructions()
         
         print("Master View Did Load: End")
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override func viewWillAppear(animated: Bool) {
-        
         self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
         print("Master view will appear: start")
@@ -187,6 +136,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func insertNewObject(sender: AnyObject) {
         print("Inserting new Procedure object")
+        
+        // Set the context and entity info.
         let context = self.fetchedResultsController.managedObjectContext
         let entity = self.fetchedResultsController.fetchRequest.entity!
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context) 
@@ -194,10 +145,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let editName = "Tap to Edit Name"
         let editDetails = "Add a short description"
         
-             
-        // If appropriate, configure the new managed object.
-        // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-        // IMPORTANT: this may be wrong. Check
         newManagedObject.setValue(editName, forKey: "title")
         newManagedObject.setValue(editDetails, forKey: "details")
              
@@ -225,7 +172,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             }
         }
         
-        // Load the Instructions.
+        // Load the HowTo Instructions if necessary.
         let jsonData = NetLoader.Caches.procedureCache.dataWithIdentifier("LoadMe")!
         print("Master has jsonData from LoadMe file: ") // \(jsonData)
         NetLoader.sharedInstance().loadHowTo(jsonData) { (success, errorString) -> Void in
@@ -265,10 +212,10 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     // MARK: - Table View
     // maybe won't use
-    func configureTableView() {
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 80.0
-    }
+//    func configureTableView() {
+//        tableView.rowHeight = UITableViewAutomaticDimension
+//        tableView.estimatedRowHeight = 80.0
+//    }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count ?? 0
@@ -281,23 +228,19 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         return sectionInfo.numberOfObjects
     }
     
-
-    // IMPORTANT: fix this
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        //tableView.rowHeight = UITableViewAutomaticDimension
         print("\(tableView.rowHeight)")
         return 44.0 //tableView.rowHeight
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) //as? UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
         
         let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
         cell.textLabel?.text = object.valueForKey("title")!.description
         
-        return cell        
-        //return configureCell(indexPath)
+        return cell
     }
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -336,29 +279,29 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
 
-    func configureCell(indexPath: NSIndexPath) -> TableViewCell {
-        
-        // Dequeue custom cell as TableViewCell.
-        if let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier(masterCellIdentifier, forIndexPath: indexPath) as? TableViewCell {
-            print("Cell is a TableViewCell")
-                        
-            
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-        let text = object.valueForKey("title")!.description
-        if let label = cell.nameLabel {
-            
-            print("Have a namelabel for cell")
-            label.text = text
-        } else {
-            print("no namelabel in cell")
-            cell.textLabel?.text = text
-        }
-        
-        return cell
-        }
-        let oldCell = TableViewCell()
-        return oldCell
-    }
+//    func configureCell(indexPath: NSIndexPath) -> TableViewCell {
+//        
+//        // Dequeue custom cell as TableViewCell.
+//        if let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier(masterCellIdentifier, forIndexPath: indexPath) as? TableViewCell {
+//            print("Cell is a TableViewCell")
+//                        
+//            
+//        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+//        let text = object.valueForKey("title")!.description
+//        if let label = cell.nameLabel {
+//            
+//            print("Have a namelabel for cell")
+//            label.text = text
+//        } else {
+//            print("no namelabel in cell")
+//            cell.textLabel?.text = text
+//        }
+//        
+//        return cell
+//        }
+//        let oldCell = TableViewCell()
+//        return oldCell
+//    }
     
     // MARK: - Split view delegate
     

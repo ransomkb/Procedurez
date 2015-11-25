@@ -32,10 +32,6 @@ class MetaTableViewController: UITableViewController {
                 } else {
                     print(errorString)
                     
-                    // Alert user
-//                    let alert = UIAlertView(title: "Problem With Request", message: "Error Message: \(errorString).", delegate: nil, cancelButtonTitle: "OK")
-//                    alert.show()
-                    
                     self.alertMessage = errorString
                     self.alertUser()
                 }
@@ -47,17 +43,6 @@ class MetaTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         self.tableView.reloadData()
-        
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
-//            
-//            NetLoader.sharedInstance().searchParse { (success, errorString) -> Void in
-//                if success {
-//                    print("Finished getting a procedure from meta.procedureID.")
-//                } else {
-//                    print(errorString)
-//                }
-//            }
-//        }
     }
     
     @IBAction func segueToImport() {
@@ -65,7 +50,6 @@ class MetaTableViewController: UITableViewController {
         let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
         NetLoader.sharedInstance().isSegue = false
         navigationController.pushViewController(controller, animated: true)
-        
     }
     
     
@@ -104,16 +88,13 @@ class MetaTableViewController: UITableViewController {
         if segue.identifier == "showImportFromCell" {
             print("Have a segue identifier called showImport")
             if let indexPath = self.tableView.indexPathForSelectedRow {
-//                let navigationController = splitViewController!.viewControllers[splitViewController!.viewControllers.count-1] as! UINavigationController
-//                let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
+
                 NetLoader.sharedInstance().parseProcedure = proceduresMeta[indexPath.row]
                 NetLoader.sharedInstance().isSegue = true
-//                controller.isSegue = true
-//                print("Destination view controller set up")
-//                navigationController.pushViewController(controller, animated: true)
             }
         }
     }
+    
     // Use UIAlertController to keep user informed.
     func alertUser() {
         

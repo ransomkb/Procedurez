@@ -18,18 +18,13 @@
 		D40D241E1B9D3080007D2F44 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241D1B9D3080007D2F44 /* Step.swift */; };
 		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
 		D40D24221B9D5914007D2F44 /* Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D24211B9D5914007D2F44 /* Procedure.swift */; };
-		D40D24241B9D7422007D2F44 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D24231B9D7422007D2F44 /* TableViewCell.swift */; };
 		D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */; };
 		D43CCDD41BF0E3200054BB9B /* ParseProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */; };
-		D44CF41D1BDC9039009E31FB /* FileSaveHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */; };
-		D46334311BE316DC00442F24 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334301BE316DC00442F24 /* WebViewController.swift */; };
 		D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334321BE3171A00442F24 /* ImportStringViewController.swift */; };
 		D4A958031BE0A92B00C5B7FF /* NetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958021BE0A92B00C5B7FF /* NetLoader.swift */; };
 		D4A958051BE0A93C00C5B7FF /* NetLoaderConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */; };
 		D4A958071BE0AE3A00C5B7FF /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */; };
 		D4A958091BE0CE4000C5B7FF /* ProcedureCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958081BE0CE4000C5B7FF /* ProcedureCache.swift */; };
-		D4B42A0C1C040F450027687B /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B42A0B1C040F450027687B /* Reachability.swift */; };
-		D4BC9D1E1BBA6B5F00527235 /* StepChildSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC9D1D1BBA6B5F00527235 /* StepChildSection.swift */; };
 		D4BC9D3C1BBA6FEE00527235 /* PadBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D201BBA6FEE00527235 /* PadBlack.png */; };
 		D4BC9D3D1BBA6FEE00527235 /* PadBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D211BBA6FEE00527235 /* PadBlue.png */; };
 		D4BC9D3E1BBA6FEE00527235 /* PadGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D221BBA6FEE00527235 /* PadGreen.png */; };
@@ -89,18 +84,13 @@
 		D40D241D1B9D3080007D2F44 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D40D24211B9D5914007D2F44 /* Procedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Procedure.swift; sourceTree = "<group>"; };
-		D40D24231B9D7422007D2F44 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaTableViewController.swift; sourceTree = "<group>"; };
 		D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseProcedure.swift; sourceTree = "<group>"; };
-		D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSaveHelper.swift; sourceTree = "<group>"; };
-		D46334301BE316DC00442F24 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		D46334321BE3171A00442F24 /* ImportStringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportStringViewController.swift; sourceTree = "<group>"; };
 		D4A958021BE0A92B00C5B7FF /* NetLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetLoader.swift; sourceTree = "<group>"; };
 		D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetLoaderConstants.swift; sourceTree = "<group>"; };
 		D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		D4A958081BE0CE4000C5B7FF /* ProcedureCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcedureCache.swift; sourceTree = "<group>"; };
-		D4B42A0B1C040F450027687B /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
-		D4BC9D1D1BBA6B5F00527235 /* StepChildSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepChildSection.swift; sourceTree = "<group>"; };
 		D4BC9D201BBA6FEE00527235 /* PadBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PadBlack.png; sourceTree = "<group>"; };
 		D4BC9D211BBA6FEE00527235 /* PadBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PadBlue.png; sourceTree = "<group>"; };
 		D4BC9D221BBA6FEE00527235 /* PadGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PadGreen.png; sourceTree = "<group>"; };
@@ -222,7 +212,6 @@
 				D4BC9D581BBA787E00527235 /* PhoneCellImage.swift */,
 				D4BC9D5A1BBA7E2700527235 /* PadCellImage.swift */,
 				D40D24211B9D5914007D2F44 /* Procedure.swift */,
-				D4BC9D1D1BBA6B5F00527235 /* StepChildSection.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -242,12 +231,8 @@
 				D4A958081BE0CE4000C5B7FF /* ProcedureCache.swift */,
 				D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */,
 				D40D23F31B9951A3007D2F44 /* AppDelegate.swift */,
-				D4B42A0B1C040F450027687B /* Reachability.swift */,
 				D40D23F81B9951A3007D2F44 /* MasterViewController.swift */,
 				D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */,
-				D40D24231B9D7422007D2F44 /* TableViewCell.swift */,
-				D44CF41C1BDC9039009E31FB /* FileSaveHelper.swift */,
-				D46334301BE316DC00442F24 /* WebViewController.swift */,
 				D46334321BE3171A00442F24 /* ImportStringViewController.swift */,
 				D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */,
 			);
@@ -423,24 +408,19 @@
 			files = (
 				D43CCDD41BF0E3200054BB9B /* ParseProcedure.swift in Sources */,
 				D4A958091BE0CE4000C5B7FF /* ProcedureCache.swift in Sources */,
-				D44CF41D1BDC9039009E31FB /* FileSaveHelper.swift in Sources */,
 				D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */,
 				D40D24221B9D5914007D2F44 /* Procedure.swift in Sources */,
 				D4A958071BE0AE3A00C5B7FF /* CoreDataStackManager.swift in Sources */,
 				D40D23F41B9951A3007D2F44 /* AppDelegate.swift in Sources */,
 				D4A958031BE0A92B00C5B7FF /* NetLoader.swift in Sources */,
 				D40D23F91B9951A3007D2F44 /* MasterViewController.swift in Sources */,
-				D40D24241B9D7422007D2F44 /* TableViewCell.swift in Sources */,
 				D40D241E1B9D3080007D2F44 /* Step.swift in Sources */,
-				D4BC9D1E1BBA6B5F00527235 /* StepChildSection.swift in Sources */,
 				D4BC9D5B1BBA7E2700527235 /* PadCellImage.swift in Sources */,
 				D4BC9D591BBA787E00527235 /* PhoneCellImage.swift in Sources */,
 				D4A958051BE0A93C00C5B7FF /* NetLoaderConstants.swift in Sources */,
 				D4DA19CA1BAE4E2700E62391 /* DetailViewController.swift in Sources */,
 				D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */,
 				D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */,
-				D4B42A0C1C040F450027687B /* Reachability.swift in Sources */,
-				D46334311BE316DC00442F24 /* WebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

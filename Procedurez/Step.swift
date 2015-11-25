@@ -10,8 +10,6 @@
 import Foundation
 import CoreData
 
-//@objc(Step)
-
 class Step: NSManagedObject {
     
     struct Keys {
@@ -49,9 +47,6 @@ class Step: NSManagedObject {
         // Initiate the parent class with the entity and context.
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
-        // IMPORTANT: does not seem to print; remove?
-        print("Step created without dictionary")
-        
         title = "Tap to Edit Name"
         details = "Add a short description"
         done = false
@@ -69,11 +64,10 @@ class Step: NSManagedObject {
         
         print("Step created with dictionary")
 
-        // IMPORTANT: maybe this should be an integer in json
         if let pos = dictionary[Keys.Position] {
             position = Int32(pos as! Int)
         }
-        //position = 1 //dictionary[Keys.Position] as! Int
+        
         title = dictionary[Keys.Title] as! String
         details = dictionary[Keys.Details] as! String
         done = false

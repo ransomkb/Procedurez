@@ -12,11 +12,11 @@ class ProcedureCache {
     
     private var inMemoryCache = NSCache()
     
-    // MARK: - Retreiving images
+    // MARK: - Retreiving data
     
     func dataWithIdentifier(identifier: String?) -> NSData? {
         
-        // If the identifier is nil, or empty, return nil
+        // Return nil if the identifier is nil, or empty
         if identifier == nil || identifier! == "" {
             return nil
         }
@@ -33,25 +33,12 @@ class ProcedureCache {
                 print("Caught error when fetching jsonData from path: \(error)")
                 return nil
             }
-        
-        // First try the memory cache
-//        if let dataJson = inMemoryCache.objectForKey(path) as? NSData {
-//            print("Found the data in the cache.")
-//            return dataJson
-//        }
-        
-        // Next Try the hard drive
-//        if let data = NSData(contentsOfFile: path) {
-//            print("Found the data on the hard drive.")
-//            return data
-//        }
-            
         }
         
         return nil
     }
     
-    // MARK: - Saving images
+    // MARK: - Saving files
     // Not Using; keeping for future updates to JSON File.
     func storeJson(data: NSData?, withIdentifier identifier: String) {
         
@@ -82,16 +69,11 @@ class ProcedureCache {
     }
     
     // MARK: - Helper
-    
+    // Keeping for any future need
     func pathForDocumentsIdentifier(identifier: String) -> NSURL? {
         if let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! { //as! NSURL
         
         let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
-        
-         // Return path to JSON resource files in the bundle.
-//        if let path = NSBundle.mainBundle().pathForResource(identifier, ofType: "json") {
-//            return path
-//        }
             return fullURL
         }
         
@@ -100,9 +82,6 @@ class ProcedureCache {
 
     
     func pathForBundleIdentifier(identifier: String) -> String? {
-//        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! //as! NSURL
-//        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
-        
         // Return path to JSON resource files in the bundle.
         if let path = NSBundle.mainBundle().pathForResource(identifier, ofType: "json") {
             return path

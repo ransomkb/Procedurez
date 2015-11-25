@@ -36,9 +36,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     var sectionSortDescriptorKey = "sectionIdentifier"
     var sortDescriptorKey = "position"
-    var procedure: Procedure?
-    //var step: Step?
-    
+        
     struct Keys {
         static let Position = "position"
         static let Title = "title"
@@ -90,15 +88,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 }
             }
             
-            //IMPORTANT: EXAMPLE OF KVC: detail.valueForKey("timeStamp")!.description
         }
         
         print("Now detailItem has \(self.detailItem?.children.count) children")
     }
     
-   // Share the Procedure with others via email.
+   // Share the Procedure with others via email or save to Notes.
     @IBAction func shareProcedure(sender: AnyObject) {
         print("Sharing Procedure; Step objectID: \(detailItem?.objectID)")
+        
         // Create the JSON data (procedure is actually a Step as detailItem is one).
         if let procedure = detailItem {
             let json = procedure.getJSONDictionary()
@@ -108,46 +106,38 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             
             // Present UIActivityViewController on main queue.
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
                 // Set up Activity View Controller
                 let nextController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
                 nextController.popoverPresentationController?.sourceView = self.view
-                //nextController.popoverPresentationController?.sourceRect = sender.frame
                 self.presentViewController(nextController, animated: true, completion: nil)
             })
             
-            print("json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(json))")
-            
-            if let data = json.dataUsingEncoding(NSUTF8StringEncoding) {
-                print("Data is of type NSData: \(data.isKindOfClass(NSData))")
-                
-                print("data of json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(data))")
-                
-                
-                let jsonFile = FileSaveHelper(fileName: (detailItem?.title)!, fileExtension: .JSON, subDirectory: "FilesToShare", directory: .DocumentDirectory)
-                
-                do {
-                    //try jsonFile.saveFile(dataForJson: data)
-                    try jsonFile.saveFile(string: json)
-                } catch {
-                    print(error)
-                }
-                
-                print("JSON file to share exists: \(jsonFile.fileExists)")
-                
-                // IMPORTANT: Practice with importing, too. Change this when all is working.
-                NetLoader.sharedInstance().json = json
-                //NetLoader.sharedInstance().importJSON()
-                
-                
-                
-                // Get the file contents off the hard drive
-                if let _ = NSData(contentsOfFile: jsonFile.fullyQualifiedPath) {
-                    print("Adding the json file to the activityItems array.")
-                    //activityItems.append(data)
-                    
-                   
-                }
-            }
+            // Decided saving to a file before sharing was redundant as already in CoreData.
+//            print("json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(json))")
+//            
+//            if let data = json.dataUsingEncoding(NSUTF8StringEncoding) {
+//                print("Data is of type NSData: \(data.isKindOfClass(NSData))")
+//                
+//                print("data of json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(data))")
+//                
+//                let jsonFile = FileSaveHelper(fileName: (detailItem?.title)!, fileExtension: .JSON, subDirectory: "FilesToShare", directory: .DocumentDirectory)
+//                
+//                do {
+//                    try jsonFile.saveFile(string: json)
+//                } catch {
+//                    print(error)
+//                }
+//                
+//                print("JSON file to share exists: \(jsonFile.fileExists)")
+//                
+//                NetLoader.sharedInstance().json = json
+//                
+//                // Get the file contents off the hard drive
+//                if let _ = NSData(contentsOfFile: jsonFile.fullyQualifiedPath) {
+//                    print("Adding the json file to the activityItems array.")
+//                }
+//            }
         } else {
             print("Procedure for detailItem is nil")
         }
@@ -224,11 +214,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Detail View did load: end")
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         print("Detail View will appear: start")
@@ -241,6 +226,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     
     
+    
     // MARK: - Misc
     
     func insertNewObject(sender: AnyObject) {
@@ -250,15 +236,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context)
         
         let editName = "Tap to Edit Name"
-        //let editDetails = "Add a short description"
-        print("isDone: \(isDone)")
-        //isDone = !isDone
         
-        // If appropriate, configure the new managed object.
-        // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-        // IMPORTANT: this may be wrong. Check
+        print("isDone: \(isDone)")
+        
         newManagedObject.setValue(editName, forKey: "title")
-        //newManagedObject.setValue(editDetails, forKeyPath: "details")
         newManagedObject.setValue(self.detailItem, forKey: "parent")
         newManagedObject.setValue(isDone, forKey: "done")
         newManagedObject.setValue("Do", forKey: "sectionIdentifier")
@@ -270,7 +251,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         var error: NSError? = nil
         do {
             try context.save()
-            //updatePositions()
         } catch let error1 as NSError {
             error = error1
             // Replace this implementation with code to handle the error appropriately.
@@ -293,25 +273,25 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
 
     
     // IMPORTANT: maybe don't need
-    func configureStep() {
-        let context = self.fetchedResultsController.managedObjectContext
-        let stepDictionary = [Keys.Position:1, Keys.Title:"Tap to add Step", Keys.Details:"Edit Details"]
-        var stepArray = [Step]()
-        let step = Step(dictionary: stepDictionary, context: context)
-        stepArray.append(step)
-        
-        // Save the context.
-        var error: NSError? = nil
-        do {
-            try context.save()
-        } catch let error1 as NSError {
-            error = error1
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            print("Unresolved error \(error), \(error!.userInfo)")
-            abort()
-        }
-    }
+//    func configureStep() {
+//        let context = self.fetchedResultsController.managedObjectContext
+//        let stepDictionary = [Keys.Position:1, Keys.Title:"Tap to add Step", Keys.Details:"Edit Details"]
+//        var stepArray = [Step]()
+//        let step = Step(dictionary: stepDictionary, context: context)
+//        stepArray.append(step)
+//        
+//        // Save the context.
+//        var error: NSError? = nil
+//        do {
+//            try context.save()
+//        } catch let error1 as NSError {
+//            error = error1
+//            // Replace this implementation with code to handle the error appropriately.
+//            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//            print("Unresolved error \(error), \(error!.userInfo)")
+//            abort()
+//        }
+//    }
     
     
     // MARK: - Table View
@@ -348,9 +328,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("This cell object has done value: \(object.done)")
         print("This cell object has sectionIdentifier: \(object.sectionIdentifier)")
         print("This cell object has children: \(object.children)")
-        
-        //object.updateSectionIdentifier()
-        //print("This cell object now has sectionIdentifier: \(object.sectionIdentifier)")
         
         let cell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) //as? UITableViewCell
         
@@ -415,7 +392,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             steps.removeAtIndex(sourceIndexPath.row)
             steps.insert(step, atIndex: destinationIndexPath.row)
             
-            //updatePositions()
             var iter : Int32 = 0
             for step in steps as! [Step] {
                 print("Step array position: \(iter)")
@@ -427,7 +403,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             var error: NSError? = nil
             do {
                 try self.managedObjectContext!.save()
-                //updatePositions()
             } catch let error1 as NSError {
                 error = error1
                 // Replace this implementation with code to handle the error appropriately.
@@ -449,7 +424,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
             
-            //let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
             controller.detailItem = object
             controller.managedObjectContext = self.managedObjectContext
             controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
@@ -459,33 +433,31 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             
             self.navigationController?.pushViewController(controller, animated: true)
         }
-
-        
     }
     
-    func configureCell(indexPath: NSIndexPath) -> TableViewCell {
-        
-        // Dequeue custom cell as TableViewCell.
-        if let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) as? TableViewCell {
-            print("Cell is a TableViewCell")
-            
-            
-            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-            let text = object.valueForKey("title")!.description
-            if let label = cell.nameLabel {
-                
-                print("Have a namelabel for cell")
-                label.text = text
-            } else {
-                print("no namelabel in cell")
-                cell.textLabel?.text = text
-            }
-            
-            return cell
-        }
-        let oldCell = TableViewCell()
-        return oldCell
-    }
+//    func configureCell(indexPath: NSIndexPath) -> TableViewCell {
+//        
+//        // Dequeue custom cell as TableViewCell.
+//        if let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) as? TableViewCell {
+//            print("Cell is a TableViewCell")
+//            
+//            
+//            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+//            let text = object.valueForKey("title")!.description
+//            if let label = cell.nameLabel {
+//                
+//                print("Have a namelabel for cell")
+//                label.text = text
+//            } else {
+//                print("no namelabel in cell")
+//                cell.textLabel?.text = text
+//            }
+//            
+//            return cell
+//        }
+//        let oldCell = TableViewCell()
+//        return oldCell
+//    }
     
     func setBackgroundImage(step: Step, indexPathRow row: Int) -> String {
         step.objectID.URIRepresentation().lastPathComponent
@@ -519,21 +491,20 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     func updatePositions() {
         print("Updating positions")
         if let _ = self.managedObjectContext {
-        if let steps = self.fetchedResultsController.fetchedObjects {
-            
-            isMovingStep = true
-            
-            //var idx : Int32 = Int32(steps.count)
-            var iter : Int32 = 0
-            for step in steps as! [Step] {
-                print("Step array position: \(iter)")
-                print("Step title: \(step.title)")
-                print("Step done: \(step.done)")
-                step.position = iter
-                ++iter
-            }
-            
-            isMovingStep = false
+            if let steps = self.fetchedResultsController.fetchedObjects {
+                
+                isMovingStep = true
+                
+                var iter : Int32 = 0
+                for step in steps as! [Step] {
+                    print("Step array position: \(iter)")
+                    print("Step title: \(step.title)")
+                    print("Step done: \(step.done)")
+                    step.position = iter
+                    ++iter
+                }
+                
+                isMovingStep = false
             }
         } else {
             return
@@ -582,7 +553,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         } else {
             print("self.managedObjectContext is not fine")
             print("Using that of AppDelegate")
-            //let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            
             self.managedObjectContext = CoreDataStackManager.sharedInstance().managedObjectContext
         }
         
@@ -596,7 +567,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         // Edit the sort key as appropriate.
         let sectionSortDescriptor = NSSortDescriptor(key: "sectionIdentifier", ascending: true)
         let sortDescriptor = NSSortDescriptor(key: self.sortDescriptorKey, ascending: true)
-        //_ = [sortDescriptor]
         let predicate = NSPredicate(format: "parent == %@", self.detailItem!)
         
         fetchRequest.sortDescriptors = [sectionSortDescriptor, sortDescriptor]
@@ -661,24 +631,13 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
         case .Update: break
-            //_ = configureCell(indexPath!)
+            
         case .Move:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
         }
         
     }
-    
-    //    func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-    //            }
-    
-    // IMPORTANT: not using this because wish to try refreshing for background color.
-    //    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-    //        self.tableView.endUpdates()
-    //    }
-    
-    
-    // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
@@ -739,10 +698,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     
     // MARK: - String related
-    // Probably will only be used in Step
-    func replaceDoubleQuotes(jsonString: String) -> String {
-        return String(jsonString.characters.map{ $0 == "\"" ? "\'" : $0 })
-    }
+    
+//    func replaceDoubleQuotes(jsonString: String) -> String {
+//        return String(jsonString.characters.map{ $0 == "\"" ? "\'" : $0 })
+//    }
     
     // Use an UIAlertController to inform user of issue.
     func alertUser() {

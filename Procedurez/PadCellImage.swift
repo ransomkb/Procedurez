@@ -8,6 +8,7 @@
 
 import Foundation
 
+// For getting the appropriate image for the table cell backgrounds
 enum PadCellImage: Int {
     case PadRed = 0, PadOrange, PadYellow, PadGreen, PadBlue, PadPurple, PadBlack
     
