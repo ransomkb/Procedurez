@@ -17,7 +17,6 @@ class Step: NSManagedObject {
         static let SectionIdentifier = "sectionIdentifier"
         static let Title = "title"
         static let Details = "details"
-        static let Procedure = "procedure"
         static let Parent = "parent"
         static let Children = "children"
     }
@@ -28,7 +27,6 @@ class Step: NSManagedObject {
     @NSManaged var details: String
     @NSManaged var done: Bool
     
-    @NSManaged var procedure: Procedure
     @NSManaged var parent: Step
     @NSManaged var children: [Step]
 

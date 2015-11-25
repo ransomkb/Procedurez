@@ -56,6 +56,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         }
         
         let fetchRequest = NSFetchRequest()
+        
         // Edit the entity name as appropriate.
         let entity = NSEntityDescription.entityForName("Step", inManagedObjectContext: sharedContext)
         fetchRequest.entity = entity
@@ -94,14 +95,14 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
     var _fetchedResultsController: NSFetchedResultsController? = nil
 
-    // Search for a dictionary with student location details on Udacity site.
+    // Search for a dictionary on Parse.com with details of a Procedure / Procedures.
     func searchParse(completionHandler: (success: Bool, errorString: String?) -> Void) {
         // Use the GET method for a RESTful request.
         taskForGETMethod(API.ParseBaseURL, method: self.setParseClass(), requestValues: NetLoader.setREST()) { (JSONResult, error) -> Void in
             
             if let error = error {
                 // Report JSONResult error details in completion handler.
-                completionHandler(success: false, errorString: "Error: Search failed. (Existing Procedure). \(error.localizedDescription)")
+                completionHandler(success: false, errorString: "Error: Search failed: \(error.localizedDescription)")
             } else {
                 print("No Error in Search")
                 
@@ -122,14 +123,14 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                                 print("Got some Meta: \(meta)")
                                 let metaProcedure = ParseProcedure(dictionary: meta as [String:AnyObject])
                                 self.metaArray.append(metaProcedure)
-                                //return photo
                             }
                             
                             print("metaArray.count: \(self.metaArray.count)")
                             
                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                //self.procedureID = self.metaArray[0].procedureId
+                                
                                 self.isMeta = false
+                                
                                 // Use completion handler to report successful creation.
                                 completionHandler(success: true, errorString: nil)
                             })
@@ -158,16 +159,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                                 }
 
                             }
-//                            
-//                            for meta in self.metaArray as [ParseProcedure] {
-//                                                            }
-                            
                         }
-                        
-                        // Use completion handler to report successful creation.
-                        //completionHandler(success: true, errorString: nil)
-                        
-                        
                     } else {
                         
                         // Use completion handler to report unlikely situation: there is a dictionary of results, but it is empty.
@@ -188,7 +180,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     func taskForGETMethod(baseURL: String, method: String, requestValues: [[String:String]], completionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
         
         // Create a string of parameters for RESTful request.
-        
         let urlString: String!
         
         // Create request from URL.
@@ -237,19 +228,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             } else {
                 print("No Error, Time to Parse Data.")
                 
-                //let newData = data
-                
-//                // Get a subset of the data to conform to Udacity requirements, if udacity Bool is true.
-//                if udacity {
-//                    print("udacity was true, so getting subset of data.")
-//                    /* subset response data! */
-//                    newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
-//                }
-                
-                
-                //println("JSONResult data: \(NSString(data: newData, encoding: NSUTF8StringEncoding)!)")
-                
-                // Send data to shared JSON parser.
                 NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
         })
@@ -289,7 +267,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         let nsError = error
         
         // Check that there is a dictionary of json data.
-//        if let parsedResult = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as? [String : AnyObject] {
         do {
             if let jsonData = data {
                 
@@ -355,14 +332,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
 
     }
     
-    /* Path for JSON files bundled with the Playground */
-    //var pathForProcedureJSON = NSBundle.mainBundle().pathForResource("Text Field JSON 1", ofType: "json")
-    
-    
-    /* Raw JSON data (...simliar to the format you might receive from the network) */
-    //var rawAnimalsJSON = NSData(contentsOfFile: pathForProcedureJSON!)
-    
-    
     func importJSON(jsonString: String, completionhandler: (success: Bool, errorString: String?) -> Void) {
         print("Importing ProcedureJSON")
         
@@ -375,38 +344,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 completionhandler(success: false, errorString: errorString)
             }
         }
-        
-//        NetLoader.parseJSONWithCompletionHandler(rawProcedureJSON!) { (parsedResult, error) -> Void in
-//            
-//            if let error = error {
-//                print("Error in Parsing with rawProcedureJSON data.")
-//                completionhandler(success: false, errorString: error.localizedDescription)
-//            } else {
-//                print("Parsed JSON data successfully.")
-//                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, completionhandler: { (success, errorString) -> Void in
-//                    if let error = errorString {
-//                        completionhandler(success: false, errorString: error)
-//                    } else {
-//                        do {
-//                            try self.sharedContext.save()
-//                        } catch {
-//                            fatalError("Failure to save context: \(error)")
-//                        }
-//
-//                        completionhandler(success: true, errorString: nil)
-//                    }
-//                })
-//            }
-//        }
-        
-//        do {
-//            /* Parse the data into usable form */
-//            let parsedProcedureJSON = try NSJSONSerialization.JSONObjectWithData(rawProcedureJSON!, options: .AllowFragments) as! NSDictionary
-//            
-//            parseJSONAsDictionary(parsedProcedureJSON)
-//        } catch {
-//            print("Caught an error while parsing JSON: \(error)")
-//        }
     }
     
     
@@ -478,187 +415,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         })
         
         completionhandler(success: true, errorString: nil)
-        
-        
-        //        if let title = dictionary["title"] {
-        //            print("Title: \(title)")
-        //
-        //            if let details = dictionary["details"] {
-        //                print("Details: \(details)")
-        //
-        //                if let sectionIdentifier = dictionary["sectionIdentifier"] {
-        //                    print("SectionIdentifier: \(sectionIdentifier)")
-        //
-        //                    if let position = dictionary["position"] {
-        //                        print("Position: \(position)")
-        //                        if let st = dictionary["steps"] {
-        //                         // Get Main Queue for context.
-        //                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        //
-        //                                let step = Step(dictionary: dictionary, context: self.sharedContext)
-        //
-        //                                if let p = parent {
-        //                                    step.parent = p
-        //                                }
-        //
-        //                                let sArray = st as! [[String: AnyObject]]
-        //                                // print("Array of Steps: \(sArray)")
-        //
-        //                                for d in sArray {
-        //                                    self.parseJSONAsDictionary(d, parent: step, completionhandler: { (success, errorString) -> Void in
-        //                                        if success {
-        //                                            print("Made a Step")
-        //                                        } else {
-        //                                            print("Had an error")
-        //                                        }
-        //                                    })
-        //                                }
-        //
-        //
-        //                                // Create a Photo class and entity value for each photo in the array using its dictionary.
-        //                                //                            _ = sArray.map() {(dictionary: [String : AnyObject]) -> Step in
-        //                                //
-        //                                //
-        //                                //                                // Set the pin variable in photo to that passed through this function.
-        //                                //                                photo.pin = pin
-        //                                //                                print("Photo image path: \(photo.imagePath)")
-        //                                //                                return step
-        //                                //                            }
-        //
-        //                                // IMPORTANT: uncomment this to save context, after finish iterating stuff.
-        //                                //                            do {
-        //                                //                                try self.sharedContext.save()
-        //                                //                            } catch {
-        //                                //                                fatalError("Failure to save context: \(error)")
-        //                                //                            }
-        //                            })
-        //
-        //                            completionhandler(success: true, errorString: nil)
-        //                        } else {
-        //                            let eString = "Dictionary had no steps key."
-        //                            completionhandler(success: false, errorString: eString)
-        //                        }
-        //                    } else {
-        //                        let eString = "Dictionary had no position key."
-        //                        completionhandler(success: false, errorString: eString)
-        //                    }
-        //                } else {
-        //                    let eString = "Dictionary had no sectionIdentifier key."
-        //                    completionhandler(success: false, errorString: eString)
-        //                }
-        //            } else {
-        //                let eString = "Dictionary had no details key."
-        //                completionhandler(success: false, errorString: eString)
-        //            }
-        //        } else {
-        //            let eString = "Dictionary had no title key."
-        //            completionhandler(success: false, errorString: eString)
-        //        }
-        //        
-        
-        //        if let error = errorString as String {
-        //            print("Error in Parsing with rawProcedureJSON data.")
-        //            completionhandler(success: false, errorString: error.localized)
-        //        } else {
-        //            print("Parsed JSON data successfully.")
-        //        }
-        
     }
-
-    
-//    
-//    func parseJSONAsDictionary(dict: NSDictionary, parent: Step?, completionhandler: (success: Bool, errorString: String?) -> Void) {
-//        /* Start playing with JSON here... */
-//        print("Parsing a JSON Dictionary to creat a Step in a Procedure.")
-//        
-//        let dictionary = dict as! [String: AnyObject]
-//        
-//        if let title = dictionary["title"] {
-//            print("Title: \(title)")
-//            
-//            if let details = dictionary["details"] {
-//                print("Details: \(details)")
-//                
-//                if let sectionIdentifier = dictionary["sectionIdentifier"] {
-//                    print("SectionIdentifier: \(sectionIdentifier)")
-//                    
-//                    if let position = dictionary["position"] {
-//                        print("Position: \(position)")
-//                        if let st = dictionary["steps"] {
-//                         // Get Main Queue for context.
-//                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//                                
-//                                let step = Step(dictionary: dictionary, context: self.sharedContext)
-//                                
-//                                if let p = parent {
-//                                    step.parent = p
-//                                }
-//                                
-//                                let sArray = st as! [[String: AnyObject]]
-//                                // print("Array of Steps: \(sArray)")
-//                                
-//                                for d in sArray {
-//                                    self.parseJSONAsDictionary(d, parent: step, completionhandler: { (success, errorString) -> Void in
-//                                        if success {
-//                                            print("Made a Step")
-//                                        } else {
-//                                            print("Had an error")
-//                                        }
-//                                    })
-//                                }
-//                                
-//                                
-//                                // Create a Photo class and entity value for each photo in the array using its dictionary.
-//                                //                            _ = sArray.map() {(dictionary: [String : AnyObject]) -> Step in
-//                                //
-//                                //
-//                                //                                // Set the pin variable in photo to that passed through this function.
-//                                //                                photo.pin = pin
-//                                //                                print("Photo image path: \(photo.imagePath)")
-//                                //                                return step
-//                                //                            }
-//                                
-//                                // IMPORTANT: uncomment this to save context, after finish iterating stuff.
-//                                //                            do {
-//                                //                                try self.sharedContext.save()
-//                                //                            } catch {
-//                                //                                fatalError("Failure to save context: \(error)")
-//                                //                            }
-//                            })
-//                            
-//                            completionhandler(success: true, errorString: nil)
-//                        } else {
-//                            let eString = "Dictionary had no steps key."
-//                            completionhandler(success: false, errorString: eString)
-//                        }
-//                    } else {
-//                        let eString = "Dictionary had no position key."
-//                        completionhandler(success: false, errorString: eString)
-//                    }
-//                } else {
-//                    let eString = "Dictionary had no sectionIdentifier key."
-//                    completionhandler(success: false, errorString: eString)
-//                }
-//            } else {
-//                let eString = "Dictionary had no details key."
-//                completionhandler(success: false, errorString: eString)
-//            }
-//        } else {
-//            let eString = "Dictionary had no title key."
-//            completionhandler(success: false, errorString: eString)
-//        }
-//        
-//        
-////        if let error = errorString as String {
-////            print("Error in Parsing with rawProcedureJSON data.")
-////            completionhandler(success: false, errorString: error.localized)
-////        } else {
-////            print("Parsed JSON data successfully.")
-////        }
-//        
-//    }
-
-
 
     // Parse JSON data using a completion handler to return the results.
     class func parseJSONWithCompletionHandler(data: NSData, completionHandler: CompletionHandler) {
