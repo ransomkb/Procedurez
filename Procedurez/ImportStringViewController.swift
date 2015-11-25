@@ -58,9 +58,6 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
                     } else {
                         print(errorString)
                         
-                        // Alert user
-//                        let alert = UIAlertView(title: "Problem With Request", message: "Error Message: \(errorString).", delegate: nil, cancelButtonTitle: "OK")
-//                        alert.show()
                         self.alertMessage = errorString
                         self.alertUser()
                     }

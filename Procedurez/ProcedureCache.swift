@@ -21,7 +21,7 @@ class ProcedureCache {
             return nil
         }
         
-        if let path = pathForIdentifier(identifier!) {
+        if let path = pathForBundleIdentifier(identifier!) {
             print("Getting procedure with identifier: \(path)")
             
             do {
@@ -52,11 +52,11 @@ class ProcedureCache {
     }
     
     // MARK: - Saving images
-    
+    // Not Using; keeping for future updates to JSON File.
     func storeJson(data: NSData?, withIdentifier identifier: String) {
         
         print("Storing image")
-        let path = pathForIdentifier(identifier)
+        let path = pathForBundleIdentifier(identifier)
         print("Stored at path: \(path)")
         
         // If the image is nil, remove images from the cache
@@ -83,10 +83,27 @@ class ProcedureCache {
     
     // MARK: - Helper
     
-    func pathForIdentifier(identifier: String) -> String? {
+    func pathForDocumentsIdentifier(identifier: String) -> NSURL? {
+        if let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! { //as! NSURL
+        
+        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
+        
+         // Return path to JSON resource files in the bundle.
+//        if let path = NSBundle.mainBundle().pathForResource(identifier, ofType: "json") {
+//            return path
+//        }
+            return fullURL
+        }
+        
+        return nil
+    }
+
+    
+    func pathForBundleIdentifier(identifier: String) -> String? {
 //        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! //as! NSURL
 //        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
         
+        // Return path to JSON resource files in the bundle.
         if let path = NSBundle.mainBundle().pathForResource(identifier, ofType: "json") {
             return path
         }
