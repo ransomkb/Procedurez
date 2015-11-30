@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate {
+class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDelegate, UITextFieldDelegate, UITextViewDelegate {
 
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
