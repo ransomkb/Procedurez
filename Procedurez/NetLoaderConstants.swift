@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Convenience structures for various string properties used in NetLoader
 extension NetLoader {
     struct API {
         static let ParseBaseURL: String = "https://api.parse.com/1/classes/"

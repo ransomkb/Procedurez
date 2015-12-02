@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// Object holder for ProdecureMetadata from Parse.com
 class ParseProcedure {
     
     let objectId: String!

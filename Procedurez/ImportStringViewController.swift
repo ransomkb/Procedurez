@@ -16,6 +16,10 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     var alertTitle: String?
     var alertMessage: String?
     
+    /* Based on student comments, this was added to help with smaller resolution devices */
+    var keyboardAdjusted = false
+    var lastKeyboardOffset: CGFloat = 0.0
+    
     @IBOutlet weak var explanationLabel: UILabel!
     @IBOutlet weak var importTextView: UITextView!
     
@@ -57,6 +61,9 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        //self.addKeyboardDismissRecognizer()
+        self.subscribeToKeyboardNotifications()
+        
         // Ensure segue was from a Parse.com data related table cell.
         if NetLoader.sharedInstance().isSegue {
             print("Segued to ImportString via Cell")
@@ -80,6 +87,13 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         } else {
             print("Segued to ImportString via Add button")
         }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        //self.removeKeyboardDismissRecognizer()
+        self.unsubscribeToKeyboardNotifications()
     }
     
     // MARK: - TextView related
@@ -119,6 +133,44 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
             self.presentViewController(alertController, animated: true, completion: nil)
         })
     }
-
     
 }
+
+
+/* This code has been added in response to student comments */
+extension ImportStringViewController {
+    
+    
+    func subscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func unsubscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        
+        if keyboardAdjusted == false {
+            lastKeyboardOffset = getKeyboardHeight(notification) / 2
+            self.view.superview?.frame.origin.y = -lastKeyboardOffset
+            keyboardAdjusted = true
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        
+        if keyboardAdjusted == true {
+            self.view.superview?.frame.origin.y = 0.0
+            keyboardAdjusted = false
+        }
+    }
+    
+    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        return keyboardSize.CGRectValue().height
+    }
+}
+
