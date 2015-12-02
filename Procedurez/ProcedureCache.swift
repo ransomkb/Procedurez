@@ -21,9 +21,11 @@ class ProcedureCache {
             return nil
         }
         
+        // Get the full path.
         if let path = pathForBundleIdentifier(identifier!) {
             print("Getting procedure with identifier: \(path)")
             
+            // Retrieve JSON data from the file.
             do {
                 let jsonData = try NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe)
                 print("Got the jsonData from the file.")
@@ -70,18 +72,22 @@ class ProcedureCache {
     
     // MARK: - Helper
     // Keeping for any future need
+    // Return an NSURL version.
     func pathForDocumentsIdentifier(identifier: String) -> NSURL? {
+        
+        // Confirm access to the Documents directory.
         if let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! { //as! NSURL
         
-        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
-            return fullURL
+            // Return full path to file at identifier.
+            return documentsDirectoryURL.URLByAppendingPathComponent(identifier)
         }
         
         return nil
     }
 
-    
+    // Return a String of the full path.
     func pathForBundleIdentifier(identifier: String) -> String? {
+        
         // Return path to JSON resource files in the bundle.
         if let path = NSBundle.mainBundle().pathForResource(identifier, ofType: "json") {
             return path

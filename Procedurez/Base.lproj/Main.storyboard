@@ -260,15 +260,15 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Procedures" id="Zdf-7t-Un8">
-                        <barButtonItem key="leftBarButtonItem" title="Gear" id="vEM-2A-7B9">
+                        <barButtonItem key="leftBarButtonItem" title="Gear" id="vEM-2A-7B9" userLabel="Import Button">
                             <connections>
-                                <action selector="openSettings:" destination="7bK-jq-Zjz" id="gnX-xZ-SpJ"/>
+                                <action selector="openImporters:" destination="7bK-jq-Zjz" id="gyh-xl-79k"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="settingsButton" destination="vEM-2A-7B9" id="NDF-k6-Daj"/>
+                        <outlet property="importButton" destination="vEM-2A-7B9" id="XvU-XD-8tE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
