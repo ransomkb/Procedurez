@@ -9,23 +9,31 @@
 import UIKit
 import Foundation
 
+// View Controller for importing Procedures in a JSON formatted string.
 class ImportStringViewController: UIViewController, UITextViewDelegate {
     
     var JSONString: String?
+    var alertTitle: String?
     var alertMessage: String?
     
     @IBOutlet weak var explanationLabel: UILabel!
     @IBOutlet weak var importTextView: UITextView!
     
+    // Saves the text view string as one or more Step entities in CoreData with paent / child relationships.
     @IBAction func saveJSONString(sender: AnyObject) {
+        
+        // Set the string properties.
         JSONString = importTextView.text
         NetLoader.sharedInstance().json = JSONString
         
+        // Verify / Vet and save to CoreData.
         NetLoader.sharedInstance().importJSON(JSONString!) { (success, errorString) -> Void in
             if success {
+                self.alertTitle = "FYI"
                 self.alertMessage = "Import Succeeded"
                 self.alertUser()
             } else {
+                self.alertTitle = "Had an Issue"
                 self.alertMessage = errorString
                 self.alertUser()
             }
@@ -39,19 +47,27 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
         
+        // Set self as text view delegate.
         self.importTextView.delegate = self
+        
+        // Add default text to text view.
         importTextView.text = "Paste Copied JSON Here"
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Ensure segue was from a Parse.com data related table cell.
         if NetLoader.sharedInstance().isSegue {
             print("Segued to ImportString via Cell")
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+                
+                // Find the correct data on Parse.com.
                 NetLoader.sharedInstance().searchParse({ (success, errorString) -> Void in
                     if success {
                         print("Got the Procedure Steps")
+                        
+                        // Display the JSON formatted data from Parse.com in the text view.
                         self.importTextView.text = NetLoader.sharedInstance().parseProcedure?.steps
                     } else {
                         print(errorString)
@@ -68,6 +84,7 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - TextView related
     
+    // Remove default text.
     func textViewDidBeginEditing(textView: UITextView) {
         print("Did Begin Editing")
         if (self.importTextView.text == "Paste Copied JSON Here") {
@@ -88,12 +105,7 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         dispatch_async(dispatch_get_main_queue(), {
             
             // Create an instance of UIAlertController.
-            let alertController = UIAlertController(title: "Issue Occurred", message: self.alertMessage, preferredStyle: .Alert)
-            
-            // Set the alert message.
-            if let message = self.alertMessage {
-                alertController.message = message
-            }
+            let alertController = UIAlertController(title: self.alertTitle, message: self.alertMessage, preferredStyle: .Alert)
             
             // Create action button with OK button to dismiss alert.
             let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in

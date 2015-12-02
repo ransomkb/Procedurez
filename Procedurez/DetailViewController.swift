@@ -10,15 +10,15 @@ import UIKit
 import CoreData
 
 class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDelegate, UITextFieldDelegate, UITextViewDelegate {
-
-    @IBOutlet weak var shareButton: UIBarButtonItem!
+    
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var titleTextField: UITextField!
     
-    @IBOutlet weak var detailsTextView: UITextView!
-    
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
+    
+    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var detailsTextView: UITextView!
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailsLabel: UILabel!
@@ -29,6 +29,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     var alertMessage: String?
     
+    // Properties for entity functions
     var isDone = false
     var isStep = true
     var isMovingStep = false
@@ -36,13 +37,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     var sectionSortDescriptorKey = "sectionIdentifier"
     var sortDescriptorKey = "position"
-        
+    
+    // Convenience keys
     struct Keys {
         static let Position = "position"
         static let Title = "title"
         static let Details = "details"
     }
     
+    // For configuring the Step detailItem
     var detailItem: Step? {
         didSet {
             // Update the view.
@@ -57,6 +60,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         if let _: AnyObject = detailItem {
             print("Do have a detail item")
             
+            // Set the text view and label to the details value.
             if let det = detailItem?.details {
                 print("Step has details")
                 
@@ -72,6 +76,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 }
             }
             
+            // Set the text field and label to the title value.
             if let proTitle = self.detailItem?.title {
                 print("Step has a title")
                 
@@ -99,9 +104,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         // Create the JSON data (procedure is actually a Step as detailItem is one).
         if let procedure = detailItem {
+            
+            // Create a JSON formatted string.
             let json = procedure.getJSONDictionary()
             print(json)
             
+            // Prepare for displaying the JSON in an array for the Activity View Controller.
             let activityItems = [json]
             
             // Present UIActivityViewController on main queue.
@@ -113,50 +121,30 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 self.presentViewController(nextController, animated: true, completion: nil)
             })
             
-            // Decided saving to a file before sharing was redundant as already in CoreData.
-//            print("json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(json))")
-//            
-//            if let data = json.dataUsingEncoding(NSUTF8StringEncoding) {
-//                print("Data is of type NSData: \(data.isKindOfClass(NSData))")
-//                
-//                print("data of json string is a valid json object: \(NSJSONSerialization.isValidJSONObject(data))")
-//                
-//                let jsonFile = FileSaveHelper(fileName: (detailItem?.title)!, fileExtension: .JSON, subDirectory: "FilesToShare", directory: .DocumentDirectory)
-//                
-//                do {
-//                    try jsonFile.saveFile(string: json)
-//                } catch {
-//                    print(error)
-//                }
-//                
-//                print("JSON file to share exists: \(jsonFile.fileExists)")
-//                
-//                NetLoader.sharedInstance().json = json
-//                
-//                // Get the file contents off the hard drive
-//                if let _ = NSData(contentsOfFile: jsonFile.fullyQualifiedPath) {
-//                    print("Adding the json file to the activityItems array.")
-//                }
-//            }
         } else {
             print("Procedure for detailItem is nil")
         }
-        
     }
     
+    // Save the data in text field and text view to CoreData.
     @IBAction func saveData(sender: AnyObject) {
         print("Saving the Data")
+        
+        // Get the context.
         let context = self.fetchedResultsController.managedObjectContext
         
+        // Assign text field and view values to the title and detail properties of the Step entity of the detail item.
         print("Do have a procedure; saving title")
         print(self.titleTextField.text!)
         self.detailItem!.title = self.titleTextField.text!
         self.detailItem!.details = self.detailsTextView.text!
         print(self.detailItem!.title)
         
+        // Prepare the labels.
         titleLabel.text = self.detailItem?.title
         detailsLabel.text = self.detailItem?.details
         
+        // Adjust positions in fetched results controller after cell is moved/deleted.
         updatePositions()
         
         // Save the context.
@@ -171,14 +159,20 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             abort()
         }
         
+        // Allow changes to fetched results controller, finally.
         self.tableView.editing = false
         
+        // Make sure the keyboard is gone.
         titleTextField.resignFirstResponder()
         detailsTextView.resignFirstResponder()
+        
+        //Hide text field and text view, etc.
         hideUI()
     }
     
+    // Unhide text field and text view, etc.
     @IBAction func editData(sender: AnyObject) {
+        // Prevent premature changes to fetched results controller.
         self.tableView.editing = true
         hideUI()
     }
@@ -192,9 +186,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         print("Detail View did load: start")
         
+        // Add a button for creating substeps / children.
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         
-        // Add a share button if this is the first Step
+        // Add a share button if this is the first Step.
         let rightBarButtonItems: [UIBarButtonItem]!
         if (detailItem?.parent == nil) {
             rightBarButtonItems = [addButton, shareButton]
@@ -204,9 +199,11 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         self.navigationItem.rightBarButtonItems = rightBarButtonItems
         
+        // Make self delegate for various objects.
         self.titleTextField.delegate = self
         self.detailsTextView.delegate = self
         
+        // Capitalize first letters of title text field.
         self.titleTextField.autocapitalizationType = UITextAutocapitalizationType.Words
         self.tableView.separatorStyle = .None
         
@@ -218,6 +215,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         super.viewWillAppear(animated)
         print("Detail View will appear: start")
         
+        // Ensure correct UI is visible for a new Step.
         if (self.titleTextField.text != "Tap to Edit Name") && !saveButton.hidden {
             hideUI()
         }
@@ -229,16 +227,20 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     // MARK: - Misc
     
+    // Insert a new Step entity object into CoreData.
     func insertNewObject(sender: AnyObject) {
         print("Inserting new Step object")
+        
+        // Prepare to insert Step entity.
         let context = self.fetchedResultsController.managedObjectContext
         let entity = self.fetchedResultsController.fetchRequest.entity!
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context)
         
         let editName = "Tap to Edit Name"
         
-        print("isDone: \(isDone)")
+        //print("isDone: \(isDone)")
         
+        // Set necessary Step properties.
         newManagedObject.setValue(editName, forKey: "title")
         newManagedObject.setValue(self.detailItem, forKey: "parent")
         newManagedObject.setValue(isDone, forKey: "done")
@@ -261,6 +263,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Now detailItem has \(self.detailItem?.children.count) children")
     }
     
+    // Hide and Unhide the User Interface labels, text fields, text views, buttons, etc.
     func hideUI() {
         print("Hiding the UI")
         saveButton.hidden = !saveButton.hidden
@@ -270,36 +273,16 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         titleLabel.hidden = !titleLabel.hidden
         detailsLabel.hidden = !detailsLabel.hidden
     }
-
-    
-    // IMPORTANT: maybe don't need
-//    func configureStep() {
-//        let context = self.fetchedResultsController.managedObjectContext
-//        let stepDictionary = [Keys.Position:1, Keys.Title:"Tap to add Step", Keys.Details:"Edit Details"]
-//        var stepArray = [Step]()
-//        let step = Step(dictionary: stepDictionary, context: context)
-//        stepArray.append(step)
-//        
-//        // Save the context.
-//        var error: NSError? = nil
-//        do {
-//            try context.save()
-//        } catch let error1 as NSError {
-//            error = error1
-//            // Replace this implementation with code to handle the error appropriately.
-//            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//            print("Unresolved error \(error), \(error!.userInfo)")
-//            abort()
-//        }
-//    }
     
     
     // MARK: - Table View
     
+    // Return number of sections.
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count ?? 0
     }
     
+    // Return number of rows in section.
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
         
@@ -307,6 +290,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return sectionInfo.numberOfObjects
     }
     
+    // Adjust the section header to Do or Done.
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if let sections = fetchedResultsController.sections {
             let currentSection = sections[section]
@@ -317,10 +301,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return nil
     }
     
+    // Return a cell configured to the properties of a child of the detailItem/Step.
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         print("Index path: \(indexPath)")
         print("Row: \(indexPath.row)")
         
+        // Get the child.
         let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
         
         print("This cell object has position: \(object.position)")
@@ -329,25 +315,29 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("This cell object has sectionIdentifier: \(object.sectionIdentifier)")
         print("This cell object has children: \(object.children)")
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) //as? UITableViewCell
+        // Dequeue a cell.
+        let cell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath)
         
-        let cellBackgroundView = UIImageView(image: UIImage(named: setBackgroundImage(object, indexPathRow:indexPath.row)))
-        
-        cell.backgroundView = cellBackgroundView
+        // Set the background to the correct image.
+        cell.backgroundView = UIImageView(image: UIImage(named: setBackgroundImage(object, indexPathRow:indexPath.row)))
         
         // Remove the selection highlighting.
         cell.selectionStyle = .None
         
+        // Make the text more readable on the colorful images.
         cell.textLabel?.textColor = UIColor.whiteColor()
         cell.detailTextLabel?.textColor = UIColor.whiteColor()
         
+        // Set the text values of the cell.
         cell.textLabel?.text = object.valueForKey("title")!.description
         cell.detailTextLabel?.text = object.valueForKey("details")?.description
         
+        // Make the cell swipable from left to right to let it be moved to the Done section.
         let swipeRight = UISwipeGestureRecognizer(target: self, action: "handleRightSwipe:")
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
         cell.addGestureRecognizer(swipeRight)
         
+        // Hide the discolsure symbol if there are no grandchildren / substeps in this substep.
         if object.children.isEmpty {
             print("No children")
             
@@ -357,18 +347,25 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return cell
     }
     
+    // Make table editable, allowing cells to be moved.
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     
+    // Handle .Delete type editing.
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
         if editingStyle == .Delete {
+            
+            // Get the context and delete the object in the cell.
             let context = self.fetchedResultsController.managedObjectContext
             context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
             
+            // Adjust positions in fetched results controller after cell is moved/deleted.
             updatePositions()
             
+            // Save the context.
             var error: NSError? = nil
             do {
                 try context.save()
@@ -382,16 +379,21 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
+    // Handle moving the row.
     func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
         print("Moving cell")
         
+        // Ensure the fetched results controller and table view do not make changes prematurely.
         isMovingStep = true
         
         if var steps = self.fetchedResultsController.fetchedObjects {
+            
+            // Get the step to be moved, remove it, and reinsert it in the fetched results controller.
             let step = steps[sourceIndexPath.row] as! Step
             steps.removeAtIndex(sourceIndexPath.row)
             steps.insert(step, atIndex: destinationIndexPath.row)
             
+            // Update the order/positions of the steps.
             var iter : Int32 = 0
             for step in steps as! [Step] {
                 print("Step array position: \(iter)")
@@ -400,6 +402,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 ++iter
             }
             
+            // Save the context.
             var error: NSError? = nil
             do {
                 try self.managedObjectContext!.save()
@@ -412,18 +415,26 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             }
         }
         
+        // Remove the premature preventative.
         isMovingStep = false
         
+        // Update the table vew rows.
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             tableView.reloadRowsAtIndexPaths(tableView.indexPathsForVisibleRows!, withRowAnimation: UITableViewRowAnimation.Fade)
         })
     }
     
+    // Handle row selection.
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
+            
+            // Get the selected child.
             let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Step
+            
+            // Create a DetailViewController from the storyboard to show the child as a detailItem/Step.
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("DetailViewController") as! DetailViewController
             
+            // Set the properties of the new view controller.
             controller.detailItem = object
             controller.managedObjectContext = self.managedObjectContext
             controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
@@ -431,37 +442,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             
             print("Destination view controller set up")
             
+            // Push the new view controller on the navigation stack.
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     
-//    func configureCell(indexPath: NSIndexPath) -> TableViewCell {
-//        
-//        // Dequeue custom cell as TableViewCell.
-//        if let cell: TableViewCell = tableView.dequeueReusableCellWithIdentifier(detailCellIdentifier, forIndexPath: indexPath) as? TableViewCell {
-//            print("Cell is a TableViewCell")
-//            
-//            
-//            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-//            let text = object.valueForKey("title")!.description
-//            if let label = cell.nameLabel {
-//                
-//                print("Have a namelabel for cell")
-//                label.text = text
-//            } else {
-//                print("no namelabel in cell")
-//                cell.textLabel?.text = text
-//            }
-//            
-//            return cell
-//        }
-//        let oldCell = TableViewCell()
-//        return oldCell
-//    }
-    
+    // Set the background image of a cell, depending on whether device is iPad or iPhone.
     func setBackgroundImage(step: Step, indexPathRow row: Int) -> String {
-        step.objectID.URIRepresentation().lastPathComponent
         
+        // Determine the type of device, then get the image of the appropriate color.
         switch UIDevice.currentDevice().userInterfaceIdiom {
         case .Pad:
             if step.done {
@@ -488,13 +477,16 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
+    // Adjust positions in fetched results controller after cell is moved/deleted.
     func updatePositions() {
         print("Updating positions")
         if let _ = self.managedObjectContext {
             if let steps = self.fetchedResultsController.fetchedObjects {
                 
+                // Ensure the fetched results controller and table view do not make changes prematurely.
                 isMovingStep = true
                 
+                // Update the order/positions of the steps.
                 var iter : Int32 = 0
                 for step in steps as! [Step] {
                     print("Step array position: \(iter)")
@@ -504,6 +496,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                     ++iter
                 }
                 
+                // Remove the premature preventative.
                 isMovingStep = false
             }
         } else {
@@ -511,16 +504,20 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
+    // Handle right swipe by marking cell as done and moving to Done section.
     func handleRightSwipe(gesture: UISwipeGestureRecognizer) {
     print("Handling swipe")
         
+        // Get the point of touch/swipe.
         let point = gesture.locationInView(self.tableView)
         print("Swipe Point: \(point)")
         let indexPath = self.tableView.indexPathForRowAtPoint(point)
         print("Swipe Point index path: \(indexPath)")
         
+        // Check the direction of the swipe.
         switch gesture.direction {
         case UISwipeGestureRecognizerDirection.Right:
+            // Update the done bool to determine table section.
             let step = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Step
             step.done = !step.done.boolValue
             step.updateSectionIdentifier()
@@ -593,9 +590,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     var _fetchedResultsController: NSFetchedResultsController? = nil
     
-    
+    // Prepare for fetched results controller changes.
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
+        // Prevent premature changes.
         if isMovingStep {
             return
         }
@@ -603,8 +601,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         self.tableView.beginUpdates()
     }
     
+    // Handle section changes to fetched results controller.
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
+        // Prevent premature changes.
         if isMovingStep {
             return
         }
@@ -619,8 +619,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
+    // Handle content changes to to fetched results controller.
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
+        // Prevent premature changes.
         if isMovingStep {
             return
         }
@@ -631,7 +633,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         case .Delete:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
         case .Update: break
-            
+            // Do nothing.
         case .Move:
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
@@ -639,14 +641,16 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
     }
     
+    // Finish changes to table view when changes to fetched results controller are finished.
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
+        // Prevent premature changes.
         if isMovingStep {
             return
         }
         
         // In the simplest, most efficient, case, reload the table view.
-        // IMPORTANT: added the end updates as no changes immediately when adding otherwise.
+        // Added the end updates as no changes immediately when adding otherwise.
         self.tableView.endUpdates()
         self.tableView.reloadData()
     }
@@ -660,12 +664,14 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
+    
+    // Drop keyboard when Return is tapped.
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        // Drop keyboard when Return is tapped.
         textField.resignFirstResponder()
         return true
     }
     
+    // Limit the title to 50 characters.
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
         if (range.length + range.location > textField.text?.characters.count )
@@ -677,8 +683,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return newLength <= 50
     }
     
+    
     // MARK: - TextView related
     
+    // Clear the default text in details text view.
     func textViewDidBeginEditing(textView: UITextView) {
         if (self.detailsTextView.text == "Add a short description") {
             self.detailsTextView.text = ""
@@ -686,6 +694,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
+    // Limit the details text to 140 characters.
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         
         if (range.length + range.location > textView.text?.characters.count )
@@ -697,11 +706,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         return newLength <= 140
     }
     
-    // MARK: - String related
-    
-//    func replaceDoubleQuotes(jsonString: String) -> String {
-//        return String(jsonString.characters.map{ $0 == "\"" ? "\'" : $0 })
-//    }
     
     // Use an UIAlertController to inform user of issue.
     func alertUser() {
