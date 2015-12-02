@@ -47,51 +47,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         super.init()
     }
     
-    // MARK: - Fetched results controller
-    
-//    var fetchedResultsController: NSFetchedResultsController {
-//        print("Accessing the Master fetched results controller")
-//        if _fetchedResultsController != nil {
-//            return _fetchedResultsController!
-//        }
-//        
-//        let fetchRequest = NSFetchRequest()
-//        
-//        // Edit the entity name as appropriate.
-//        let entity = NSEntityDescription.entityForName("Step", inManagedObjectContext: sharedContext)
-//        fetchRequest.entity = entity
-//        
-//        // Set the batch size to a suitable number.
-//        fetchRequest.fetchBatchSize = 20
-//        
-//        // Sort the Steps by title, ascending.
-//        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
-//        let predicate = NSPredicate(format: "parent == nil")
-//        
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-//        fetchRequest.predicate = predicate
-//        
-//        // Edit the section name key path and cache name if appropriate.
-//        // nil for section name key path means "no sections".
-//        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: sharedContext, sectionNameKeyPath: nil, cacheName: nil)
-//        aFetchedResultsController.delegate = self
-//        _fetchedResultsController = aFetchedResultsController
-//        
-//        var error: NSError? = nil
-//        do {
-//            try _fetchedResultsController!.performFetch()
-//        } catch let error1 as NSError {
-//            error = error1
-//            // Replace this implementation with code to handle the error appropriately.
-//            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//            print("Unresolved error \(error), \(error!.userInfo)")
-//            abort()
-//        }
-//        
-//        return _fetchedResultsController!
-//    }
-//    var _fetchedResultsController: NSFetchedResultsController? = nil
-
     // Search for a dictionary on Parse.com with details of a Procedure / Procedures.
     func searchParse(completionHandler: (success: Bool, errorString: String?) -> Void) {
         // Use the GET method for a RESTful request.
@@ -111,9 +66,10 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     if resultsArray.count > 0 {
                         print("Results count: \(resultsArray.count)")
                         
-                        
+                        // Get MetaData of a Procedure, or the JSON formatted string of the Procedure itself.
                         if self.isMeta {
                             
+                            // Create ParseProcedure objects from the results array, and append them to the meta array.
                             self.metaArray = [ParseProcedure]()
                             
                             for meta in resultsArray {
@@ -135,6 +91,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                         } else {
                             print("metaArray is not empty; getting steps")
                             
+                            // Get the single JSON formatted string object from the results array.
                             let dictionary: [String:AnyObject] = resultsArray[0]
                             
                             if let process = self.parseProcedure {
@@ -144,6 +101,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                                         print("Procedure objectId == meta.procedureId")
                                         if let procedureSteps = dictionary["steps"] as? String {
                                             print("JSON dictionary key steps was assigned to a ParseProcedure.steps")
+                                            
+                                            // Set the steps property of the parseProecedure to that of the results array.
                                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                                 
                                                 self.parseProcedure?.steps = procedureSteps
@@ -179,7 +138,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         // Create a string of parameters for RESTful request.
         let urlString: String!
         
-        // Create request from URL.
+        // Create request from URL; adjust URL depending on whether request is for Meta data or the actual Procedure.
         if isMeta {
             urlString = baseURL + method
         } else {
@@ -225,6 +184,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             } else {
                 print("No Error, Time to Parse Data.")
                 
+                // Parse the JSON.
                 NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
         })
@@ -246,6 +206,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         return requestValues
     }
     
+    // Determine whether to get a Procedure from Parse.com, or its meta data.
     func setParseClass() -> String {
         if isMeta {
             print("Parse Class is Meta")
@@ -297,13 +258,14 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    
     // MARK: - JSONParsing stuff
     
-    // IMPORTANT: get the LoadMe file from the bundle. parse the jason and set the first how to.
+    // Get the LoadMe.json file (How To Use) data; parse the json, and save the first Procedure.
     func loadHowTo(jsonData: NSData, completionhandler: (success: Bool, errorString: String?) -> Void) {
-        
         print("Trying to load How to Use Procedure.")
         
+        // Parse JSON data using a completion handler to return the results.
         NetLoader.parseJSONWithCompletionHandler(jsonData) { (parsedResult, error) -> Void in
             
             if let error = error {
@@ -311,10 +273,14 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 completionhandler(success: false, errorString: error.localizedDescription)
             } else {
                 print("Parsed JSON data successfully.")
+                
+                // Get the necessary data from the dictionary of JSON data, use it to create a Step, 
+                // iterating through children and grandchildren.
                 self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, completionhandler: { (success, errorString) -> Void in
                     if let error = errorString {
                         completionhandler(success: false, errorString: error)
                     } else {
+                        // Save the context for all the Steps of the Procedure.
                         do {
                             try self.sharedContext.save()
                         } catch {
@@ -329,11 +295,13 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
 
     }
     
+    // Get the LoadMe.json file string from the bundle; import JSON-formatted string by converting it to data.
     func importJSON(jsonString: String, completionhandler: (success: Bool, errorString: String?) -> Void) {
         print("Importing ProcedureJSON")
         
         let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
         
+        // Parse the json, and save the first Procedure.
         self.loadHowTo(rawProcedureJSON!) { (success, errorString) -> Void in
             if success {
                 completionhandler(success: true, errorString: nil)
@@ -343,7 +311,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    
+    // Get the necessary data from the dictionary of JSON data, use it to create a Step,
+    // iterating through children and grandchildren.
     func parseJSONAsDictionary(dict: NSDictionary, parent: Step?, completionhandler: (success: Bool, errorString: String?) -> Void) {
         
         /* Start playing with JSON here... */
@@ -351,6 +320,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         
         let dictionary = dict as! [String: AnyObject]
         
+        // Ensure the necessary data is in the dictionary.
         guard let title = dictionary["title"] where (dictionary["title"] as! String).characters.count <= self.titleCount else {
             let eString = "Dictionary had no title key."
             completionhandler(success: false, errorString: eString)
@@ -389,15 +359,19 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             
+            // Create a Step entity.
             let step = Step(dictionary: dictionary, context: self.sharedContext)
             
+            // Use parent parameter to set parent property of the Step.
             if let p = parent {
                 step.parent = p
             }
             
+            // Get any children as an array of Step-related dictionaries.
             let sArray = st as! [[String: AnyObject]]
             // print("Array of Steps: \(sArray)")
             
+            // Iterate through the array to create the Step entities for any children.
             for d in sArray {
                 self.parseJSONAsDictionary(d, parent: step, completionhandler: { (success, errorString) -> Void in
                     if success {
@@ -411,6 +385,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             
         })
         
+        // Inform function caller of success in creating all the Step entities, 
+        // with related parents and children, for Procedure.
         completionhandler(success: true, errorString: nil)
     }
 

@@ -140,7 +140,6 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
 /* This code has been added in response to student comments */
 extension ImportStringViewController {
     
-    
     func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
