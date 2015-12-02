@@ -125,15 +125,7 @@ class Step: NSManagedObject {
     
     // Replace escaped double-quotes with escaped single-quotes.
     func replaceDoubleQuotes(jsonString: String) -> String {
-        return String(jsonString.characters.map {
-                //$0 == "\"" ? "\'" : $0
-            switch $0 {
-            case "\"":
-                return "\'"
-            default:
-                return $0
-            }
-        })
+        return String(jsonString.characters.map { $0 == "\"" ? "\'" : $0 })
     }
     
 }
