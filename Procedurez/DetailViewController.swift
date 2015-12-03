@@ -204,7 +204,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         self.detailsTextView.delegate = self
         
         // Capitalize first letters of title text field.
-        self.titleTextField.autocapitalizationType = UITextAutocapitalizationType.Words
+        // (Works in simulator only if software keyboard is toggled.)
+        self.titleTextField.autocapitalizationType = .Words
         self.tableView.separatorStyle = .None
         
         self.configureView()
@@ -655,6 +656,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         self.tableView.reloadData()
     }
     
+    
     // MARK: - TextField related
     
     // Clear the default text when text field is selected.
@@ -690,7 +692,6 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     func textViewDidBeginEditing(textView: UITextView) {
         if (self.detailsTextView.text == "Add a short description") {
             self.detailsTextView.text = ""
-            
         }
     }
     

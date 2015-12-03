@@ -48,7 +48,7 @@
                                 <rect key="frame" x="78" y="72" width="506" height="30"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Add a short description" translatesAutoresizingMaskIntoConstraints="NO" id="YPo-mA-HIO">
                                 <rect key="frame" x="78" y="118" width="506" height="50"/>
