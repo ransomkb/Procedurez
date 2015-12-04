@@ -22,9 +22,12 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var explanationLabel: UILabel!
     @IBOutlet weak var importTextView: UITextView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // Saves the text view string as one or more Step entities in CoreData with paent / child relationships.
     @IBAction func saveJSONString(sender: AnyObject) {
+        
+        self.activityIndicator.startAnimating()
         
         // Set the string properties.
         JSONString = importTextView.text
@@ -33,10 +36,12 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         // Verify / Vet and save to CoreData.
         NetLoader.sharedInstance().importJSON(JSONString!) { (success, errorString) -> Void in
             if success {
+                self.activityIndicator.stopAnimating()
                 self.alertTitle = "FYI"
                 self.alertMessage = "Import Succeeded"
                 self.alertUser()
             } else {
+                self.activityIndicator.stopAnimating()
                 self.alertTitle = "Had an Issue"
                 self.alertMessage = errorString
                 self.alertUser()
@@ -67,6 +72,9 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         // Ensure segue was from a Parse.com data related table cell.
         if NetLoader.sharedInstance().isSegue {
             print("Segued to ImportString via Cell")
+            
+            self.activityIndicator.startAnimating()
+            
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
                 
                 // Find the correct data on Parse.com.

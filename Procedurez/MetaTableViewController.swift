@@ -14,9 +14,11 @@ class MetaTableViewController: UITableViewController {
     var alertMessage: String?
     
     // Array for the table view
-    var proceduresMeta: [ParseProcedure] = []
+    var proceduresMeta: [ParseProcedure]?
     
     @IBOutlet weak var tableViewCell: UITableViewCell!
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +35,13 @@ class MetaTableViewController: UITableViewController {
             NetLoader.sharedInstance().searchParse { (success, errorString) -> Void in
                 if success {
                     print("Finished getting array of meta items.")
+                    self.activityIndicator.stopAnimating()
                     self.proceduresMeta = NetLoader.sharedInstance().metaArray
                     self.tableView.reloadData()
                 } else {
                     print(errorString)
                     
+                    self.activityIndicator.stopAnimating()
                     self.alertMessage = errorString
                     self.alertUser()
                 }
@@ -90,11 +94,15 @@ class MetaTableViewController: UITableViewController {
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
             
             // Get the appropriate Procedure data from Parse.com.
-            NetLoader.sharedInstance().parseProcedure = proceduresMeta[indexPath.row]
-            
-            // Inform ImportStringViewController this is a segue from a cell, not the button.
-            NetLoader.sharedInstance().isSegue = true
-            navigationController.pushViewController(controller, animated: true)
+            if proceduresMeta?.count > indexPath.row {
+                NetLoader.sharedInstance().parseProcedure = proceduresMeta![indexPath.row]
+                    
+                // Inform ImportStringViewController this is a segue from a cell, not the button.
+                NetLoader.sharedInstance().isSegue = true
+                navigationController.pushViewController(controller, animated: true)
+            } else {
+                print("MetaTableViewController: Meta array is too small.")
+            }
         }
     }
     
