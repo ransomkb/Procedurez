@@ -98,15 +98,11 @@ class MetaTableViewController: UITableViewController {
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
             
             // Get the appropriate Procedure data from Parse.com.
-            if proceduresMeta?.count > indexPath.row {
-                NetLoader.sharedInstance().parseProcedure = proceduresMeta![indexPath.row]
-                    
-                // Inform ImportStringViewController this is a segue from a cell, not the button.
-                NetLoader.sharedInstance().isSegue = true
-                navigationController.pushViewController(controller, animated: true)
-            } else {
-                print("MetaTableViewController: Meta array is too small.")
-            }
+            NetLoader.sharedInstance().parseProcedure = proceduresMeta![indexPath.row]
+            
+            // Inform ImportStringViewController this is a segue from a cell, not the button.
+            NetLoader.sharedInstance().isSegue = true
+            navigationController.pushViewController(controller, animated: true)
         }
     }
     
