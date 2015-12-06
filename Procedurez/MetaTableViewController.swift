@@ -23,10 +23,14 @@ class MetaTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        proceduresMeta = [ParseProcedure]()
+        
         // Place the Add button (to skip Parse.com and add JSON formatted Procedure string directly).
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "segueToImport")
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            
+            self.activityIndicator.startAnimating()
             
             // Ensure getting the meta data of the Procedure from Parse.com.
             NetLoader.sharedInstance().isMeta = true
@@ -73,7 +77,7 @@ class MetaTableViewController: UITableViewController {
     
     // Return the count of the metaArray property.
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return NetLoader.sharedInstance().metaArray.count
+        return proceduresMeta!.count
     }
     
     // Return a cell configured to the meta data of a Procedure.
