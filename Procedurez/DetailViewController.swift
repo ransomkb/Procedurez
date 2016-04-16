@@ -187,7 +187,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Detail View did load: start")
         
         // Add a button for creating substeps / children.
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
+        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(DetailViewController.insertNewObject(_:)))
         
         // Add a share button if this is the first Step.
         let rightBarButtonItems: [UIBarButtonItem]!
@@ -334,7 +334,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         cell.detailTextLabel?.text = object.valueForKey("details")?.description
         
         // Make the cell swipable from left to right to let it be moved to the Done section.
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: "handleRightSwipe:")
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(DetailViewController.handleRightSwipe(_:)))
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
         cell.addGestureRecognizer(swipeRight)
         
@@ -400,7 +400,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 print("Step array position: \(iter)")
                 print("Step title: \(step.title)")
                 step.position = iter
-                ++iter
+                iter += 1
             }
             
             // Save the context.
@@ -494,7 +494,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                     print("Step title: \(step.title)")
                     print("Step done: \(step.done)")
                     step.position = iter
-                    ++iter
+                    iter += 1
                 }
                 
                 // Remove the premature preventative.

@@ -90,7 +90,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
         
         // Create button for adding procedures.
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
+        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(MasterViewController.insertNewObject(_:)))
         
         // Add buttons to navigation controller.
         let leftBarButtonItems: [UIBarButtonItem] = [importButton, self.editButtonItem()]

@@ -53,7 +53,7 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         // Resign first responder when tapping anywhere else.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ImportStringViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
         // Set self as text view delegate.
@@ -149,8 +149,8 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
 extension ImportStringViewController {
     
     func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ImportStringViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ImportStringViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     func unsubscribeToKeyboardNotifications() {

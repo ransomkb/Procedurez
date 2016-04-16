@@ -26,7 +26,7 @@ class MetaTableViewController: UITableViewController {
         proceduresMeta = [ParseProcedure]()
         
         // Place the Add button (to skip Parse.com and add JSON formatted Procedure string directly).
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "segueToImport")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(MetaTableViewController.segueToImport))
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             

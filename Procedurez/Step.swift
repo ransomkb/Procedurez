@@ -112,7 +112,7 @@ class Step: NSManagedObject {
                     json += ", "
                 }
                 
-                ++counter
+                counter += 1
             }
         }
         
