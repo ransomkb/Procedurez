@@ -122,6 +122,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "Procedurez"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

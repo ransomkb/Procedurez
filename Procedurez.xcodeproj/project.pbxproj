@@ -16,10 +16,10 @@
 		D40D240F1B9951A3007D2F44 /* ProcedurezTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */; };
 		D40D241E1B9D3080007D2F44 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241D1B9D3080007D2F44 /* Step.swift */; };
 		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
-		D42DD7561CC39EF80039F0C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D42DD7551CC39EF80039F0C7 /* Images.xcassets */; };
 		D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */; };
 		D43CCDD41BF0E3200054BB9B /* ParseProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */; };
 		D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334321BE3171A00442F24 /* ImportStringViewController.swift */; };
+		D4714DF91CC3B7F800404469 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4714DF81CC3B7F800404469 /* Images.xcassets */; };
 		D4A958031BE0A92B00C5B7FF /* NetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958021BE0A92B00C5B7FF /* NetLoader.swift */; };
 		D4A958051BE0A93C00C5B7FF /* NetLoaderConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */; };
 		D4A958071BE0AE3A00C5B7FF /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */; };
@@ -81,10 +81,10 @@
 		D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcedurezTests.swift; sourceTree = "<group>"; };
 		D40D241D1B9D3080007D2F44 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		D42DD7551CC39EF80039F0C7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RepeaterImages/Images.xcassets; sourceTree = "<group>"; };
 		D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaTableViewController.swift; sourceTree = "<group>"; };
 		D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseProcedure.swift; sourceTree = "<group>"; };
 		D46334321BE3171A00442F24 /* ImportStringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportStringViewController.swift; sourceTree = "<group>"; };
+		D4714DF81CC3B7F800404469 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D4A958021BE0A92B00C5B7FF /* NetLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetLoader.swift; sourceTree = "<group>"; };
 		D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetLoaderConstants.swift; sourceTree = "<group>"; };
 		D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
@@ -175,8 +175,8 @@
 			isa = PBXGroup;
 			children = (
 				D4BC9D1F1BBA6FEE00527235 /* RepeaterImages */,
-				D42DD7551CC39EF80039F0C7 /* Images.xcassets */,
 				D40D23F21B9951A3007D2F44 /* Info.plist */,
+				D4714DF81CC3B7F800404469 /* Images.xcassets */,
 				D400BC841BF052E50035BC70 /* LoadMe.json */,
 			);
 			name = "Supporting Files";
@@ -355,6 +355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4BC9D471BBA6FEE00527235 /* PhonePurple.png in Resources */,
+				D4714DF91CC3B7F800404469 /* Images.xcassets in Resources */,
 				D40D23FE1B9951A3007D2F44 /* Main.storyboard in Resources */,
 				D4BC9D451BBA6FEE00527235 /* PhoneGreen.png in Resources */,
 				D4BC9D3C1BBA6FEE00527235 /* PadBlack.png in Resources */,
@@ -370,7 +371,6 @@
 				D4BC9D3F1BBA6FEE00527235 /* PadOrange.png in Resources */,
 				D4BC9D431BBA6FEE00527235 /* PhoneBlack.png in Resources */,
 				D4BC9D401BBA6FEE00527235 /* PadPurple.png in Resources */,
-				D42DD7561CC39EF80039F0C7 /* Images.xcassets in Resources */,
 				D4BC9D521BBA6FEE00527235 /* RepPadLaunch768@2x.png in Resources */,
 				D4BC9D541BBA6FEE00527235 /* RepSpot29G.png in Resources */,
 				D4BC9D551BBA6FEE00527235 /* RepSpot50GPad.png in Resources */,
@@ -550,6 +550,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Procedurez/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hart-book.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -564,6 +565,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Procedurez/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hart-book.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
