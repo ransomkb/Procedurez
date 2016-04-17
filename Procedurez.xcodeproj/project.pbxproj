@@ -12,11 +12,12 @@
 		D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D40D23F51B9951A3007D2F44 /* Procedurez.xcdatamodeld */; };
 		D40D23F91B9951A3007D2F44 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D23F81B9951A3007D2F44 /* MasterViewController.swift */; };
 		D40D23FE1B9951A3007D2F44 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D40D23FC1B9951A3007D2F44 /* Main.storyboard */; };
-		D40D24001B9951A3007D2F44 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D40D23FF1B9951A3007D2F44 /* Images.xcassets */; };
+		D40D24001B9951A3007D2F44 /* Images1.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D40D23FF1B9951A3007D2F44 /* Images1.xcassets */; };
 		D40D24031B9951A3007D2F44 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D40D24011B9951A3007D2F44 /* LaunchScreen.xib */; };
 		D40D240F1B9951A3007D2F44 /* ProcedurezTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */; };
 		D40D241E1B9D3080007D2F44 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241D1B9D3080007D2F44 /* Step.swift */; };
 		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
+		D42DD7561CC39EF80039F0C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D42DD7551CC39EF80039F0C7 /* Images.xcassets */; };
 		D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */; };
 		D43CCDD41BF0E3200054BB9B /* ParseProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */; };
 		D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334321BE3171A00442F24 /* ImportStringViewController.swift */; };
@@ -75,13 +76,14 @@
 		D40D23F61B9951A3007D2F44 /* Procedurez.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Procedurez.xcdatamodel; sourceTree = "<group>"; };
 		D40D23F81B9951A3007D2F44 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		D40D23FD1B9951A3007D2F44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		D40D23FF1B9951A3007D2F44 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		D40D23FF1B9951A3007D2F44 /* Images1.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images1.xcassets; sourceTree = "<group>"; };
 		D40D24021B9951A3007D2F44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		D40D24081B9951A3007D2F44 /* ProcedurezTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProcedurezTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40D240D1B9951A3007D2F44 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcedurezTests.swift; sourceTree = "<group>"; };
 		D40D241D1B9D3080007D2F44 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D42DD7551CC39EF80039F0C7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RepeaterImages/Images.xcassets; sourceTree = "<group>"; };
 		D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaTableViewController.swift; sourceTree = "<group>"; };
 		D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseProcedure.swift; sourceTree = "<group>"; };
 		D46334321BE3171A00442F24 /* ImportStringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportStringViewController.swift; sourceTree = "<group>"; };
@@ -175,7 +177,8 @@
 			isa = PBXGroup;
 			children = (
 				D4BC9D1F1BBA6FEE00527235 /* RepeaterImages */,
-				D40D23FF1B9951A3007D2F44 /* Images.xcassets */,
+				D42DD7551CC39EF80039F0C7 /* Images.xcassets */,
+				D40D23FF1B9951A3007D2F44 /* Images1.xcassets */,
 				D40D23F21B9951A3007D2F44 /* Info.plist */,
 				D400BC841BF052E50035BC70 /* LoadMe.json */,
 			);
@@ -370,13 +373,14 @@
 				D4BC9D3F1BBA6FEE00527235 /* PadOrange.png in Resources */,
 				D4BC9D431BBA6FEE00527235 /* PhoneBlack.png in Resources */,
 				D4BC9D401BBA6FEE00527235 /* PadPurple.png in Resources */,
+				D42DD7561CC39EF80039F0C7 /* Images.xcassets in Resources */,
 				D4BC9D521BBA6FEE00527235 /* RepPadLaunch768@2x.png in Resources */,
 				D4BC9D541BBA6FEE00527235 /* RepSpot29G.png in Resources */,
 				D4BC9D551BBA6FEE00527235 /* RepSpot50GPad.png in Resources */,
 				D4BC9D4B1BBA6FEE00527235 /* Repeaters144GPad.png in Resources */,
 				D4BC9D4A1BBA6FEE00527235 /* Repeaters114G.png in Resources */,
 				D4BC9D4D1BBA6FEE00527235 /* Repeaters72GPad.png in Resources */,
-				D40D24001B9951A3007D2F44 /* Images.xcassets in Resources */,
+				D40D24001B9951A3007D2F44 /* Images1.xcassets in Resources */,
 				D4BC9D531BBA6FEE00527235 /* RepSpot100GPad.png in Resources */,
 				D4BC9D4F1BBA6FEE00527235 /* RepeatersLaunch640x960.png in Resources */,
 				D4BC9D561BBA6FEE00527235 /* RepSpot58G.png in Resources */,
