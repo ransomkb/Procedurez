@@ -7,13 +7,12 @@
 //
 
 import Foundation
-import CloudKit
 
 // Convenience structures for various string properties used in NetLoader
-extension NetLoader {
+extension NetLoader
+{
     
     // POST [path]/database/[version]/[container]/[environment]/[database]/[subpath]
-    
     
     struct API {
         static let Path = "https://api.apple-cloudkit.com"
@@ -95,9 +94,4 @@ extension NetLoader {
         static let CreatedAt = "createdAt"
         static let UpdatedAt = "updatedAt"
     }
-    
-    func createRecordFieldDict(value: CKValue, type: String?) -> [String: AnyObject] {
-        return ["value": value, "type": type]
-    }
-    
 }
