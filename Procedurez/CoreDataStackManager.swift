@@ -94,17 +94,20 @@ class CoreDataStackManager {
     
     func saveContext () {
         if let moc = self.managedObjectContext {
-            var error: NSError? = nil
+            //var error: NSError? = nil
             if moc.hasChanges {
                 do {
                     try moc.save()
-                } catch let error1 as NSError {
-                    error = error1
-                    // I know I should replace this if I submit it to the App Store.
-                    // Replace this implementation with code to handle the error appropriately.
-                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                    NSLog("Unresolved error \(error), \(error!.userInfo)")
-                    abort()
+                } catch {
+//                    error = error1
+//                    // I know I should replace this if I submit it to the App Store.
+//                    // Replace this implementation with code to handle the error appropriately.
+//                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                    NSLog("Unresolved error \(error), \(error!.userInfo)")
+//                    abort()
+                    
+                    // Core Data Programming Guide shows below (https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CoreData/CreatingObjects.html#//apple_ref/doc/uid/TP40001075-CH5-SW1)
+                    fatalError("Failure to save context: \(error)")
                 }
             }
         }

@@ -21,7 +21,6 @@
 		D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334321BE3171A00442F24 /* ImportStringViewController.swift */; };
 		D4714DF91CC3B7F800404469 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4714DF81CC3B7F800404469 /* Images.xcassets */; };
 		D4A958031BE0A92B00C5B7FF /* NetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958021BE0A92B00C5B7FF /* NetLoader.swift */; };
-		D4A958051BE0A93C00C5B7FF /* NetLoaderConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */; };
 		D4A958071BE0AE3A00C5B7FF /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958061BE0AE3A00C5B7FF /* CoreDataStackManager.swift */; };
 		D4A958091BE0CE4000C5B7FF /* ProcedureCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958081BE0CE4000C5B7FF /* ProcedureCache.swift */; };
 		D4BC9D3C1BBA6FEE00527235 /* PadBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D201BBA6FEE00527235 /* PadBlack.png */; };
@@ -54,6 +53,8 @@
 		D4BC9D571BBA6FEE00527235 /* RepStore1024G.png in Resources */ = {isa = PBXBuildFile; fileRef = D4BC9D3B1BBA6FEE00527235 /* RepStore1024G.png */; };
 		D4BC9D591BBA787E00527235 /* PhoneCellImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC9D581BBA787E00527235 /* PhoneCellImage.swift */; };
 		D4BC9D5B1BBA7E2700527235 /* PadCellImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC9D5A1BBA7E2700527235 /* PadCellImage.swift */; };
+		D4C7235E1CCE67FA008A38E3 /* NetLoaderConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */; };
+		D4D5A62C1CCDAE06002D31A5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4D5A62B1CCDAE06002D31A5 /* CloudKit.framework */; };
 		D4DA19CA1BAE4E2700E62391 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +120,8 @@
 		D4BC9D3B1BBA6FEE00527235 /* RepStore1024G.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RepStore1024G.png; sourceTree = "<group>"; };
 		D4BC9D581BBA787E00527235 /* PhoneCellImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneCellImage.swift; sourceTree = "<group>"; };
 		D4BC9D5A1BBA7E2700527235 /* PadCellImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PadCellImage.swift; sourceTree = "<group>"; };
+		D4D5A6261CCDA980002D31A5 /* Procedurez.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Procedurez.entitlements; sourceTree = "<group>"; };
+		D4D5A62B1CCDAE06002D31A5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +131,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */,
+				D4D5A62C1CCDAE06002D31A5 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +148,7 @@
 		D40D23E51B9951A3007D2F44 = {
 			isa = PBXGroup;
 			children = (
+				D4D5A62B1CCDAE06002D31A5 /* CloudKit.framework */,
 				D40D241F1B9D30F8007D2F44 /* CoreData.framework */,
 				D40D23F01B9951A3007D2F44 /* Procedurez */,
 				D40D240B1B9951A3007D2F44 /* ProcedurezTests */,
@@ -163,6 +168,7 @@
 		D40D23F01B9951A3007D2F44 /* Procedurez */ = {
 			isa = PBXGroup;
 			children = (
+				D4D5A6261CCDA980002D31A5 /* Procedurez.entitlements */,
 				D40D241A1B9D2FE2007D2F44 /* Controllers */,
 				D40D24191B9D2FDC007D2F44 /* Views */,
 				D40D24181B9D2FD1007D2F44 /* Models */,
@@ -323,6 +329,11 @@
 					D40D23ED1B9951A3007D2F44 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = LKVGHGE885;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					D40D24071B9951A3007D2F44 = {
 						CreatedOnToolsVersion = 6.4;
@@ -409,11 +420,11 @@
 				D4A958071BE0AE3A00C5B7FF /* CoreDataStackManager.swift in Sources */,
 				D40D23F41B9951A3007D2F44 /* AppDelegate.swift in Sources */,
 				D4A958031BE0A92B00C5B7FF /* NetLoader.swift in Sources */,
+				D4C7235E1CCE67FA008A38E3 /* NetLoaderConstants.swift in Sources */,
 				D40D23F91B9951A3007D2F44 /* MasterViewController.swift in Sources */,
 				D40D241E1B9D3080007D2F44 /* Step.swift in Sources */,
 				D4BC9D5B1BBA7E2700527235 /* PadCellImage.swift in Sources */,
 				D4BC9D591BBA787E00527235 /* PhoneCellImage.swift in Sources */,
-				D4A958051BE0A93C00C5B7FF /* NetLoaderConstants.swift in Sources */,
 				D4DA19CA1BAE4E2700E62391 /* DetailViewController.swift in Sources */,
 				D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */,
 				D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */,
@@ -475,6 +486,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -521,6 +533,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -547,6 +560,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Procedurez/Procedurez.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Procedurez/Info.plist;
@@ -562,6 +576,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Procedurez/Procedurez.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Procedurez/Info.plist;

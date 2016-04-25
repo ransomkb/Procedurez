@@ -7,13 +7,55 @@
 //
 
 import Foundation
+import CloudKit
 
 // Convenience structures for various string properties used in NetLoader
 extension NetLoader {
+    
+    // POST [path]/database/[version]/[container]/[environment]/[database]/[subpath]
+    
+    
     struct API {
+        static let Path = "https://api.apple-cloudkit.com"
+        static let Version = "1"
+        static let Container = "iCloud.com.hart-book.Procedurez"
+        static let EnvironmentDevelopment = "development"
+        static let EnvironmentProduction = "production"
+        static let PublicDatabase = "public"
+        static let PrivateDatabase = "private"
+        
         static let ParseBaseURL: String = "https://api.parse.com/1/classes/"
         static let Procedure = "Procedure"
         static let Meta = "ProcedureMeta"
+    }
+    
+    struct Tokens {
+        static let ProcedurezAPIToken = "?ckAPIToken=c2355c68a81739fb91cb1a5df6d3a7a07f85d355853217b9f7c55770d66a29ac"
+        static let WebAuthToken = "&ckWebAuthToken="
+    }
+    
+    struct SubPaths {
+        static let Records = "records"
+        static let Assets = "assets"
+        static let Zones = "zones"
+        static let Users = "users"
+        static let Tokens = "tokens"
+        static let Subscriptions = "subscriptions"
+        
+        static let ID = "id"
+        static let Create = "create"
+        static let Modify = "modify"
+        static let Query = "query"
+        static let Lookup = "lookup"
+        static let Changes = "changes"
+        static let Upload = "upload"
+        
+        static let List = "list"
+        static let Email = "email"
+        static let Current = "current"
+        static let References = "references"
+        static let Register = "register"
+        static let Contacts = "contacts"
     }
     
     struct Keys {
@@ -53,4 +95,9 @@ extension NetLoader {
         static let CreatedAt = "createdAt"
         static let UpdatedAt = "updatedAt"
     }
+    
+    func createRecordFieldDict(value: CKValue, type: String?) -> [String: AnyObject] {
+        return ["value": value, "type": type]
+    }
+    
 }
