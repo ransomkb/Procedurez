@@ -47,27 +47,27 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         super.init()
     }
     
-//    func dictToJSON(dict:[String: AnyObject]) -> NSData? {
-//        do {
-//            let jsonData = try NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions.PrettyPrinted)
-//            return jsonData
-//            // here "jsonData" is the dictionary encoded in JSON data
-//        } catch let error as NSError {
-//            print(error)
-//            return nil
-//        }
-//    }
-//    
-//    func JSONToDict(jsonData: NSData) -> [String: AnyObject]? {
-//        do {
-//            let decoded = try NSJSONSerialization.JSONObjectWithData(jsonData, options: []) as? [String:String]
-//            // here "decoded" is the dictionary decoded from JSON data
-//            return decoded!
-//        } catch let error as NSError {
-//            print(error)
-//            return nil
-//        }
-//    }
+    func dictToJSON(dict:[String: AnyObject]) -> NSData? {
+        do {
+            let jsonData = try NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions.PrettyPrinted)
+            return jsonData
+            // here "jsonData" is the dictionary encoded in JSON data
+        } catch let error as NSError {
+            print(error)
+            return nil
+        }
+    }
+    
+    func JSONToDict(jsonData: NSData) -> [String: AnyObject]? {
+        do {
+            let decoded = try NSJSONSerialization.JSONObjectWithData(jsonData, options: []) as? [String:String]
+            // here "decoded" is the dictionary decoded from JSON data
+            return decoded!
+        } catch let error as NSError {
+            print(error)
+            return nil
+        }
+    }
     
     // Search for a dictionary on Parse.com with details of a Procedure / Procedures.
     func searchParse(completionHandler: (success: Bool, errorString: String?) -> Void) {
