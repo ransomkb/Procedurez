@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import MapKit
 import UIKit
 
 class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
@@ -471,6 +472,71 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         // Return string of joined url variables separated by &.
         return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
     }
+    
+    // MARK: - CloudKit Dictionaries
+    
+    
+    func queryDict(recordType:String, filteredBy filterBy: [AnyObject]?, sortedBy sortBy: [AnyObject]?) -> [String: AnyObject] {
+        var qDict: [String: AnyObject] = ["recordType":recordType]
+        
+        if !(sortBy?.isEmpty)! {
+            qDict["sortBy"] = sortBy! as [AnyObject]
+        }
+        
+        if !(filterBy?.isEmpty)! {
+            qDict["filterBy"] = filterBy! as [AnyObject]
+        }
+        
+        return qDict
+    }
+    
+    func recordFieldDict(value: AnyObject) -> [String: AnyObject] {
+        return ["value":value]
+    }
+    
+    func filterDict(comparator: String, withFieldName fieldName: String, withFieldValue fieldValue: AnyObject, withDistance distance:CLLocation?) -> [String: AnyObject] {
+        var filterDict: [String: AnyObject] = ["comparator":comparator, "fieldName":fieldName, "fieldValue":fieldValue]
+        
+        if let dist = distance {
+            filterDict["distance"] = dist
+        }
+        
+        return filterDict
+    }
+    
+    // ascending is a string value of "true" or "false"; default is "true"
+    func sortDict(fieldName: String, withAscendingBoolString ascending: String?, withRelativeLocation relativeLocation:CLLocation?) -> [String: AnyObject] {
+        var sDict: [String: AnyObject] = ["fieldName":fieldName]
+        
+        if let ascend = ascending {
+            sDict["ascending"] = ascend
+        }
+        
+        if let rel = relativeLocation {
+            sDict["relativeLocation"] = rel
+        }
+        
+        return sDict
+    }
+    
+    func userDict(userRecordName: String, withFirstName firstName: String?, withLastName lastName: String?, withEmailAddress emailAddress: String?) -> [String: String] {
+        var uDict: [String: String] = ["userRecordName":userRecordName]
+        
+        if let first = firstName {
+            uDict["userRecordName"] = first
+        }
+        
+        if let last = lastName {
+            uDict["lastName"] = last
+        }
+        
+        if let email = emailAddress {
+            uDict["emailAddress"] = email
+        }
+        
+        return uDict
+    }
+
     
     // MARK: - Shared Instance
     

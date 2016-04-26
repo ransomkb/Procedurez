@@ -52,7 +52,7 @@ extension NetLoader
         static let List = "list"
         static let Email = "email"
         static let Current = "current"
-        static let References = "references"
+        static let Rereference = "rereference"
         static let Register = "register"
         static let Contacts = "contacts"
     }
@@ -94,4 +94,10 @@ extension NetLoader
         static let CreatedAt = "createdAt"
         static let UpdatedAt = "updatedAt"
     }
+    
+    struct Comparators {
+        static let EQUALS = "EQUALS"
+        static let BEGINSWITH = "BEGINS_WITH"
+    }
+    
 }
