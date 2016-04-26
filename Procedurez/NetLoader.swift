@@ -517,6 +517,16 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         return sDict
     }
     
+    func recordOperationDict(operationType: String, onRecord record: [String: AnyObject], withDesiredKeys desiredKeys: [String]?) -> [String: AnyObject] {
+        var rOpDict: [String: AnyObject] = ["operationType":operationType, "record":record]
+        
+        if let dKeys = desiredKeys {
+            rOpDict["desiredKeys"] = dKeys
+        }
+        
+        return rOpDict
+    }
+    
     func userDict(userRecordName: String, withFirstName firstName: String?, withLastName lastName: String?, withEmailAddress emailAddress: String?) -> [String: String] {
         var uDict: [String: String] = ["userRecordName":userRecordName]
         

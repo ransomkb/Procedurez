@@ -95,6 +95,17 @@ extension NetLoader
         static let UpdatedAt = "updatedAt"
     }
     
+    struct OperationTypes {
+        static let CreateType = "create"
+        static let UpdateType = "update"
+        static let ForceUpdateType = "forceUpdate"
+        static let ReplaceType = "replace"
+        static let ForceReplaceType = "forceReplace"
+        static let DeleteType = "delete"
+        static let ForceDeleteType = "forceDelete"
+    }
+    
+    // Probably just used in responses
     struct CKValues {
         static let AssetType = "Asset"
         static let BytesType = "Bytes"
