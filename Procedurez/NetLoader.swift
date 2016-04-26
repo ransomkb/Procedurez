@@ -404,8 +404,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     }
                 })
             }
-            
-            
         })
         
         // Inform function caller of success in creating all the Step entities, 
@@ -490,7 +488,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         return qDict
     }
     
-    func recordFieldDict(value: AnyObject) -> [String: AnyObject] {
+    func recordFieldDict(value: String) -> [String: String] {
         return ["value":value]
     }
     

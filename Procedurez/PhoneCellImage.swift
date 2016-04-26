@@ -10,6 +10,7 @@ import Foundation
 
 // For getting the appropriate image for the table cell backgrounds
 enum PhoneCellImage: Int {
+    // set the rawValue
     case PhoneRed = 0, PhoneOrange, PhoneYellow, PhoneGreen, PhoneBlue, PhonePurple, PhoneBlack
     
     func title() -> String {

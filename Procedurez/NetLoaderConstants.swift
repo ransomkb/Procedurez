@@ -95,6 +95,18 @@ extension NetLoader
         static let UpdatedAt = "updatedAt"
     }
     
+    struct CKValues {
+        static let AssetType = "Asset"
+        static let BytesType = "Bytes"
+        static let DateTimeType = "Date/Time"
+        static let DoubleType = "Double"
+        static let Int64Type = "Int(64)"
+        static let LocationType = "Location"
+        static let ReferenceType = "Reference"
+        static let StringType = "String"
+        static let ListType = "List"
+    }
+    
     struct Comparators {
         static let EQUALS = "EQUALS"
         static let BEGINSWITH = "BEGINS_WITH"
