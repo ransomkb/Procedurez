@@ -190,7 +190,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     // set the request.HTTPMethod to "POST"; set the request.HTTPBody to your var jsonData: NSData from a dictionary;
     
     // Create a task using the GET method for CloudKit Web Services
-    func taskForCKGetMethod(urlString: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
+    func taskForCKGetMethod(urlString: String, tfckgCompletionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
         
         // Create a string of parameters for RESTful request.
         //let urlString: String!
@@ -215,12 +215,12 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             // Handle download error.
             if let error = downloadError {
                 let newError = NetLoader.errorForData(data, error: error)
-                completionHandler(result: nil, error: newError)
+                tfckgCompletionHandler(result: nil, error: newError)
             } else {
                 print("No Error, Time to Parse Data.")
                 
                 // Parse the JSON.
-                NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
+                NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: tfckgCompletionHandler)
             }
         })
         
@@ -231,7 +231,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     // Create a task using the GET method; handle JSON response.
-    func taskForGETMethod(baseURL: String, method: String, requestValues: [[String:String]], completionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
+    func taskForGETMethod(baseURL: String, method: String, requestValues: [[String:String]], tfgCompletionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
         
         // Create a string of parameters for RESTful request.
         let urlString: String!
@@ -280,12 +280,12 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             // Handle download error.
             if let error = downloadError {
                 let newError = NetLoader.errorForData(data, error: error)
-                completionHandler(result: nil, error: newError)
+                tfgCompletionHandler(result: nil, error: newError)
             } else {
                 print("No Error, Time to Parse Data.")
                 
                 // Parse the JSON.
-                NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
+                NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: tfgCompletionHandler)
             }
         })
         
@@ -362,7 +362,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - JSONParsing stuff
     
     // Get the LoadMe.json file (How To Use) data; parse the json, and save the first Procedure.
-    func loadHowTo(jsonData: NSData, completionhandler: (success: Bool, errorString: String?) -> Void) {
+    func loadHowTo(jsonData: NSData, lhtCompletionhandler: (success: Bool, errorString: String?) -> Void) {
         print("Trying to load How to Use Procedure.")
         
         // Parse JSON data using a completion handler to return the results.
@@ -370,15 +370,15 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             
             if let error = error {
                 print("Error in Parsing with rawProcedureJSON data.")
-                completionhandler(success: false, errorString: error.localizedDescription)
+                lhtCompletionhandler(success: false, errorString: error.localizedDescription)
             } else {
                 print("Parsed JSON data successfully.")
                 
                 // Get the necessary data from the dictionary of JSON data, use it to create a Step, 
                 // iterating through children and grandchildren.
-                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, completionhandler: { (success, errorString) -> Void in
+                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, pjadCompletionhandler: { (success, errorString) -> Void in
                     if let error = errorString {
-                        completionhandler(success: false, errorString: error)
+                        lhtCompletionhandler(success: false, errorString: error)
                     } else {
                         // Save the context for all the Steps of the Procedure.
                         // IMPORTANT: see about threading for Core Data on another queue, not Main;
@@ -388,7 +388,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                             fatalError("Failure to save context: \(error)")
                         }
                         
-                        completionhandler(success: true, errorString: nil)
+                        lhtCompletionhandler(success: true, errorString: nil)
                     }
                 })
             }
@@ -414,7 +414,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     // Get the necessary data from the dictionary of JSON data, use it to create a Step,
     // iterating through children and grandchildren.
-    func parseJSONAsDictionary(dict: NSDictionary, parent: Step?, completionhandler: (success: Bool, errorString: String?) -> Void) {
+    func parseJSONAsDictionary(dict: NSDictionary, parent: Step?, pjadCompletionhandler: (success: Bool, errorString: String?) -> Void) {
         
         /* Start playing with JSON here... */
         print("Parsing a JSON Dictionary to creat a Step in a Procedure.")
@@ -424,31 +424,31 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         // Ensure the necessary data is in the dictionary.
         guard let title = dictionary["title"] where (dictionary["title"] as! String).characters.count <= self.titleCount else {
             let eString = "Dictionary had no title key."
-            completionhandler(success: false, errorString: eString)
+            pjadCompletionhandler(success: false, errorString: eString)
             return
         }
         
         guard let details = dictionary["details"] where (dictionary["details"]as! String).characters.count <= self.detailsCount else {
             let eString = "Dictionary had no details key."
-            completionhandler(success: false, errorString: eString)
+            pjadCompletionhandler(success: false, errorString: eString)
             return
         }
         
         guard let sectionIdentifier = dictionary["sectionIdentifier"] where (dictionary["sectionIdentifier"] as! String).characters.count <= self.sectionIdentifierCount else {
             let eString = "Dictionary had no sectionIdentifier key."
-            completionhandler(success: false, errorString: eString)
+            pjadCompletionhandler(success: false, errorString: eString)
             return
         }
         
         guard let position = dictionary["position"] else {
             let eString = "Dictionary had no position key."
-            completionhandler(success: false, errorString: eString)
+            pjadCompletionhandler(success: false, errorString: eString)
             return
         }
         
         guard let st = dictionary["steps"] else {
             let eString = "Dictionary had no steps key."
-            completionhandler(success: false, errorString: eString)
+            pjadCompletionhandler(success: false, errorString: eString)
             return
         }
         
@@ -475,7 +475,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             
             // Iterate through the array to create the Step entities for any children.
             for d in sArray {
-                self.parseJSONAsDictionary(d, parent: step, completionhandler: { (success, errorString) -> Void in
+                self.parseJSONAsDictionary(d, parent: step, pjadCompletionhandler: { (success, errorString) -> Void in
                     if success {
                         print("Made a Step")
                     } else {
@@ -487,7 +487,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         
         // Inform function caller of success in creating all the Step entities, 
         // with related parents and children, for Procedure.
-        completionhandler(success: true, errorString: nil)
+        pjadCompletionhandler(success: true, errorString: nil)
     }
 
     // Parse JSON data using a completion handler to return the results.
