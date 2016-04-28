@@ -28,6 +28,7 @@ class MetaTableViewController: UITableViewController {
         // Place the Add button (to skip Parse.com and add JSON formatted Procedure string directly).
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(MetaTableViewController.segueToImport))
         
+        // IMPORTANT: see about threading for Core Data on another queue, not Main; this queue is good for fetching from net;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
             self.activityIndicator.startAnimating()

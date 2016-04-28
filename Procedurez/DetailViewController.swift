@@ -148,6 +148,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         updatePositions()
         
         // Save the context.
+        // IMPORTANT: see about threading for Core Data on another queue, not Main;
+        
         var error: NSError? = nil
         do {
             try context.save()
@@ -251,6 +253,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         print("Created a step with name: \(stepName)")
         
         // Save the context.
+        // IMPORTANT: see about threading for Core Data on another queue, not Main;
         var error: NSError? = nil
         do {
             try context.save()
@@ -367,6 +370,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             updatePositions()
             
             // Save the context.
+            // IMPORTANT: see about threading for Core Data on another queue, not Main;
             var error: NSError? = nil
             do {
                 try context.save()
@@ -404,6 +408,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             }
             
             // Save the context.
+            // IMPORTANT: see about threading for Core Data on another queue, not Main;
             var error: NSError? = nil
             do {
                 try self.managedObjectContext!.save()

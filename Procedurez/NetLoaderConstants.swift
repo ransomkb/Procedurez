@@ -14,6 +14,11 @@ extension NetLoader
     
     // POST [path]/database/[version]/[container]/[environment]/[database]/[subpath]
     
+    // can just use this each time you build a path
+    func buildPath(pathArray:[String]) -> String {
+        return pathArray.joinWithSeparator("/")
+    }
+    
     struct API {
         static let Path = "https://api.apple-cloudkit.com"
         static let Version = "1"
@@ -30,7 +35,7 @@ extension NetLoader
     
     struct Tokens {
         static let ProcedurezAPIToken = "?ckAPIToken=c2355c68a81739fb91cb1a5df6d3a7a07f85d355853217b9f7c55770d66a29ac"
-        static let WebAuthToken = "&ckWebAuthToken="
+        //static let WebAuthToken = "&ckWebAuthToken="
     }
     
     struct SubPaths {
@@ -95,7 +100,7 @@ extension NetLoader
         static let UpdatedAt = "updatedAt"
     }
     
-    struct OperationTypes {
+    struct OperationTypeKeys {
         static let CreateType = "create"
         static let UpdateType = "update"
         static let ForceUpdateType = "forceUpdate"
@@ -118,7 +123,7 @@ extension NetLoader
         static let ListType = "List"
     }
     
-    struct Comparators {
+    struct ComparatorValues {
         static let EQUALS = "EQUALS"
         static let BEGINSWITH = "BEGINS_WITH"
     }

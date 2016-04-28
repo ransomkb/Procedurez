@@ -48,9 +48,18 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         super.init()
     }
     
-    func dictToJSON(dict:[String: AnyObject]) -> NSData? {
+    // Got from Stack Trace?
+    //import Foundation
+    // Use Below turn JSONData into string
+    // var dataString = String(data: fooData, encoding: NSUTF8StringEncoding)
+    
+    func dictToJSONData(dict:[String: AnyObject]) -> NSData? {
         do {
             let jsonData = try NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions.PrettyPrinted)
+            
+            // Use Below turn JSONData into string; just for reference reminder; place somewhere else
+            // var dataString = String(data: jsonData, encoding: NSUTF8StringEncoding)
+            
             return jsonData
             // here "jsonData" is the dictionary encoded in JSON data
         } catch let error as NSError {
@@ -103,6 +112,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                             
                             print("metaArray.count: \(self.metaArray.count)")
                             
+                            // IMPORTANT: see about threading for Core Data on another queue, not Main;
                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                 
                                 self.isMeta = false
@@ -126,6 +136,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                                             print("JSON dictionary key steps was assigned to a ParseProcedure.steps")
                                             
                                             // Set the steps property of the parseProecedure to that of the results array.
+                                            // IMPORTANT: see about threading for Core Data on another queue, not Main;
                                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                                 
                                                 self.parseProcedure?.steps = procedureSteps
@@ -133,6 +144,26 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                                                 // Use completion handler to report successful creation.
                                                 completionHandler(success: true, errorString: nil)
                                             })
+                                            
+                                            // IMPORTANT: Get off the Main Queue when doing Core Data intensive stuff;
+                                            // Consider this kind of threading:
+//                                            let jsonArray = … //JSON data to be imported into Core Data
+//                                            let moc = … //Our primary context on the main queue
+//                                            
+//                                            let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+//                                            privateMOC.parentContext = moc
+//                                            
+//                                            privateMOC.performBlock {
+//                                                for jsonObject in jsonArray {
+//                                                    let mo = … //Managed object that matches the incoming JSON structure
+//                                                    //update MO with data from the dictionary
+//                                                }
+//                                                do {
+//                                                    try privateMOC.save()
+//                                                } catch {
+//                                                    fatalError("Failure to save context: \(error)")
+//                                                }
+//                                            }
                                         }
                                     }
                                 }
@@ -147,12 +178,56 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     }
                 } else {
                     
-                    // Use completion handler to report no error, but no student locations returned for user, so probably first time.
+                    // Use completion handler to report no error, but no procedures returned for request, so probably first time.
                     let eString = "Existing Procedure not found."
                     completionHandler(success: true, errorString: eString)
                 }
             }
         }
+    }
+    
+    // Creating a task for the POST method would require setting request properties:
+    // set the request.HTTPMethod to "POST"; set the request.HTTPBody to your var jsonData: NSData from a dictionary;
+    
+    // Create a task using the GET method for CloudKit Web Services
+    func taskForCKGetMethod(urlString: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
+        
+        // Create a string of parameters for RESTful request.
+        //let urlString: String!
+        
+        print("GET URL: \(urlString)")
+        
+        guard let url = NSURL(string: urlString) else {
+            let eString = "urlString had an issue."
+            print(eString)
+            
+            return self.searchTask!
+        }
+
+        let request = NSMutableURLRequest(URL: url)
+        
+        // Create a data task with a request for shared session; pass response data to JSON parser.
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request, completionHandler: { (data, responseMeta, downloadError) -> Void in
+            
+            print("Starting GET task.")
+            
+            // Handle download error.
+            if let error = downloadError {
+                let newError = NetLoader.errorForData(data, error: error)
+                completionHandler(result: nil, error: newError)
+            } else {
+                print("No Error, Time to Parse Data.")
+                
+                // Parse the JSON.
+                NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
+            }
+        })
+        
+        task.resume()
+        
+        return task
+
     }
     
     // Create a task using the GET method; handle JSON response.
@@ -196,13 +271,15 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         
         // Create a data task with a request for shared session; pass response data to JSON parser.
         let session = NSURLSession.sharedSession()
+        // after calling a function with a completionHandler closure, it returns some data that can be used;
+        // session data task with request returns the response data as NSData?, metadata? of the response, or an error?
         let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, downloadError) -> Void in
             
             print("Starting GET task.")
             
             // Handle download error.
             if let error = downloadError {
-                let newError = NetLoader.errorForData(data, response: response, error: error)
+                let newError = NetLoader.errorForData(data, error: error)
                 completionHandler(result: nil, error: newError)
             } else {
                 print("No Error, Time to Parse Data.")
@@ -241,7 +318,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     // Create an error with json data from the response.
-    class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
+    class func errorForData(data: NSData?, error: NSError) -> NSError {
         
         print("Handling Error")
         
@@ -304,6 +381,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                         completionhandler(success: false, errorString: error)
                     } else {
                         // Save the context for all the Steps of the Procedure.
+                        // IMPORTANT: see about threading for Core Data on another queue, not Main;
                         do {
                             try self.sharedContext.save()
                         } catch {
@@ -380,6 +458,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         print("Position: \(position)")
         print("Steps: Have an array")
         
+        // IMPORTANT: see about threading for Core Data on another queue, not Main;
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             
             // Create a Step entity.

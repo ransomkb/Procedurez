@@ -161,6 +161,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         newManagedObject.setValue(editDetails, forKey: "details")
              
         // Save the context.
+        // IMPORTANT: see about threading for Core Data on another queue, not Main;
         var error: NSError? = nil
         do {
             try context.save()
@@ -264,6 +265,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let context = self.fetchedResultsController.managedObjectContext
             context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
                 
+            // IMPORTANT: see about threading for Core Data on another queue, not Main;
             var error: NSError? = nil
             do {
                 try context.save()
