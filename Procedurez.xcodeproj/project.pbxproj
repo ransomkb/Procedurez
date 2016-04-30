@@ -54,6 +54,7 @@
 		D4BC9D591BBA787E00527235 /* PhoneCellImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC9D581BBA787E00527235 /* PhoneCellImage.swift */; };
 		D4BC9D5B1BBA7E2700527235 /* PadCellImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC9D5A1BBA7E2700527235 /* PadCellImage.swift */; };
 		D4C723601CCE6996008A38E3 /* NetLoaderConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */; };
+		D4C723621CD23F90008A38E3 /* RKBCloudProcedureJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C723611CD23F90008A38E3 /* RKBCloudProcedureJSON.swift */; };
 		D4D5A62C1CCDAE06002D31A5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4D5A62B1CCDAE06002D31A5 /* CloudKit.framework */; };
 		D4DA19CA1BAE4E2700E62391 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
@@ -120,6 +121,7 @@
 		D4BC9D3B1BBA6FEE00527235 /* RepStore1024G.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RepStore1024G.png; sourceTree = "<group>"; };
 		D4BC9D581BBA787E00527235 /* PhoneCellImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneCellImage.swift; sourceTree = "<group>"; };
 		D4BC9D5A1BBA7E2700527235 /* PadCellImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PadCellImage.swift; sourceTree = "<group>"; };
+		D4C723611CD23F90008A38E3 /* RKBCloudProcedureJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RKBCloudProcedureJSON.swift; sourceTree = "<group>"; };
 		D4D5A6261CCDA980002D31A5 /* Procedurez.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Procedurez.entitlements; sourceTree = "<group>"; };
 		D4D5A62B1CCDAE06002D31A5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 			children = (
 				D40D23F51B9951A3007D2F44 /* Procedurez.xcdatamodeld */,
 				D40D241D1B9D3080007D2F44 /* Step.swift */,
+				D4C723611CD23F90008A38E3 /* RKBCloudProcedureJSON.swift */,
 				D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */,
 				D4A958021BE0A92B00C5B7FF /* NetLoader.swift */,
 				D4A958041BE0A93C00C5B7FF /* NetLoaderConstants.swift */,
@@ -418,6 +421,7 @@
 				D4A958091BE0CE4000C5B7FF /* ProcedureCache.swift in Sources */,
 				D40D23F71B9951A3007D2F44 /* Procedurez.xcdatamodeld in Sources */,
 				D4A958071BE0AE3A00C5B7FF /* CoreDataStackManager.swift in Sources */,
+				D4C723621CD23F90008A38E3 /* RKBCloudProcedureJSON.swift in Sources */,
 				D40D23F41B9951A3007D2F44 /* AppDelegate.swift in Sources */,
 				D4A958031BE0A92B00C5B7FF /* NetLoader.swift in Sources */,
 				D4C723601CCE6996008A38E3 /* NetLoaderConstants.swift in Sources */,

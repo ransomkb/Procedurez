@@ -16,6 +16,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     typealias CompletionHandler = (parsedResult: AnyObject!, error: NSError?) -> Void
     
     var session: NSURLSession
+    
+    // may not be using
     var searchTask: NSURLSessionDataTask?
     
     var isMeta: Bool
@@ -81,8 +83,25 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     // Search for a dictionary on Parse.com with details of a Procedure / Procedures.
     func searchParse(completionHandler: (success: Bool, errorString: String?) -> Void) {
+        
+        // New for CloudKit
+        // POST [path]/database/[version]/[container]/[environment]/[database]/[subpath]
+//        let baseUrlArray = [API.Path,
+//                        "database",
+//                        API.Version,
+//                        API.Container,
+//                        API.EnvironmentDevelopment,
+//                        API.PublicDatabase,
+//                        SubPaths.Records]
+//        
+//        let baseURL = buildPath(baseUrlArray)
+//        
+        
         // Use the GET method for a RESTful request.
         taskForGETMethod(API.ParseBaseURL, method: self.setParseClass(), requestValues: NetLoader.setREST()) { (JSONResult, error) -> Void in
+        
+        // CloudKit version
+        //taskForCKGetMethod(baseURL, method: self.setParseClass()) { (JSONResult, error) -> Void in
             
             if let error = error {
                 // Report JSONResult error details in completion handler.
@@ -111,7 +130,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                             }
                             
                             print("metaArray.count: \(self.metaArray.count)")
-                            
+
                             // IMPORTANT: see about threading for Core Data on another queue, not Main;
                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                 
@@ -120,7 +139,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                                 // Use completion handler to report successful creation.
                                 completionHandler(success: true, errorString: nil)
                             })
-                            
+                        
                         } else {
                             print("metaArray is not empty; getting steps")
                             
@@ -145,11 +164,11 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                                                 completionHandler(success: true, errorString: nil)
                                             })
                                             
-                                            // IMPORTANT: Get off the Main Queue when doing Core Data intensive stuff;
-                                            // Consider this kind of threading:
+                                             //IMPORTANT: Get off the Main Queue when doing Core Data intensive stuff;
+                                             //Consider this kind of threading:
 //                                            let jsonArray = … //JSON data to be imported into Core Data
 //                                            let moc = … //Our primary context on the main queue
-//                                            
+//
 //                                            let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
 //                                            privateMOC.parentContext = moc
 //                                            
@@ -190,10 +209,29 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     // set the request.HTTPMethod to "POST"; set the request.HTTPBody to your var jsonData: NSData from a dictionary;
     
     // Create a task using the GET method for CloudKit Web Services
-    func taskForCKGetMethod(urlString: String, tfckgCompletionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
+    func taskForCKGetMethod(baseURL: String, method: String, tfckgCompletionHandler: (result: AnyObject!, error: NSError?) -> Void ) -> NSURLSessionDataTask {
         
         // Create a string of parameters for RESTful request.
-        //let urlString: String!
+        let urlString: String!
+        
+        // Create request from URL; adjust URL depending on whether request is for Meta data or the actual Procedure; add authent.token;
+        urlString = baseURL + method + Tokens.ProcedurezAPIToken
+        
+        var jsonQDict = NSData()
+        if isMeta {
+            let qDict = queryDict(CloudDictKeys.JSONProcedureRecordType, filteredBy: nil, sortedBy: nil)
+            let reqDict = ["query": qDict]
+            print("Request Dictionary: \(reqDict)")
+            
+            //jsonQDict = dictToJSONData(reqDict)!
+            //let dataString = String(data: jsonQDict, encoding: NSUTF8StringEncoding)
+            let jsonDictString = "{query:[recordType:\"JSONProcedure\"]}"
+            jsonQDict = (jsonDictString.dataUsingEncoding(NSUTF8StringEncoding))!
+            print("jsonQDict: \(jsonDictString)")
+        }
+        
+        
+        
         
         print("GET URL: \(urlString)")
         
@@ -205,6 +243,9 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         }
 
         let request = NSMutableURLRequest(URL: url)
+        
+        request.HTTPMethod = "POST"
+        request.HTTPBody = jsonQDict
         
         // Create a data task with a request for shared session; pass response data to JSON parser.
         let session = NSURLSession.sharedSession()
@@ -218,14 +259,16 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 tfckgCompletionHandler(result: nil, error: newError)
             } else {
                 print("No Error, Time to Parse Data.")
-                
+                print("Cloud Kit Data: \(data)" )
                 // Parse the JSON.
-                NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: tfckgCompletionHandler)
+                NetLoader.parseJSONWithCompletionHandler(data!, pjwCompletionHandler: tfckgCompletionHandler)
             }
         })
         
+        // Starts first time, and resumes if interrupted
         task.resume()
         
+        // may be unnecessary
         return task
 
     }
@@ -272,8 +315,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         // Create a data task with a request for shared session; pass response data to JSON parser.
         let session = NSURLSession.sharedSession()
         // after calling a function with a completionHandler closure, it returns some data that can be used;
-        // session data task with request returns the response data as NSData?, metadata? of the response, or an error?
-        let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, downloadError) -> Void in
+        // session data task with request returns the response data as NSData?, metadata? as NSURLResponse response, or an error?
+        let task = session.dataTaskWithRequest(request, completionHandler: { (data, responseMeta, downloadError) -> Void in
             
             print("Starting GET task.")
             
@@ -285,7 +328,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 print("No Error, Time to Parse Data.")
                 
                 // Parse the JSON.
-                NetLoader.parseJSONWithCompletionHandler(data!, completionHandler: tfgCompletionHandler)
+                NetLoader.parseJSONWithCompletionHandler(data!, pjwCompletionHandler: tfgCompletionHandler)
             }
         })
         
@@ -310,10 +353,10 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     func setParseClass() -> String {
         if isMeta {
             print("Parse Class is Meta")
-            return API.Meta
+            return "/"+SubPaths.Query
         } else {
             print("Parse Class is Procedure")
-            return API.Procedure
+            return "/"+SubPaths.Lookup
         }
     }
     
@@ -337,7 +380,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     let userInfo = [NSLocalizedDescriptionKey : errorMessage]
                     
                     // Return the error details.
-                    return NSError(domain: "PinPhotos Error", code: 1, userInfo: userInfo)
+                    return NSError(domain: "iCloud Error", code: 1, userInfo: userInfo)
                 }
             }
         } catch {
@@ -491,7 +534,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
 
     // Parse JSON data using a completion handler to return the results.
-    class func parseJSONWithCompletionHandler(data: NSData, completionHandler: CompletionHandler) {
+    class func parseJSONWithCompletionHandler(data: NSData, pjwCompletionHandler: CompletionHandler) {
         
         print("Parsing JSON")
         let parsingError: NSError? = nil
@@ -507,20 +550,20 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             if let error = parsingError {
                 
                 // Report the failure and the parsing error.
-                completionHandler(parsedResult: nil, error: error)
+                pjwCompletionHandler(parsedResult: nil, error: error)
             } else {
                 
                 // Return parsed results.
-                completionHandler(parsedResult: parsedResult, error: nil)
+                pjwCompletionHandler(parsedResult: parsedResult, error: nil)
             }
         } catch let error as NSError {
             //parsingError = error
             //parsedResult = nil
             // Report the failure and the parsing error.
-            completionHandler(parsedResult: nil, error: error)
+            pjwCompletionHandler(parsedResult: nil, error: error)
         } catch {
             print(error)
-            completionHandler(parsedResult: nil, error: nil)
+            pjwCompletionHandler(parsedResult: nil, error: nil)
         }
     }
     
@@ -552,16 +595,29 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: - CloudKit Dictionaries
     
+    func lookupRecordDict(nameArray:[String]) -> [[String: AnyObject]] {
+        var lrDictArray = [[String: AnyObject]]()
+        var lrDict: [String: AnyObject]
+        
+        for n in nameArray {
+            lrDict = [String: AnyObject]()
+            lrDict["recordName"] = n
+            lrDict["desiredKeys"] = ["steps"]
+            lrDictArray.append(lrDict)
+        }
+        
+        return lrDictArray
+    }
     
     func queryDict(recordType:String, filteredBy filterBy: [AnyObject]?, sortedBy sortBy: [AnyObject]?) -> [String: AnyObject] {
         var qDict: [String: AnyObject] = ["recordType":recordType]
         
-        if !(sortBy?.isEmpty)! {
-            qDict["sortBy"] = sortBy! as [AnyObject]
+        if let sort = sortBy {
+            qDict["sortBy"] = sort
         }
         
-        if !(filterBy?.isEmpty)! {
-            qDict["filterBy"] = filterBy! as [AnyObject]
+        if let filter = filterBy {
+            qDict["filterBy"] = filter
         }
         
         return qDict

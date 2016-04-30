@@ -19,6 +19,7 @@ extension NetLoader
         return pathArray.joinWithSeparator("/")
     }
     
+    
     struct API {
         static let Path = "https://api.apple-cloudkit.com"
         static let Version = "1"
@@ -98,6 +99,10 @@ extension NetLoader
         
         static let CreatedAt = "createdAt"
         static let UpdatedAt = "updatedAt"
+    }
+    
+    struct CloudDictKeys {
+        static let JSONProcedureRecordType = "JSONProcedure"
     }
     
     struct OperationTypeKeys {
