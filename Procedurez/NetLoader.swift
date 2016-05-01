@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CloudKit
 import CoreData
 import MapKit
 import UIKit
@@ -14,6 +15,12 @@ import UIKit
 class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     typealias CompletionHandler = (parsedResult: AnyObject!, error: NSError?) -> Void
+    
+    let container: CKContainer
+    let publicDB: CKDatabase
+    let privateDB: CKDatabase
+    
+    
     
     var session: NSURLSession
     
@@ -44,6 +51,9 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     override init() {
+        container = CKContainer.defaultContainer()
+        publicDB = container.publicCloudDatabase
+        privateDB = container.privateCloudDatabase
         session = NSURLSession.sharedSession()
         isMeta = true
         metaArray = [ParseProcedure]()
@@ -79,6 +89,13 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             print(error)
             return nil
         }
+    }
+    
+    func createUniqueID() -> String {
+        let timestampAsString = String(format: "%f", NSDate.timeIntervalSinceReferenceDate())
+        let timestampParts = timestampAsString.componentsSeparatedByString(".")
+        
+        return timestampParts[0]
     }
     
     // Search for a dictionary on Parse.com with details of a Procedure / Procedures.
@@ -224,14 +241,12 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             print("Request Dictionary: \(reqDict)")
             
             //jsonQDict = dictToJSONData(reqDict)!
-            //let dataString = String(data: jsonQDict, encoding: NSUTF8StringEncoding)
+            let dataString = String(data: jsonQDict, encoding: NSUTF8StringEncoding)
             let jsonDictString = "{query:[recordType:\"JSONProcedure\"]}"
             jsonQDict = (jsonDictString.dataUsingEncoding(NSUTF8StringEncoding))!
             print("jsonQDict: \(jsonDictString)")
+            print("dataString: \(dataString)")
         }
-        
-        
-        
         
         print("GET URL: \(urlString)")
         
