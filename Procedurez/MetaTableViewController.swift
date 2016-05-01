@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CloudKit
 import UIKit
 
 class MetaTableViewController: UITableViewController {
@@ -15,6 +16,7 @@ class MetaTableViewController: UITableViewController {
     
     // Array for the table view
     var proceduresMeta: [ParseProcedure]?
+    var procedurezArray: [CKRecord]?
     
     @IBOutlet weak var tableViewCell: UITableViewCell!
     
@@ -23,7 +25,8 @@ class MetaTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        proceduresMeta = [ParseProcedure]()
+        //proceduresMeta = [ParseProcedure]()
+        procedurezArray = [CKRecord]()
         
         // Place the Add button (to skip Parse.com and add JSON formatted Procedure string directly).
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(MetaTableViewController.segueToImport))
@@ -33,15 +36,11 @@ class MetaTableViewController: UITableViewController {
             
             self.activityIndicator.startAnimating()
             
-            // Ensure getting the meta data of the Procedure from Parse.com.
-            NetLoader.sharedInstance().isMeta = true
-    
-            // Get the meta data of all of the Procedures from Parse.com and place it in an array for the table view.
-            NetLoader.sharedInstance().searchParse { (success, errorString) -> Void in
+            NetLoader.sharedInstance().fetchAllProcedurez({ (success, errorString) in
                 if success {
-                    print("Finished getting array of meta items.")
+                    print("Finished getting array of record items.")
                     self.activityIndicator.stopAnimating()
-                    self.proceduresMeta = NetLoader.sharedInstance().metaArray
+                    self.procedurezArray = NetLoader.sharedInstance().recordArray
                     self.tableView.reloadData()
                 } else {
                     print(errorString)
@@ -50,7 +49,28 @@ class MetaTableViewController: UITableViewController {
                     self.alertMessage = errorString
                     self.alertUser()
                 }
-            }
+
+            })
+            
+            // Used with Parse; changing to cloud kit
+            // Ensure getting the meta data of the Procedure from Parse.com.
+//            NetLoader.sharedInstance().isMeta = true
+//    
+//            // Get the meta data of all of the Procedures from Parse.com and place it in an array for the table view.
+//            NetLoader.sharedInstance().searchParse { (success, errorString) -> Void in
+//                if success {
+//                    print("Finished getting array of meta items.")
+//                    self.activityIndicator.stopAnimating()
+//                    self.proceduresMeta = NetLoader.sharedInstance().metaArray
+//                    self.tableView.reloadData()
+//                } else {
+//                    print(errorString)
+//                    
+//                    self.activityIndicator.stopAnimating()
+//                    self.alertMessage = errorString
+//                    self.alertUser()
+//                }
+//            }
         }
     }
     
@@ -78,7 +98,8 @@ class MetaTableViewController: UITableViewController {
     
     // Return the count of the metaArray property.
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return proceduresMeta!.count
+        //return proceduresMeta!.count
+        return procedurezArray!.count
     }
     
     // Return a cell configured to the meta data of a Procedure.
@@ -99,7 +120,8 @@ class MetaTableViewController: UITableViewController {
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
             
             // Get the appropriate Procedure data from Parse.com.
-            NetLoader.sharedInstance().parseProcedure = proceduresMeta![indexPath.row]
+            //NetLoader.sharedInstance().parseProcedure = proceduresMeta![indexPath.row]
+            NetLoader.sharedInstance().JSONRecord = procedurezArray![indexPath.row]
             
             // Inform ImportStringViewController this is a segue from a cell, not the button.
             NetLoader.sharedInstance().isSegue = true

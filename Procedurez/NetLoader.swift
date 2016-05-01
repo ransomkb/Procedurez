@@ -25,8 +25,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     let publicDB: CKDatabase
     let privateDB: CKDatabase
     
-    
-    
     var session: NSURLSession
     
     // may not be using
@@ -39,6 +37,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     var procedureID: String?
     
     var procedurezArray: [RKBCloudProcedureJSON]
+    var recordArray: [CKRecord]
+    var JSONRecord: CKRecord?
     
     var metaArray: [ParseProcedure]
     var parseProcedure: ParseProcedure?
@@ -65,6 +65,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         isMeta = true
         metaArray = [ParseProcedure]()
         procedurezArray = [RKBCloudProcedureJSON]()
+        recordArray = [CKRecord]()
         super.init()
     }
     
@@ -106,20 +107,21 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         return timestampParts[0]
     }
     
-    func fetchAllProcedurez() {
+    func fetchAllProcedurez(completionHandler: (success: Bool, errorString: String?) -> Void) {
         // predicate set to true gets all
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: CloudDictKeys.JSONProcedureRecordType, predicate: predicate)
         
         publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
             if error != nil {
-                print(error)
+                completionHandler(success: false, errorString: "Error: Search failed: \(error!.localizedDescription)")
             } else {
                 for p in results! {
-                    let procedure = p as CKRecord
-                    let jsonProcedure = RKBCloudProcedureJSON(record: procedure)
-                    
+                    self.recordArray.append(p)
+                    //let procedure = p as CKRecord
+                    //let jsonProcedure = RKBCloudProcedureJSON(record: procedure)
                 }
+                completionHandler(success: true, errorString: nil)
             }
         }
     }
