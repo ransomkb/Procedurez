@@ -15,13 +15,18 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
     var JSONString: String?
     var alertTitle: String?
     var alertMessage: String?
+    var tempImportText: String?
     
     /* Based on student comments, this was added to help with smaller resolution devices */
     var keyboardAdjusted = false
     var lastKeyboardOffset: CGFloat = 0.0
     
     @IBOutlet weak var explanationLabel: UILabel!
-    @IBOutlet weak var importTextView: UITextView!
+    @IBOutlet weak var importTextView: UITextView! {
+        didSet {
+            importTextView.text = tempImportText
+        }
+    }
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // Saves the text view string as one or more Step entities in CoreData with paent / child relationships.
@@ -73,26 +78,27 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         if NetLoader.sharedInstance().isSegue {
             print("Segued to ImportString via Cell")
             
-            self.activityIndicator.startAnimating()
-            
-            // IMPORTANT: see about threading for Core Data on another queue, not Main; this queue is good for fetching from net;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
-                
-                // Find the correct data on Parse.com.
-                NetLoader.sharedInstance().searchParse({ (success, errorString) -> Void in
-                    if success {
-                        print("Got the Procedure Steps")
-                        
-                        // Display the JSON formatted data from Parse.com in the text view.
-                        self.importTextView.text = NetLoader.sharedInstance().parseProcedure?.steps
-                    } else {
-                        print(errorString)
-                        
-                        self.alertMessage = errorString
-                        self.alertUser()
-                    }
-                })
-            }
+            self.importTextView.text = NetLoader.sharedInstance().JSONRecord?.valueForKey(NetLoader.ProcedureKeys.Steps) as! String
+//            self.activityIndicator.startAnimating()
+//            
+//            // IMPORTANT: see about threading for Core Data on another queue, not Main; this queue is good for fetching from net;
+//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+//                
+//                // Find the correct data on Parse.com.
+//                NetLoader.sharedInstance().searchParse({ (success, errorString) -> Void in
+//                    if success {
+//                        print("Got the Procedure Steps")
+//                        
+//                        // Display the JSON formatted data from Parse.com in the text view.
+//                        self.importTextView.text = NetLoader.sharedInstance().parseProcedure?.steps
+//                    } else {
+//                        print(errorString)
+//                        
+//                        self.alertMessage = errorString
+//                        self.alertUser()
+//                    }
+//                })
+//            }
         } else {
             print("Segued to ImportString via Add button")
         }

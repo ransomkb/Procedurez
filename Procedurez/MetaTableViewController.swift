@@ -95,7 +95,7 @@ class MetaTableViewController: UITableViewController {
         navigationController.pushViewController(controller, animated: true)
     }
     
-    
+
     // MARK: - Table view functions
     
     // Return 1 as there will only ever be 1 section.
@@ -123,40 +123,42 @@ class MetaTableViewController: UITableViewController {
     
     // Segue to ImportStringViewController if a cell is selected.
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let navigationController = splitViewController!.viewControllers[splitViewController!.viewControllers.count-1] as? UINavigationController {
-            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
+        
+        self.activityIndicator.startAnimating()
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
-            // Get the appropriate Procedure data from Parse.com.
-            //NetLoader.sharedInstance().parseProcedure = proceduresMeta![indexPath.row]
-            
-            
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
-                
-                // Used for one time to set up meta; probably do not need it again;
-                //NetLoader.sharedInstance().prepareMeta()
-                
-                self.activityIndicator.startAnimating()
-                
-                let jsonRecord = self.procedurezArray![indexPath.row].valueForKey("procedureID") as! CKReference
-                NetLoader.sharedInstance().fetchAProcedure(jsonRecord, completionHandler: { (success, errorString) in
-                    if success {
-                        print("Finished getting array of record items.")
-                        self.activityIndicator.stopAnimating()
-                        self.procedurezArray = NetLoader.sharedInstance().recordArray
-                        self.tableView.reloadData()
-                    } else {
-                        print(errorString)
+            let jsonRecord = self.procedurezArray![indexPath.row].valueForKey("procedureID") as! CKReference
+            NetLoader.sharedInstance().fetchAProcedure(jsonRecord, completionHandler: { (success, errorString) in
+                if success {
+                    print("Finished getting a JSONRecord.")
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
                         
                         self.activityIndicator.stopAnimating()
-                        self.alertMessage = errorString
-                        self.alertUser()
-                    }
+                        
+                        if let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController {
+                            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
+                            
+                            let importSteps = NetLoader.sharedInstance().JSONRecord?.valueForKey(NetLoader.ProcedureKeys.Steps) as! String
+
+                            controller.tempImportText = importSteps
+                                
+                            // Inform ImportStringViewController this is a segue from a cell, not the button.
+                            NetLoader.sharedInstance().isSegue = true
+                            navigationController.pushViewController(controller, animated: true)
+                        }
+                    })
                     
-                })
-            }
-            // Inform ImportStringViewController this is a segue from a cell, not the button.
-            NetLoader.sharedInstance().isSegue = true
-            navigationController.pushViewController(controller, animated: true)
+                } else {
+                    print(errorString)
+                    
+                    self.activityIndicator.stopAnimating()
+                    self.alertMessage = errorString
+                    self.alertUser()
+                }
+                
+            })
         }
     }
     
