@@ -12,6 +12,11 @@ import CoreData
 import MapKit
 import UIKit
 
+//protocol JSONProcedurezDelegate {
+//    func errorUpdating(error: NSError)
+//    func modelUpdated()
+//}
+
 class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     typealias CompletionHandler = (parsedResult: AnyObject!, error: NSError?) -> Void
@@ -32,6 +37,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     var metaID: String?
     var procedureID: String?
+    
+    var procedurezArray: [RKBCloudProcedureJSON]
     
     var metaArray: [ParseProcedure]
     var parseProcedure: ParseProcedure?
@@ -57,6 +64,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         session = NSURLSession.sharedSession()
         isMeta = true
         metaArray = [ParseProcedure]()
+        procedurezArray = [RKBCloudProcedureJSON]()
         super.init()
     }
     
@@ -96,6 +104,24 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         let timestampParts = timestampAsString.componentsSeparatedByString(".")
         
         return timestampParts[0]
+    }
+    
+    func fetchAllProcedurez() {
+        // predicate set to true gets all
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: CloudDictKeys.JSONProcedureRecordType, predicate: predicate)
+        
+        publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
+            if error != nil {
+                print(error)
+            } else {
+                for p in results! {
+                    let procedure = p as CKRecord
+                    let jsonProcedure = RKBCloudProcedureJSON(record: procedure)
+                    
+                }
+            }
+        }
     }
     
     // Search for a dictionary on Parse.com with details of a Procedure / Procedures.
