@@ -25,6 +25,11 @@ class MetaTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        var firstPlacement = self.tableView.center
+        firstPlacement.y += 200
+        firstPlacement.x = 300
+        self.activityIndicator.center = firstPlacement
+        
         //proceduresMeta = [ParseProcedure]()
         procedurezArray = [CKRecord]()
         
@@ -83,7 +88,7 @@ class MetaTableViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.activityIndicator.center = self.tableView.center
+        
         self.tableView.reloadData()
     }
     
