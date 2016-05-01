@@ -36,6 +36,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     var metaID: String?
     var procedureID: String?
     
+    var metaRecordDict: [String:String]
+
     var procedurezArray: [RKBCloudProcedureJSON]
     var recordArray: [CKRecord]
     var JSONRecord: CKRecord?
@@ -66,8 +68,14 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         metaArray = [ParseProcedure]()
         procedurezArray = [RKBCloudProcedureJSON]()
         recordArray = [CKRecord]()
+        // May not need below again;
+        metaRecordDict = [String:String]()
+        // Leave last, or problems
         super.init()
+        // uncomment this if you need it again
+        //metaRecordDict = createRecordDict()
     }
+    
     
     // Got from Stack Trace?
     //import Foundation
@@ -100,6 +108,15 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    // Creates a dictionary holding record related data
+    func createRecordDict() -> [String:String] {
+        return [RecordKeys.RecordName:createUniqueID(),
+                CloudDictKeys.RecordType:CloudDictValues.JSONProcedureMetaRecordType,
+                       ProcedureKeys.Name:"Ranges",
+                       ProcedureKeys.Creator:"RKB"]
+    }
+    
+    // Uses a time stamp to create a unique ID
     func createUniqueID() -> String {
         let timestampAsString = String(format: "%f", NSDate.timeIntervalSinceReferenceDate())
         let timestampParts = timestampAsString.componentsSeparatedByString(".")
@@ -107,20 +124,77 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         return timestampParts[0]
     }
     
-    func fetchAllProcedurez(completionHandler: (success: Bool, errorString: String?) -> Void) {
-        // predicate set to true gets all
-        let predicate = NSPredicate(value: true)
-        let query = CKQuery(recordType: CloudDictKeys.JSONProcedureRecordType, predicate: predicate)
+    // Creates a recordID, then a record from that;
+    func createCKRecord(recordDict: [String:String]) -> CKRecord {
+        let recordID = CKRecordID(recordName: recordDict[RecordKeys.RecordName]!)
+        let record = CKRecord(recordType: recordDict[CloudDictKeys.RecordType]!, recordID: recordID)
+        record.setObject(recordDict[ProcedureKeys.Name], forKey: ProcedureKeys.Name)
+        record.setObject(recordDict[ProcedureKeys.Creator], forKey: ProcedureKeys.Creator)
+        
+        return record
+    }
+    
+    // Used to get meta ready for on cloudkitprobably will not use it again.
+    func prepareMeta() {
+        let predicate = NSPredicate(format: "name == %@", "Ranges")
+        let query = CKQuery(recordType: CloudDictValues.JSONProcedureRecordType, predicate: predicate)
         
         publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
             if error != nil {
-                completionHandler(success: false, errorString: "Error: Search failed: \(error!.localizedDescription)")
+                print("Got an error after fetching for meta: \(error)")
             } else {
                 for p in results! {
+                    let recordID = p.recordID
+                    print("Record ID is: \(recordID)")
+                    let pName = p.valueForKey("name")
+                    print("Record name is: \(pName)")
+                    
+                    let metaRecord = self.createCKRecord(self.metaRecordDict)
+                    let procedureID = CKReference(recordID: recordID, action: .None)
+                    metaRecord.setObject(procedureID, forKey: RecordKeys.MetaID)
+                    self.publicDB.saveRecord(metaRecord, completionHandler: { (metaProcedureRecord, error) in
+                        if error != nil {
+                            print("Got an error after saving meta: \(error)")
+                        } else {
+                            print("Created a metaRecord: \(metaProcedureRecord?.valueForKey("name"))")
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    func fetchAllProcedurez(completionHandler: (success: Bool, errorString: String?) -> Void) {
+        print("Fetching all Procedurez.")
+        // predicate set to true gets all
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: CloudDictValues.JSONProcedureMetaRecordType, predicate: predicate)
+        
+        publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
+            if error != nil {
+                print("Got an error after fetching: \(error)")
+                completionHandler(success: false, errorString: "Error: Search failed: \(error!.localizedDescription)")
+            } else {
+                self.recordArray.removeAll(keepCapacity: true)
+                for p in results! {
+                    let pName = p.valueForKey("name")
                     self.recordArray.append(p)
+                    print("Record name is: \(pName)")
                     //let procedure = p as CKRecord
                     //let jsonProcedure = RKBCloudProcedureJSON(record: procedure)
                 }
+                completionHandler(success: true, errorString: nil)
+            }
+        }
+    }
+    
+    func fetchAProcedure(procedureID: CKReference, completionHandler: (success: Bool, errorString: String?) -> Void) {
+        publicDB.fetchRecordWithID(procedureID.recordID) { (record, error) in
+            if error != nil {
+                print("Got an error when fetching a record by ID: \(error)")
+                completionHandler(success: false, errorString: "Error: Search failed: \(error!.localizedDescription)")
+            } else {
+                self.JSONRecord = record
                 completionHandler(success: true, errorString: nil)
             }
         }
@@ -264,7 +338,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         
         var jsonQDict = NSData()
         if isMeta {
-            let qDict = queryDict(CloudDictKeys.JSONProcedureRecordType, filteredBy: nil, sortedBy: nil)
+            let qDict = queryDict(CloudDictValues.JSONProcedureRecordType, filteredBy: nil, sortedBy: nil)
             let reqDict = ["query": qDict]
             print("Request Dictionary: \(reqDict)")
             

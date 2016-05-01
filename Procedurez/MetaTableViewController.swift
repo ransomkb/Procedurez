@@ -34,14 +34,21 @@ class MetaTableViewController: UITableViewController {
         // IMPORTANT: see about threading for Core Data on another queue, not Main; this queue is good for fetching from net;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
+            // Used for one time to set up meta; probably do not need it again;
+            //NetLoader.sharedInstance().prepareMeta()
+            
             self.activityIndicator.startAnimating()
             
             NetLoader.sharedInstance().fetchAllProcedurez({ (success, errorString) in
                 if success {
                     print("Finished getting array of record items.")
-                    self.activityIndicator.stopAnimating()
-                    self.procedurezArray = NetLoader.sharedInstance().recordArray
-                    self.tableView.reloadData()
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.procedurezArray?.removeAll(keepCapacity: true)
+                        self.activityIndicator.stopAnimating()
+                        self.procedurezArray = NetLoader.sharedInstance().recordArray
+                        self.tableView.reloadData()
+                    })
+                    
                 } else {
                     print(errorString)
                     
@@ -76,7 +83,7 @@ class MetaTableViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        self.activityIndicator.center = self.tableView.center
         self.tableView.reloadData()
     }
     
@@ -107,10 +114,10 @@ class MetaTableViewController: UITableViewController {
         
         // Dequeue a cell and get the appropriate meta data from the array.
         let cell = tableView.dequeueReusableCellWithIdentifier("MetaCell", forIndexPath: indexPath) as UITableViewCell
-        let meta = NetLoader.sharedInstance().metaArray[indexPath.row]
-        
-        cell.textLabel?.text = "\(meta.name)"
-        cell.detailTextLabel?.text = "Created by \(meta.creator)"
+        let meta = NetLoader.sharedInstance().recordArray[indexPath.row]
+        let pName = meta.valueForKey("name")!
+        cell.textLabel?.text = pName as? String
+        cell.detailTextLabel?.text = "Created by \(meta.valueForKey("creator")!)"
         return cell
     }
     
@@ -121,8 +128,32 @@ class MetaTableViewController: UITableViewController {
             
             // Get the appropriate Procedure data from Parse.com.
             //NetLoader.sharedInstance().parseProcedure = proceduresMeta![indexPath.row]
-            NetLoader.sharedInstance().JSONRecord = procedurezArray![indexPath.row]
             
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+                
+                // Used for one time to set up meta; probably do not need it again;
+                //NetLoader.sharedInstance().prepareMeta()
+                
+                self.activityIndicator.startAnimating()
+                
+                let jsonRecord = self.procedurezArray![indexPath.row].valueForKey("procedureID") as! CKReference
+                NetLoader.sharedInstance().fetchAProcedure(jsonRecord, completionHandler: { (success, errorString) in
+                    if success {
+                        print("Finished getting array of record items.")
+                        self.activityIndicator.stopAnimating()
+                        self.procedurezArray = NetLoader.sharedInstance().recordArray
+                        self.tableView.reloadData()
+                    } else {
+                        print(errorString)
+                        
+                        self.activityIndicator.stopAnimating()
+                        self.alertMessage = errorString
+                        self.alertUser()
+                    }
+                    
+                })
+            }
             // Inform ImportStringViewController this is a segue from a cell, not the button.
             NetLoader.sharedInstance().isSegue = true
             navigationController.pushViewController(controller, animated: true)
@@ -151,6 +182,5 @@ class MetaTableViewController: UITableViewController {
             self.presentViewController(alertController, animated: true, completion: nil)
         })
     }
-
     
 }
