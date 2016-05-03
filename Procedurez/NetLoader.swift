@@ -40,6 +40,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
 
     var procedurezArray: [RKBCloudProcedureJSON]
     var recordArray: [CKRecord]
+    var childrenArray: [CKRecord]?
     
     var JSONRecord: CKRecord?
     var stepRecord: CKRecord?
@@ -554,7 +555,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 
                 // Get the necessary data from the dictionary of JSON data, use it to create a Step, 
                 // iterating through children and grandchildren.
-                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, pjadCompletionhandler: { (success, errorString) -> Void in
+                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, ckParent: nil, pjadCompletionhandler: { (success, errorString) -> Void in
                     if let error = errorString {
                         lhtCompletionhandler(success: false, errorString: error)
                     } else {
@@ -592,12 +593,12 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     // Get the necessary data from the dictionary of JSON data, use it to create a Step,
     // iterating through children and grandchildren.
-    func parseJSONAsDictionary(dict: NSDictionary, parent: Step?, pjadCompletionhandler: (success: Bool, errorString: String?) -> Void) {
+    func parseJSONAsDictionary(dict: NSDictionary, parent: Step?, ckParent: CKRecord?, pjadCompletionhandler: (success: Bool, errorString: String?) -> Void) {
         
         /* Start playing with JSON here... */
         print("Parsing a JSON Dictionary to creat a Step in a Procedure.")
         
-        let dictionary = dict as! [String: AnyObject]
+        var dictionary = dict as! [String: AnyObject]
         
         // Ensure the necessary data is in the dictionary.
         guard let title = dictionary["title"] where (dictionary["title"] as! String).characters.count <= self.titleCount else {
@@ -642,10 +643,27 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             // Create a Step entity.
             let step = Step(dictionary: dictionary, context: self.sharedContext)
             
+            dictionary[CloudDictKeys.RecordTypeKey] = CloudDictValues.StepRecordType
+            var ckStep = self.createCKRecord(dictionary)
+            
             // Use parent parameter to set parent property of the Step.
             if let p = parent {
                 step.parent = p
             }
+            
+            if let ckp = ckParent {
+                ckStep["parent"] = CKReference(record: ckp, action: .DeleteSelf)
+            }
+            
+            self.publicDB.saveRecord(ckStep, completionHandler: { (stepRecord, error) in
+                if error != nil {
+                    print("Got an error after saving step: \(error)")
+                } else {
+                    ckStep = stepRecord!
+                    let stepTitle = stepRecord?["title"] as! String
+                    print("Created a step record: \(stepTitle)")
+                }
+            })
             
             // Get any children as an array of Step-related dictionaries.
             let sArray = st as! [[String: AnyObject]]
@@ -653,7 +671,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             
             // Iterate through the array to create the Step entities for any children.
             for d in sArray {
-                self.parseJSONAsDictionary(d, parent: step, pjadCompletionhandler: { (success, errorString) -> Void in
+                self.parseJSONAsDictionary(d, parent: step, ckParent: ckStep, pjadCompletionhandler: { (success, errorString) -> Void in
                     if success {
                         print("Made a Step")
                     } else {
