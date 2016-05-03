@@ -47,24 +47,21 @@ class MetaTableViewController: UITableViewController {
             let reference = CKReference(recordID: CKRecordID(recordName: NetLoader.CloudDictValues.Grandpa), action: .None)
             
             NetLoader.sharedInstance().queryChildrenRecords(reference, completionHandler: { (success, error) in
-                
-                if success {
-                    print("Finished getting array of record items.")
-                    dispatch_async(dispatch_get_main_queue(), {
-                        //self.procedurezArray.removeAll(keepCapacity: true)
-                        self.activityIndicator.stopAnimating()
-                        self.procedurezArray = NetLoader.sharedInstance().recordArray
-                        self.tableView.reloadData()
-                    })
-                    
-                } else {
-                    let errorString = "Error: Search failed: \(error!.localizedDescription)"
+                dispatch_async(dispatch_get_main_queue(), {
                     
                     self.activityIndicator.stopAnimating()
-                    self.alertMessage = errorString
-                    self.alertUser()
-                }
-
+                    if success {
+                        print("Finished getting array of record items.")
+                        //self.procedurezArray.removeAll(keepCapacity: true)
+                        self.procedurezArray = NetLoader.sharedInstance().recordArray
+                        self.tableView.reloadData()
+                    } else if error != nil {
+                        self.alertMessage = "Error: Search failed: \(error!.localizedDescription)"
+                        self.alertUser()
+                    } else {
+                        print("Could find no Steps with Grandpa as parent")
+                    }
+                })
             })
             
             // Used with Parse; changing to cloud kit
@@ -132,21 +129,15 @@ class MetaTableViewController: UITableViewController {
     // Segue to ImportStringViewController if a cell is selected.
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        //self.activityIndicator.startAnimating()
-        NetLoader.sharedInstance().stepRecord = self.procedurezArray![indexPath.row]
-        
         dispatch_async(dispatch_get_main_queue(), {
-            
-            //self.activityIndicator.stopAnimating()
             
             if let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController {
                 let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportCloudKitStep") as! ImportCloudKitStep
                 
-                //let importSteps = NetLoader.sharedInstance().JSONRecord?.valueForKey(NetLoader.ProcedureKeys.Steps) as! String
+                let topStep = self.procedurezArray![indexPath.row]
+                NetLoader.sharedInstance().stepRecord = topStep
+                controller.ckStep = topStep
                 
-                //controller.tempImportText = importSteps
-                
-                // Inform ImportStringViewController this is a segue from a cell, not the button.
                 NetLoader.sharedInstance().isSegue = true
                 navigationController.pushViewController(controller, animated: true)
             }

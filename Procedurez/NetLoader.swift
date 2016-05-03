@@ -187,16 +187,22 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         let query = CKQuery(recordType: CloudDictValues.StepRecordType, predicate: predicate)
         
         publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
+            
+            self.recordArray.removeAll()
+            
             if error != nil {
                 print("Got an error after fetching for meta: \(error)")
                 completionHandler(success: false, error: error)
-            } else {
-                self.recordArray.removeAll()
-                
-                for p in results! {
-                    self.recordArray.append(p)
+            } else if let res = results {
+                if res.isEmpty {
+                    completionHandler(success: false, error: nil)
+                } else {
+                    self.recordArray = results!
+                    //                for p in results! {
+                    //                    self.recordArray.append(p)
+                    //                }
+                    completionHandler(success: true, error: nil)
                 }
-                completionHandler(success: true, error: nil)
             }
         }
     }
@@ -701,6 +707,8 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             
             if let ckp = ckParent {
                 ckStep["parent"] = CKReference(record: ckp, action: .DeleteSelf)
+            } else {
+                ckStep["parent"] = CKReference(recordID: CKRecordID(recordName: CloudDictValues.Grandpa), action: .None)
             }
             
             self.publicDB.saveRecord(ckStep, completionHandler: { (stepRecord, error) in
