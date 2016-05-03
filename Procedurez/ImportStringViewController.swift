@@ -63,9 +63,6 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         
         // Set self as text view delegate.
         self.importTextView.delegate = self
-        
-        // Add default text to text view.
-        importTextView.text = "Paste Copied JSON Here"
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -101,6 +98,9 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
 //            }
         } else {
             print("Segued to ImportString via Add button")
+            
+            // Add default text to text view.
+            importTextView.text = "Paste Copied JSON Here"
         }
     }
     

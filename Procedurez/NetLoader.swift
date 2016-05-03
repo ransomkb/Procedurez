@@ -20,6 +20,7 @@ import UIKit
 class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     typealias CompletionHandler = (parsedResult: AnyObject!, error: NSError?) -> Void
+    typealias SuccessCompHandler = (success: Bool, error: NSError?) -> Void
     
     let container: CKContainer
     let publicDB: CKDatabase
@@ -40,7 +41,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
 
     var procedurezArray: [RKBCloudProcedureJSON]
     var recordArray: [CKRecord]
-    var childrenArray: [CKRecord]?
+    //var childrenArray: [CKRecord]?
     
     var JSONRecord: CKRecord?
     var stepRecord: CKRecord?
@@ -150,6 +151,54 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 print("Created a step record: \(stepTitle)")
             }
         })
+    }
+    
+    func fetchOneRecordByRecordID(recordID: CKRecordID, completionHandler: SuccessCompHandler) {
+        self.publicDB.fetchRecordWithID(recordID) { (record, error) in
+            if error == nil {
+                self.stepRecord = record
+                print("Fetched one step record: \(self.stepRecord!["title"])")
+                completionHandler(success: true, error: nil)
+            } else {
+                completionHandler(success: false, error: error)
+            }
+        }
+    }
+    
+    func queryOneRecord(title: String, completionHandler: SuccessCompHandler) {
+        let predicate = NSPredicate(format: "title == %@", title)
+        let query = CKQuery(recordType: CloudDictValues.StepRecordType, predicate: predicate)
+        
+        publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
+            if error != nil {
+                print("Got an error after fetching one Step: \(error)")
+                completionHandler(success: false, error: error)
+            } else {
+                for p in results! {
+                    self.stepRecord = p
+                }
+                completionHandler(success: true, error: nil)
+            }
+        }
+    }
+    
+    func queryChildrenRecords(reference: CKReference, completionHandler: SuccessCompHandler) {
+        let predicate = NSPredicate(format: "parent == %@", reference)
+        let query = CKQuery(recordType: CloudDictValues.StepRecordType, predicate: predicate)
+        
+        publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
+            if error != nil {
+                print("Got an error after fetching for meta: \(error)")
+                completionHandler(success: false, error: error)
+            } else {
+                self.recordArray.removeAll()
+                
+                for p in results! {
+                    self.recordArray.append(p)
+                }
+                completionHandler(success: true, error: nil)
+            }
+        }
     }
     
     // Used to get meta ready for on cloudkitprobably will not use it again.

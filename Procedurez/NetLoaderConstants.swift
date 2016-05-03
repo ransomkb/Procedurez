@@ -118,6 +118,7 @@ extension NetLoader
     }
     
     struct CloudDictValues {
+        static let Grandpa = "53b9022c-df3b-481c-9194-666b5aaa8a50"
         static let StepRecordType = "Step"
         static let JSONProcedureRecordType = "JSONProcedure"
         static let JSONProcedureMetaRecordType = "JSONProcedureMeta"

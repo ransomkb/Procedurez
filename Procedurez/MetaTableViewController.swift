@@ -31,7 +31,7 @@ class MetaTableViewController: UITableViewController {
         self.activityIndicator.center = firstPlacement
         
         //proceduresMeta = [ParseProcedure]()
-        procedurezArray = [CKRecord]()
+        self.procedurezArray = [CKRecord]()
         
         // Place the Add button (to skip Parse.com and add JSON formatted Procedure string directly).
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(MetaTableViewController.segueToImport))
@@ -44,18 +44,21 @@ class MetaTableViewController: UITableViewController {
             
             self.activityIndicator.startAnimating()
             
-            NetLoader.sharedInstance().fetchAllProcedurez({ (success, errorString) in
+            let reference = CKReference(recordID: CKRecordID(recordName: NetLoader.CloudDictValues.Grandpa), action: .None)
+            
+            NetLoader.sharedInstance().queryChildrenRecords(reference, completionHandler: { (success, error) in
+                
                 if success {
                     print("Finished getting array of record items.")
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.procedurezArray?.removeAll(keepCapacity: true)
+                        //self.procedurezArray.removeAll(keepCapacity: true)
                         self.activityIndicator.stopAnimating()
                         self.procedurezArray = NetLoader.sharedInstance().recordArray
                         self.tableView.reloadData()
                     })
                     
                 } else {
-                    print(errorString)
+                    let errorString = "Error: Search failed: \(error!.localizedDescription)"
                     
                     self.activityIndicator.stopAnimating()
                     self.alertMessage = errorString
@@ -111,7 +114,7 @@ class MetaTableViewController: UITableViewController {
     // Return the count of the metaArray property.
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //return proceduresMeta!.count
-        return procedurezArray!.count
+        return self.procedurezArray!.count
     }
     
     // Return a cell configured to the meta data of a Procedure.
@@ -119,52 +122,72 @@ class MetaTableViewController: UITableViewController {
         
         // Dequeue a cell and get the appropriate meta data from the array.
         let cell = tableView.dequeueReusableCellWithIdentifier("MetaCell", forIndexPath: indexPath) as UITableViewCell
-        let meta = NetLoader.sharedInstance().recordArray[indexPath.row]
-        let pName = meta.valueForKey("name")!
-        cell.textLabel?.text = pName as? String
-        cell.detailTextLabel?.text = "Created by \(meta.valueForKey("creator")!)"
+        let step = self.procedurezArray![indexPath.row]
+        let title = step["title"]!
+        cell.textLabel?.text = title as? String
+        cell.detailTextLabel?.text = step["details"] as? String
         return cell
     }
     
     // Segue to ImportStringViewController if a cell is selected.
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        self.activityIndicator.startAnimating()
+        //self.activityIndicator.startAnimating()
+        NetLoader.sharedInstance().stepRecord = self.procedurezArray![indexPath.row]
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+        dispatch_async(dispatch_get_main_queue(), {
             
-            let jsonRecord = self.procedurezArray![indexPath.row].valueForKey("procedureID") as! CKReference
-            NetLoader.sharedInstance().fetchAProcedure(jsonRecord, completionHandler: { (success, errorString) in
-                if success {
-                    print("Finished getting a JSONRecord.")
-                    
-                    dispatch_async(dispatch_get_main_queue(), {
-                        
-                        self.activityIndicator.stopAnimating()
-                        
-                        if let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController {
-                            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
-                            
-                            let importSteps = NetLoader.sharedInstance().JSONRecord?.valueForKey(NetLoader.ProcedureKeys.Steps) as! String
-
-                            controller.tempImportText = importSteps
-                                
-                            // Inform ImportStringViewController this is a segue from a cell, not the button.
-                            NetLoader.sharedInstance().isSegue = true
-                            navigationController.pushViewController(controller, animated: true)
-                        }
-                    })
-                    
-                } else {
-                    print(errorString)
-                    
-                    self.activityIndicator.stopAnimating()
-                    self.alertMessage = errorString
-                    self.alertUser()
-                }
+            //self.activityIndicator.stopAnimating()
+            
+            if let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController {
+                let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportCloudKitStep") as! ImportCloudKitStep
                 
-            })
-        }
+                //let importSteps = NetLoader.sharedInstance().JSONRecord?.valueForKey(NetLoader.ProcedureKeys.Steps) as! String
+                
+                //controller.tempImportText = importSteps
+                
+                // Inform ImportStringViewController this is a segue from a cell, not the button.
+                NetLoader.sharedInstance().isSegue = true
+                navigationController.pushViewController(controller, animated: true)
+            }
+        })
+
+        
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+//
+//            NetLoader.sharedInstance().stepRecord = NetLoader.sharedInstance().recordArray[indexPath.row]
+//            NetLoader.sharedInstance().fetchOneRecordByRecordID(<#T##recordID: CKRecordID##CKRecordID#>, completionHandler: <#T##SuccessCompHandler##SuccessCompHandler##(success: Bool, error: NSError?) -> Void#>)
+//                if success {
+//                    print("Finished getting a top-level CloudKit Step.")
+//                    
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        
+//                        self.activityIndicator.stopAnimating()
+//                        
+//                        if let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController {
+//                            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportCloudKitStep") as! ImportCloudKitStep
+//                            
+//                            //let importSteps = NetLoader.sharedInstance().JSONRecord?.valueForKey(NetLoader.ProcedureKeys.Steps) as! String
+//
+//                            //controller.tempImportText = importSteps
+//                                
+//                            // Inform ImportStringViewController this is a segue from a cell, not the button.
+//                            NetLoader.sharedInstance().isSegue = true
+//                            navigationController.pushViewController(controller, animated: true)
+//                        }
+//                    })
+//                    
+//                } else {
+//                    let errorString = "Error: Search failed: \(error!.localizedDescription)"
+//                    print(errorString)
+//                    
+//                    self.activityIndicator.stopAnimating()
+//                    self.alertMessage = errorString
+//                    self.alertUser()
+//                }
+//                
+//            
+//        }
     }
     
     // Use UIAlertController to keep user informed.

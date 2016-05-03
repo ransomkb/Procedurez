@@ -16,6 +16,7 @@
 		D40D240F1B9951A3007D2F44 /* ProcedurezTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */; };
 		D40D241E1B9D3080007D2F44 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D241D1B9D3080007D2F44 /* Step.swift */; };
 		D40D24201B9D30F8007D2F44 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D40D241F1B9D30F8007D2F44 /* CoreData.framework */; };
+		D41B98381CD87F3D0051FCF0 /* ImportCloudKitStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41B98371CD87F3D0051FCF0 /* ImportCloudKitStep.swift */; };
 		D43CCDD21BF0E2150054BB9B /* MetaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */; };
 		D43CCDD41BF0E3200054BB9B /* ParseProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */; };
 		D46334331BE3171A00442F24 /* ImportStringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46334321BE3171A00442F24 /* ImportStringViewController.swift */; };
@@ -83,6 +84,7 @@
 		D40D240E1B9951A3007D2F44 /* ProcedurezTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcedurezTests.swift; sourceTree = "<group>"; };
 		D40D241D1B9D3080007D2F44 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		D40D241F1B9D30F8007D2F44 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D41B98371CD87F3D0051FCF0 /* ImportCloudKitStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportCloudKitStep.swift; sourceTree = "<group>"; };
 		D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaTableViewController.swift; sourceTree = "<group>"; };
 		D43CCDD31BF0E3200054BB9B /* ParseProcedure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseProcedure.swift; sourceTree = "<group>"; };
 		D46334321BE3171A00442F24 /* ImportStringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportStringViewController.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				D4DA19C91BAE4E2700E62391 /* DetailViewController.swift */,
 				D46334321BE3171A00442F24 /* ImportStringViewController.swift */,
 				D43CCDD11BF0E2150054BB9B /* MetaTableViewController.swift */,
+				D41B98371CD87F3D0051FCF0 /* ImportCloudKitStep.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				D4A958031BE0A92B00C5B7FF /* NetLoader.swift in Sources */,
 				D4C723601CCE6996008A38E3 /* NetLoaderConstants.swift in Sources */,
 				D40D23F91B9951A3007D2F44 /* MasterViewController.swift in Sources */,
+				D41B98381CD87F3D0051FCF0 /* ImportCloudKitStep.swift in Sources */,
 				D40D241E1B9D3080007D2F44 /* Step.swift in Sources */,
 				D4BC9D5B1BBA7E2700527235 /* PadCellImage.swift in Sources */,
 				D4BC9D591BBA787E00527235 /* PhoneCellImage.swift in Sources */,
