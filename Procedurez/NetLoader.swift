@@ -40,7 +40,10 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
 
     var procedurezArray: [RKBCloudProcedureJSON]
     var recordArray: [CKRecord]
+    
     var JSONRecord: CKRecord?
+    var stepRecord: CKRecord?
+    var parentRecord: CKRecord?
     
     var metaArray: [ParseProcedure]
     var parseProcedure: ParseProcedure?
@@ -109,9 +112,9 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     // Creates a dictionary holding record related data
-    func createRecordDict() -> [String:String] {
+    func createRecordDict() -> [String:AnyObject?] {
         return [RecordKeys.RecordName:createUniqueID(),
-                CloudDictKeys.RecordType:CloudDictValues.JSONProcedureMetaRecordType,
+                CloudDictKeys.RecordTypeKey:CloudDictValues.JSONProcedureMetaRecordType,
                        ProcedureKeys.Name:"Ranges",
                        ProcedureKeys.Creator:"RKB"]
     }
@@ -125,45 +128,60 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     // Creates a recordID, then a record from that;
-    func createCKRecord(recordDict: [String:String]) -> CKRecord {
-        let recordID = CKRecordID(recordName: recordDict[RecordKeys.RecordName]!)
-        let record = CKRecord(recordType: recordDict[CloudDictKeys.RecordType]!, recordID: recordID)
-        record.setObject(recordDict[ProcedureKeys.Name], forKey: ProcedureKeys.Name)
-        record.setObject(recordDict[ProcedureKeys.Creator], forKey: ProcedureKeys.Creator)
-        
+    func createCKRecord(recordDict: [String:AnyObject?]) -> CKRecord {
+        // Wish to create a record with an automatically created recordID
+        let record = CKRecord(recordType: recordDict[CloudDictKeys.RecordTypeKey]! as! String)
+        //let recordID = CKRecordID(recordName: recordDict[RecordKeys.RecordName]!)
+        //let record = CKRecord(recordType: recordDict[CloudDictKeys.RecordTypeKey]!, recordID: recordID)
+        record.setObject(recordDict[CloudDictKeys.TitleKey] as! String, forKey: CloudDictKeys.TitleKey)
+        record.setObject(recordDict[CloudDictKeys.DetailsKey] as! String, forKey: CloudDictKeys.DetailsKey)
+        record.setObject(recordDict[CloudDictKeys.SectionIdentifierKey] as! String, forKey: CloudDictKeys.SectionIdentifierKey)
+        record.setObject(recordDict[CloudDictKeys.PositionKey] as! NSNumber, forKey: CloudDictKeys.PositionKey)
+        record.setObject(recordDict[CloudDictKeys.ParentKey] as! CKReference, forKey: CloudDictKeys.ParentKey)
         return record
     }
     
-    // Used to get meta ready for on cloudkitprobably will not use it again.
-    func prepareMeta() {
-        let predicate = NSPredicate(format: "name == %@", "Ranges")
-        let query = CKQuery(recordType: CloudDictValues.JSONProcedureRecordType, predicate: predicate)
-        
-        publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
+    func saveCKRecord(record: CKRecord) {
+        self.publicDB.saveRecord(record, completionHandler: { (stepRecord, error) in
             if error != nil {
-                print("Got an error after fetching for meta: \(error)")
+                print("Got an error after saving step: \(error)")
             } else {
-                for p in results! {
-                    let recordID = p.recordID
-                    print("Record ID is: \(recordID)")
-                    let pName = p.valueForKey("name")
-                    print("Record name is: \(pName)")
-                    
-                    let metaRecord = self.createCKRecord(self.metaRecordDict)
-                    let procedureID = CKReference(recordID: recordID, action: .None)
-                    metaRecord.setObject(procedureID, forKey: RecordKeys.MetaID)
-                    self.publicDB.saveRecord(metaRecord, completionHandler: { (metaProcedureRecord, error) in
-                        if error != nil {
-                            print("Got an error after saving meta: \(error)")
-                        } else {
-                            print("Created a metaRecord: \(metaProcedureRecord?.valueForKey("name"))")
-                        }
-                    })
-                }
+                let stepTitle = stepRecord?["title"] as! String
+                print("Created a step record: \(stepTitle)")
             }
-        }
+        })
     }
     
+    // Used to get meta ready for on cloudkitprobably will not use it again.
+//    func prepareMeta() {
+//        let predicate = NSPredicate(format: "name == %@", "Ranges")
+//        let query = CKQuery(recordType: CloudDictValues.JSONProcedureRecordType, predicate: predicate)
+//        
+//        publicDB.performQuery(query, inZoneWithID: nil) { (results, error) in
+//            if error != nil {
+//                print("Got an error after fetching for meta: \(error)")
+//            } else {
+//                for p in results! {
+//                    let recordID = p.recordID
+//                    print("Record ID is: \(recordID)")
+//                    let pName = p.valueForKey("name")
+//                    print("Record name is: \(pName)")
+//                    
+//                    let metaRecord = self.createCKRecord(self.metaRecordDict)
+//                    let procedureID = CKReference(recordID: recordID, action: .None)
+//                    metaRecord.setObject(procedureID, forKey: RecordKeys.MetaID)
+//                    self.publicDB.saveRecord(metaRecord, completionHandler: { (metaProcedureRecord, error) in
+//                        if error != nil {
+//                            print("Got an error after saving meta: \(error)")
+//                        } else {
+//                            print("Created a metaRecord: \(metaProcedureRecord?.valueForKey("name"))")
+//                        }
+//                    })
+//                }
+//            }
+//        }
+//    }
+//    
     func fetchAllProcedurez(completionHandler: (success: Bool, errorString: String?) -> Void) {
         print("Fetching all Procedurez.")
         // predicate set to true gets all

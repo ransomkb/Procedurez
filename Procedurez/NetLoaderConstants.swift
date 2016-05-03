@@ -108,10 +108,17 @@ extension NetLoader
     }
     
     struct CloudDictKeys {
-        static let RecordType = "recordType"
+        static let RecordTypeKey = "recordType"
+        static let TitleKey = "title"
+        static let DetailsKey = "details"
+        static let SectionIdentifierKey = "sectionIdentifier"
+        static let PositionKey = "position"
+        static let ParentKey = "parent"
+        static let ChildrenKey = "children"
     }
     
     struct CloudDictValues {
+        static let StepRecordType = "Step"
         static let JSONProcedureRecordType = "JSONProcedure"
         static let JSONProcedureMetaRecordType = "JSONProcedureMeta"
     }
