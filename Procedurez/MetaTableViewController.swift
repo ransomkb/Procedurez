@@ -36,11 +36,25 @@ class MetaTableViewController: UITableViewController {
         // Place the Add button (to skip Parse.com and add JSON formatted Procedure string directly).
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(MetaTableViewController.segueToImport))
         
-        // IMPORTANT: see about threading for Core Data on another queue, not Main; this queue is good for fetching from net;
+        self.fillTableRows()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableView.reloadData()
+    }
+    
+    // Skip Parse.com and add JSON formatted Procedure string directly via ImportStringViewController
+    @IBAction func segueToImport() {
+        let navigationController = splitViewController!.viewControllers[splitViewController!.viewControllers.count-1] as! UINavigationController
+        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
+        NetLoader.sharedInstance().isSegue = false
+        navigationController.pushViewController(controller, animated: true)
+    }
+    
+    func fillTableRows() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
-            
-            // Used for one time to set up meta; probably do not need it again;
-            //NetLoader.sharedInstance().prepareMeta()
             
             self.activityIndicator.startAnimating()
             
@@ -63,41 +77,7 @@ class MetaTableViewController: UITableViewController {
                     }
                 })
             })
-            
-            // Used with Parse; changing to cloud kit
-            // Ensure getting the meta data of the Procedure from Parse.com.
-//            NetLoader.sharedInstance().isMeta = true
-//    
-//            // Get the meta data of all of the Procedures from Parse.com and place it in an array for the table view.
-//            NetLoader.sharedInstance().searchParse { (success, errorString) -> Void in
-//                if success {
-//                    print("Finished getting array of meta items.")
-//                    self.activityIndicator.stopAnimating()
-//                    self.proceduresMeta = NetLoader.sharedInstance().metaArray
-//                    self.tableView.reloadData()
-//                } else {
-//                    print(errorString)
-//                    
-//                    self.activityIndicator.stopAnimating()
-//                    self.alertMessage = errorString
-//                    self.alertUser()
-//                }
-//            }
         }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.tableView.reloadData()
-    }
-    
-    // Skip Parse.com and add JSON formatted Procedure string directly via ImportStringViewController
-    @IBAction func segueToImport() {
-        let navigationController = splitViewController!.viewControllers[splitViewController!.viewControllers.count-1] as! UINavigationController
-        let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportStringViewController") as! ImportStringViewController
-        NetLoader.sharedInstance().isSegue = false
-        navigationController.pushViewController(controller, animated: true)
     }
     
 
@@ -142,44 +122,29 @@ class MetaTableViewController: UITableViewController {
                 navigationController.pushViewController(controller, animated: true)
             }
         })
-
-        
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
-//
-//            NetLoader.sharedInstance().stepRecord = NetLoader.sharedInstance().recordArray[indexPath.row]
-//            NetLoader.sharedInstance().fetchOneRecordByRecordID(<#T##recordID: CKRecordID##CKRecordID#>, completionHandler: <#T##SuccessCompHandler##SuccessCompHandler##(success: Bool, error: NSError?) -> Void#>)
-//                if success {
-//                    print("Finished getting a top-level CloudKit Step.")
-//                    
-//                    dispatch_async(dispatch_get_main_queue(), {
-//                        
-//                        self.activityIndicator.stopAnimating()
-//                        
-//                        if let navigationController = self.splitViewController!.viewControllers[self.splitViewController!.viewControllers.count-1] as? UINavigationController {
-//                            let controller = self.storyboard?.instantiateViewControllerWithIdentifier("ImportCloudKitStep") as! ImportCloudKitStep
-//                            
-//                            //let importSteps = NetLoader.sharedInstance().JSONRecord?.valueForKey(NetLoader.ProcedureKeys.Steps) as! String
-//
-//                            //controller.tempImportText = importSteps
-//                                
-//                            // Inform ImportStringViewController this is a segue from a cell, not the button.
-//                            NetLoader.sharedInstance().isSegue = true
-//                            navigationController.pushViewController(controller, animated: true)
-//                        }
-//                    })
-//                    
-//                } else {
-//                    let errorString = "Error: Search failed: \(error!.localizedDescription)"
-//                    print(errorString)
-//                    
-//                    self.activityIndicator.stopAnimating()
-//                    self.alertMessage = errorString
-//                    self.alertUser()
-//                }
-//                
-//            
-//        }
     }
+    
+    // IMPORTANT: Hide this when putting on storeß
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        // Delete table view procedure from managedObjectContext.
+        if editingStyle == .Delete {
+            let deleteMe = self.procedurezArray![indexPath.row]
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+                
+                NetLoader.sharedInstance().publicDB.deleteRecordWithID(deleteMe.recordID, completionHandler: { (deletedRecordID, error) in
+                    if error == nil {
+                        print("Deleted the record")
+                        
+                        self.fillTableRows()
+                    } else {
+                        print("Failed to delete record: \(error?.localizedDescription)")
+                    }
+                })
+            }
+        }
+    }
+
     
     // Use UIAlertController to keep user informed.
     func alertUser() {

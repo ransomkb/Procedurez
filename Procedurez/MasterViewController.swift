@@ -48,6 +48,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     @IBAction func openImporters(sender: AnyObject) {
         print("openSettings Action Occurring. Preparing to Show MetaTableViewController")
         
+        
         // Prepare for segue to MetaTableViewController.
         let masterNavigationController = splitViewController!.viewControllers[0] as! UINavigationController
         let controller = self.storyboard?.instantiateViewControllerWithIdentifier("MetaTableViewController") as! MetaTableViewController
@@ -189,7 +190,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         // Load the HowTo Instructions if necessary.
         let jsonData = NetLoader.Caches.procedureCache.dataWithIdentifier("LoadMe")!
         print("Master has jsonData from LoadMe file: ") // \(jsonData)
-        NetLoader.sharedInstance().loadHowTo(jsonData) { (success, errorString) -> Void in
+        NetLoader.sharedInstance().loadJSONDataIntoCoreData(jsonData) { (success, errorString) -> Void in
             if success {
                 let successMessage = "Master: Could load jsonData into Core Data"
                 print(successMessage)
@@ -276,6 +277,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 print("Unresolved error \(error), \(error!.userInfo)")
                 abort()
+                // replace abort with this when ready for store
+                //fatalError("Failure to save context: \(error)")
             }
         }
     }
@@ -365,6 +368,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     var _fetchedResultsController: NSFetchedResultsController? = nil
 
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        print("isImporting: \(NetLoader.sharedInstance().isImporting)")
+        // Prevent premature changes.
+        if NetLoader.sharedInstance().isImporting {
+            return
+        }
+        
         // Start table view updates.
         self.tableView.beginUpdates()
     }

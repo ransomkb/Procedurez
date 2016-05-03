@@ -37,7 +37,7 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         // Add a button for creating substeps / children.
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(ImportCloudKitStep.shareAction(_:)))
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(ImportCloudKitStep.saveAction(_:)))
         
 //        // Add a share button if this is the first Step.
 //        let rightBarButtonItems: [UIBarButtonItem]!
@@ -88,7 +88,7 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
         detailsLabel.text = ckStep!["details"] as? String
     }
     
-    func shareAction(sender: AnyObject) {
+    func saveAction(sender: AnyObject) {
         
         self.alertMessage = "Do you wish to save this Procedure of Steps to Local Storage?"
         
@@ -98,6 +98,8 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
         // Create action button with OK button to dismiss alert.
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) -> Void in
             // save the ckStep to Core Data
+            NetLoader.sharedInstance().isImporting = true
+            // save
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)

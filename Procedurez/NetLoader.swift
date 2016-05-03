@@ -33,6 +33,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     
     var isMeta: Bool
     var isSegue: Bool = false
+    var isImporting: Bool = false
     
     var metaID: String?
     var procedureID: String?
@@ -595,7 +596,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - JSONParsing stuff
     
     // Get the LoadMe.json file (How To Use) data; parse the json, and save the first Procedure.
-    func loadHowTo(jsonData: NSData, lhtCompletionhandler: (success: Bool, errorString: String?) -> Void) {
+    func loadJSONDataIntoCoreData(jsonData: NSData, lhtCompletionhandler: (success: Bool, errorString: String?) -> Void) {
         print("Trying to load How to Use Procedure.")
         
         // Parse JSON data using a completion handler to return the results.
@@ -645,10 +646,11 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                             // IMPORTANT: see about threading for Core Data on another queue, not Main;
                             do {
                                 try privateMOC.save()//self.sharedContext.save()
+                                print("Saved privateMOC")
+                                NetLoader.sharedInstance().isImporting = false
                             } catch {
                                 fatalError("Failure to save context: \(error)")
                             }
-                            
                             lhtCompletionhandler(success: true, errorString: nil)
                         }
                     })
@@ -671,7 +673,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Parse the json, and save the first Procedure.
-        self.loadHowTo(rawProcedureJSON!) { (success, errorString) -> Void in
+        self.loadJSONDataIntoCoreData(rawProcedureJSON!) { (success, errorString) -> Void in
             if success {
                 completionhandler(success: true, errorString: nil)
             } else {

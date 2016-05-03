@@ -37,12 +37,14 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         // Set the string properties.
         JSONString = importTextView.text
         NetLoader.sharedInstance().json = JSONString
-        
+        NetLoader.sharedInstance().isImporting = true
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
             // Verify / Vet and save to CoreData.
             NetLoader.sharedInstance().importJSON(self.JSONString!) { (success, errorString) -> Void in
+                
+                NetLoader.sharedInstance().isImporting = false
                 if success {
                     self.activityIndicator.stopAnimating()
                     self.alertTitle = "FYI"

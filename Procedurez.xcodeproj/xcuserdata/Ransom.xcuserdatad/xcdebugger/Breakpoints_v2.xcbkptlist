@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Procedurez/ImportStringViewController.swift"
-            timestampString = "483980249.551519"
+            timestampString = "484005477.496416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
             landmarkName = "saveJSONString(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Procedurez/NetLoader.swift"
-            timestampString = "483982170.683611"
+            timestampString = "484007104.93301"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "675"
-            endingLineNumber = "675"
+            startingLineNumber = "677"
+            endingLineNumber = "677"
             landmarkName = "importJSON(_:completionhandler:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,12 +58,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Procedurez/NetLoader.swift"
-            timestampString = "483982405.812835"
+            timestampString = "484005477.496416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "636"
-            endingLineNumber = "636"
-            landmarkName = "loadHowTo(_:lhtCompletionhandler:)"
+            startingLineNumber = "637"
+            endingLineNumber = "637"
+            landmarkName = "loadJSONDataIntoCoreData(_:lhtCompletionhandler:)"
             landmarkType = "5">
             <Locations>
                <Location
