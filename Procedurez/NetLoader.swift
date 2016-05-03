@@ -138,7 +138,6 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         record.setObject(recordDict[CloudDictKeys.DetailsKey] as! String, forKey: CloudDictKeys.DetailsKey)
         record.setObject(recordDict[CloudDictKeys.SectionIdentifierKey] as! String, forKey: CloudDictKeys.SectionIdentifierKey)
         record.setObject(recordDict[CloudDictKeys.PositionKey] as! NSNumber, forKey: CloudDictKeys.PositionKey)
-        record.setObject(recordDict[CloudDictKeys.ParentKey] as! CKReference, forKey: CloudDictKeys.ParentKey)
         return record
     }
     
@@ -638,7 +637,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         print("Steps: Have an array")
         
         // IMPORTANT: see about threading for Core Data on another queue, not Main;
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
             // Create a Step entity.
             let step = Step(dictionary: dictionary, context: self.sharedContext)
@@ -679,7 +678,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     }
                 })
             }
-        })
+        }
         
         // Inform function caller of success in creating all the Step entities, 
         // with related parents and children, for Procedure.
