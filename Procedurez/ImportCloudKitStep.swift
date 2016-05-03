@@ -37,7 +37,7 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         // Add a button for creating substeps / children.
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(ImportCloudKitStep.shareAction(_:)))
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(ImportCloudKitStep.shareAction(_:)))
         
 //        // Add a share button if this is the first Step.
 //        let rightBarButtonItems: [UIBarButtonItem]!

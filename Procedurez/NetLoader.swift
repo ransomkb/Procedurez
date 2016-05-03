@@ -607,26 +607,61 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             } else {
                 print("Parsed JSON data successfully.")
                 
-                // Get the necessary data from the dictionary of JSON data, use it to create a Step, 
+                // Get the necessary data from the dictionary of JSON data, use it to create a Step,
                 // iterating through children and grandchildren.
-                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, ckParent: nil, pjadCompletionhandler: { (success, errorString) -> Void in
-                    if let error = errorString {
-                        lhtCompletionhandler(success: false, errorString: error)
-                    } else {
-                        // Save the context for all the Steps of the Procedure.
-                        // IMPORTANT: see about threading for Core Data on another queue, not Main;
-                        do {
-                            try self.sharedContext.save()
-                        } catch {
-                            fatalError("Failure to save context: \(error)")
+                //                self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, ckParent: nil, pjadCompletionhandler: { (success, errorString) -> Void in
+                //                    if let error = errorString {
+                //                        lhtCompletionhandler(success: false, errorString: error)
+                //                    } else {
+                //                        // Save the context for all the Steps of the Procedure.
+                //                        // IMPORTANT: see about threading for Core Data on another queue, not Main;
+                //                        do {
+                //                            try self.sharedContext.save()
+                //                        } catch {
+                //                            fatalError("Failure to save context: \(error)")
+                //                        }
+                //
+                //                        lhtCompletionhandler(success: true, errorString: nil)
+                //                    }
+                //                })
+                
+                //IMPORTANT: Get off the Main Queue when doing Core Data intensive stuff;
+                //Consider this kind of threading:
+                //                                            let jsonArray = … //JSON data to be imported into Core Data
+                //                                            let moc = … //Our primary context on the main queue
+                //
+                let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+                privateMOC.parentContext = self.sharedContext
+                
+                privateMOC.performBlock {
+                    
+                    // Get the necessary data from the dictionary of JSON data, use it to create a Step,
+                    // iterating through children and grandchildren.
+                    self.parseJSONAsDictionary(parsedResult as! NSDictionary, parent: nil, ckParent: nil, pjadCompletionhandler: { (success, errorString) -> Void in
+                        if let error = errorString {
+                            lhtCompletionhandler(success: false, errorString: error)
+                        } else {
+                            // Save the context for all the Steps of the Procedure.
+                            // IMPORTANT: see about threading for Core Data on another queue, not Main;
+                            do {
+                                try privateMOC.save()//self.sharedContext.save()
+                            } catch {
+                                fatalError("Failure to save context: \(error)")
+                            }
+                            
+                            lhtCompletionhandler(success: true, errorString: nil)
                         }
-                        
-                        lhtCompletionhandler(success: true, errorString: nil)
-                    }
-                })
+                    })
+                    //                                                do {
+                    //                                                    try privateMOC.save()
+                    //                                                } catch {
+                    //                                                    fatalError("Failure to save context: \(error)")
+                    //                                                }
+                    //                                            }
+                }
             }
         }
-
+        
     }
     
     // Get the LoadMe.json file string from the bundle; import JSON-formatted string by converting it to data.

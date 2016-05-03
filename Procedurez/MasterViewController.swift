@@ -248,6 +248,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
         
         let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+        
         cell.textLabel?.text = object.valueForKey("title")!.description
         
         return cell

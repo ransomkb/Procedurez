@@ -38,18 +38,22 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         JSONString = importTextView.text
         NetLoader.sharedInstance().json = JSONString
         
-        // Verify / Vet and save to CoreData.
-        NetLoader.sharedInstance().importJSON(JSONString!) { (success, errorString) -> Void in
-            if success {
-                self.activityIndicator.stopAnimating()
-                self.alertTitle = "FYI"
-                self.alertMessage = "Import Succeeded"
-                self.alertUser()
-            } else {
-                self.activityIndicator.stopAnimating()
-                self.alertTitle = "Had an Issue"
-                self.alertMessage = errorString
-                self.alertUser()
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            
+            // Verify / Vet and save to CoreData.
+            NetLoader.sharedInstance().importJSON(self.JSONString!) { (success, errorString) -> Void in
+                if success {
+                    self.activityIndicator.stopAnimating()
+                    self.alertTitle = "FYI"
+                    self.alertMessage = "Import Succeeded"
+                    self.alertUser()
+                } else {
+                    self.activityIndicator.stopAnimating()
+                    self.alertTitle = "Had an Issue"
+                    self.alertMessage = errorString
+                    self.alertUser()
+                }
             }
         }
     }
