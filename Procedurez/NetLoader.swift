@@ -114,6 +114,10 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    
+    
+    // MARK: - CloudKit stuff
+    
     // Creates a dictionary holding record related data
     func createRecordDict() -> [String:AnyObject?] {
         return [RecordKeys.RecordName:createUniqueID(),
@@ -199,13 +203,80 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     completionHandler(success: false, error: nil)
                 } else {
                     self.recordArray = results!
-                    //                for p in results! {
-                    //                    self.recordArray.append(p)
-                    //                }
                     completionHandler(success: true, error: nil)
                 }
             }
         }
+    }
+    
+    func loadCKProcedureIntoCoreData(topStep: CKRecord, lckpCompletionHandler: SuccessCompHandler) {
+        
+        let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        privateMOC.parentContext = self.sharedContext
+        
+        privateMOC.performBlock {
+            
+            // Get the necessary data from the CloudKit topStep; use it to create a Step,
+            // iterating through children and grandchildren.
+            self.fetchAllCKStepsOfProcedure(topStep, parent: nil, privMOC: self.sharedContext, fackCompletionHandler: { (success, error) in
+                if error != nil {
+                    lckpCompletionHandler(success: false, error: error)
+                } else {
+                    // Save the context for all the Steps of the Procedure.
+                    do {
+                        try privateMOC.save()
+                        print("Saved privateMOC")
+                        NetLoader.sharedInstance().isImporting = false
+                    } catch {
+                        fatalError("Failure to save context: \(error)")
+                    }
+                    lckpCompletionHandler(success: true, error: nil)
+                }
+            })
+        }
+    }
+    
+    func fetchAllCKStepsOfProcedure(ckStep: CKRecord, parent: Step?, privMOC: NSManagedObjectContext, fackCompletionHandler: SuccessCompHandler) {
+        let stepDict = [CloudDictKeys.TitleKey: ckStep[CloudDictKeys.TitleKey] as! String,
+                        CloudDictKeys.DetailsKey: ckStep[CloudDictKeys.DetailsKey] as! String,
+                        CloudDictKeys.PositionKey: ckStep[CloudDictKeys.PositionKey] as! NSNumber]
+        
+        let newCDStep = Step(dictionary: stepDict, context: privMOC)
+        
+        if let p = parent {
+            print("This is not a Top Step")
+            newCDStep.parent = p
+        } else {
+            print("This IS a Top Step")
+        }
+        
+        let reference = CKReference(record: ckStep, action: .DeleteSelf)
+        
+        queryChildrenRecords(reference) { (success, error) in
+            if error == nil {
+                if success {
+                    for res in self.recordArray {
+                        self.fetchAllCKStepsOfProcedure(res, parent: newCDStep, privMOC: privMOC, fackCompletionHandler: { (success, error) -> Void in
+                            if success {
+                                print("Made a Step")
+                                //fackCompletionHandler(success: true, error: nil)
+                            } else {
+                                print("Had an error")
+                                fackCompletionHandler(success: false, error: error)
+                                return
+                            }
+                        })
+                    }
+                } else {
+                    //fackCompletionHandler(success: true, error: nil)
+                }
+            } else {
+                fackCompletionHandler(success: false, error: error)
+                return
+            }
+        }
+        
+        fackCompletionHandler(success: true, error: nil)
     }
     
     // Used to get meta ready for on cloudkitprobably will not use it again.
@@ -728,6 +799,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         print("Position: \(position)")
         print("Steps: Have an array")
         
+        // NOW
         // IMPORTANT: see about threading for Core Data on another queue, not Main;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             

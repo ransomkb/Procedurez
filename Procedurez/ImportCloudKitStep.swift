@@ -100,6 +100,15 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
             // save the ckStep to Core Data
             NetLoader.sharedInstance().isImporting = true
             // save
+            NetLoader.sharedInstance().loadCKProcedureIntoCoreData(NetLoader.sharedInstance().stepRecord!, lckpCompletionHandler: { (success, error) in
+                if error == nil {
+                    self.alertMessage = "Success!"
+                    self.alertUser()
+                } else {
+                    self.alertMessage = "There was an error: \(error?.localizedDescription)"
+                    self.alertUser()
+                }
+            })
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
