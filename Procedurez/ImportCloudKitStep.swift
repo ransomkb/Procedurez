@@ -101,13 +101,20 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
             NetLoader.sharedInstance().isImporting = true
             // save
             NetLoader.sharedInstance().loadCKProcedureIntoCoreData(NetLoader.sharedInstance().stepRecord!, lckpCompletionHandler: { (success, error) in
-                if error == nil {
-                    self.alertMessage = "Success!"
-                    self.alertUser()
-                } else {
-                    self.alertMessage = "There was an error: \(error?.localizedDescription)"
-                    self.alertUser()
-                }
+                
+                //dispatch_async(dispatch_get_main_queue(), {
+                    if error == nil {
+                        CoreDataStackManager.sharedInstance().saveContext()
+                        print("Saved sharedContext")
+                        NetLoader.sharedInstance().isImporting = false
+                        
+                        self.alertMessage = "Successful Save!"
+                        self.alertUser()
+                    } else {
+                        self.alertMessage = "There was an error: \(error?.localizedDescription)"
+                        self.alertUser()
+                    }
+                //})
             })
         }
         

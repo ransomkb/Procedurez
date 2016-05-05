@@ -214,7 +214,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         privateMOC.parentContext = self.sharedContext
         
-        privateMOC.performBlock {
+        privateMOC.performBlockAndWait {
             
             // Get the necessary data from the CloudKit topStep; use it to create a Step,
             // iterating through children and grandchildren.
