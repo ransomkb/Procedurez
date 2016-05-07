@@ -98,6 +98,7 @@ class CoreDataStackManager {
             if moc.hasChanges {
                 do {
                     try moc.save()
+                    print("Saved sharedContext")
                 } catch {
 //                    error = error1
 //                    // I know I should replace this if I submit it to the App Store.

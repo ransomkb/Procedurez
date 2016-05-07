@@ -200,8 +200,10 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 completionHandler(success: false, error: error)
             } else if let res = results {
                 if res.isEmpty {
+                    print("The CloudKit results array was EMPTY.")
                     completionHandler(success: false, error: nil)
                 } else {
+                    print("The CloudKit results array was NOT empty.")
                     self.recordArray = results!
                     completionHandler(success: true, error: nil)
                 }
@@ -218,7 +220,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
             
             // Get the necessary data from the CloudKit topStep; use it to create a Step,
             // iterating through children and grandchildren.
-            self.fetchAllCKStepsOfProcedure(topStep, parent: nil, privMOC: self.sharedContext, fackCompletionHandler: { (success, error) in
+            self.fetchAllCKStepsOfProcedure(topStep, parent: nil, privMOC: privateMOC, fackCompletionHandler: { (success, error) in
                 if error != nil {
                     lckpCompletionHandler(success: false, error: error)
                 } else {
@@ -226,11 +228,12 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     do {
                         try privateMOC.save()
                         print("Saved privateMOC")
-                        NetLoader.sharedInstance().isImporting = false
+                        //CoreDataStackManager.sharedInstance().saveContext()
+                        //NetLoader.sharedInstance().isImporting = false
+                        lckpCompletionHandler(success: true, error: nil)
                     } catch {
-                        fatalError("Failure to save context: \(error)")
+                        fatalError("Failure to save privateMOC: \(error)")
                     }
-                    lckpCompletionHandler(success: true, error: nil)
                 }
             })
         }
@@ -259,7 +262,16 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                         self.fetchAllCKStepsOfProcedure(res, parent: newCDStep, privMOC: privMOC, fackCompletionHandler: { (success, error) -> Void in
                             if success {
                                 print("Made a Step")
-                                //fackCompletionHandler(success: true, error: nil)
+                                // Save the context for all the Steps of the Procedure.
+                                do {
+                                    try privMOC.save()
+                                    print("Saved privMOC")
+                                    //NetLoader.sharedInstance().isImporting = false
+                                } catch {
+                                    fatalError("Failure to save context: \(error)")
+                                }
+
+                                fackCompletionHandler(success: true, error: nil)
                             } else {
                                 print("Had an error")
                                 fackCompletionHandler(success: false, error: error)
@@ -268,15 +280,16 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                         })
                     }
                 } else {
-                    //fackCompletionHandler(success: true, error: nil)
+                    fackCompletionHandler(success: true, error: nil)
                 }
             } else {
                 fackCompletionHandler(success: false, error: error)
                 return
             }
+            
+            print("End of fetchAllCKStepsOfProcedure")
+            fackCompletionHandler(success: true, error: nil)
         }
-        
-        fackCompletionHandler(success: true, error: nil)
     }
     
     // Used to get meta ready for on cloudkitprobably will not use it again.
@@ -702,10 +715,10 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 //                                            let jsonArray = … //JSON data to be imported into Core Data
                 //                                            let moc = … //Our primary context on the main queue
                 //
-                let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-                privateMOC.parentContext = self.sharedContext
+                //let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+                //privateMOC.parentContext = self.sharedContext
                 
-                privateMOC.performBlock {
+                //privateMOC.performBlock {
                     
                     // Get the necessary data from the dictionary of JSON data, use it to create a Step,
                     // iterating through children and grandchildren.
@@ -713,16 +726,19 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                         if let error = errorString {
                             lhtCompletionhandler(success: false, errorString: error)
                         } else {
-                            // Save the context for all the Steps of the Procedure.
-                            // IMPORTANT: see about threading for Core Data on another queue, not Main;
-                            do {
-                                try privateMOC.save()//self.sharedContext.save()
-                                print("Saved privateMOC")
-                                NetLoader.sharedInstance().isImporting = false
-                            } catch {
-                                fatalError("Failure to save context: \(error)")
-                            }
-                            lhtCompletionhandler(success: true, errorString: nil)
+                            dispatch_async(dispatch_get_main_queue(), {
+                                
+                                // Save the context for all the Steps of the Procedure.
+                                // IMPORTANT: see about threading for Core Data on another queue, not Main;
+                                do {
+                                    try self.sharedContext.save() //privateMOC.save()//
+                                    print("Saved privateMOC")
+                                } catch {
+                                    fatalError("Failure to save context: \(error)")
+                                }
+                                
+                                lhtCompletionhandler(success: true, errorString: nil)
+                            })
                         }
                     })
                     //                                                do {
@@ -731,7 +747,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     //                                                    fatalError("Failure to save context: \(error)")
                     //                                                }
                     //                                            }
-                }
+               // }
             }
         }
         
@@ -741,13 +757,18 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
     func importJSON(jsonString: String, completionhandler: (success: Bool, errorString: String?) -> Void) {
         print("Importing ProcedureJSON")
         
+        self.isImporting = true
+        
         let rawProcedureJSON = json!.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Parse the json, and save the first Procedure.
         self.loadJSONDataIntoCoreData(rawProcedureJSON!) { (success, errorString) -> Void in
             if success {
+                
+                self.isImporting = false
                 completionhandler(success: true, errorString: nil)
             } else {
+                self.isImporting = false
                 completionhandler(success: false, errorString: errorString)
             }
         }
@@ -801,7 +822,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
         
         // NOW
         // IMPORTANT: see about threading for Core Data on another queue, not Main;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
             // Create a Step entity.
             let step = Step(dictionary: dictionary, context: self.sharedContext)
@@ -820,15 +841,16 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                 ckStep["parent"] = CKReference(recordID: CKRecordID(recordName: CloudDictValues.Grandpa), action: .None)
             }
             
-            self.publicDB.saveRecord(ckStep, completionHandler: { (stepRecord, error) in
-                if error != nil {
-                    print("Got an error after saving step: \(error)")
-                } else {
-                    ckStep = stepRecord!
-                    let stepTitle = stepRecord?["title"] as! String
-                    print("Created a step record: \(stepTitle)")
-                }
-            })
+            // Commented out to prevent duplication in cloud kit now
+//            self.publicDB.saveRecord(ckStep, completionHandler: { (stepRecord, error) in
+//                if error != nil {
+//                    print("Got an error after saving step: \(error)")
+//                } else {
+//                    ckStep = stepRecord!
+//                    let stepTitle = stepRecord?["title"] as! String
+//                    print("Created a step record: \(stepTitle)")
+//                }
+//            })
             
             // Get any children as an array of Step-related dictionaries.
             let sArray = st as! [[String: AnyObject]]
@@ -844,7 +866,7 @@ class NetLoader: NSObject, NSFetchedResultsControllerDelegate {
                     }
                 })
             }
-        }
+        //}
         
         // Inform function caller of success in creating all the Step entities, 
         // with related parents and children, for Procedure.

@@ -100,22 +100,7 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
             // save the ckStep to Core Data
             NetLoader.sharedInstance().isImporting = true
             // save
-            NetLoader.sharedInstance().loadCKProcedureIntoCoreData(NetLoader.sharedInstance().stepRecord!, lckpCompletionHandler: { (success, error) in
-                
-                //dispatch_async(dispatch_get_main_queue(), {
-                    if error == nil {
-                        CoreDataStackManager.sharedInstance().saveContext()
-                        print("Saved sharedContext")
-                        NetLoader.sharedInstance().isImporting = false
-                        
-                        self.alertMessage = "Successful Save!"
-                        self.alertUser()
-                    } else {
-                        self.alertMessage = "There was an error: \(error?.localizedDescription)"
-                        self.alertUser()
-                    }
-                //})
-            })
+            self.downLoadCKStep()
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
@@ -126,6 +111,34 @@ class ImportCloudKitStep: UIViewController, UITableViewDelegate, UITableViewData
         
         // Present the alert controller.
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func downLoadCKStep() {
+        NetLoader.sharedInstance().loadCKProcedureIntoCoreData(NetLoader.sharedInstance().stepRecord!, lckpCompletionHandler: { (success, error) in
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                if error == nil {
+                    CoreDataStackManager.sharedInstance().saveContext()
+                    //                        do {
+                    //                            try NetLoader.sharedInstance().sharedContext.save()
+                    //                            let message = "Successful Save!"
+                    //                            print(message)
+                    //                            self.alertMessage = message
+                    //                        } catch {
+                    //                            fatalError("Failure to save sharedContext: \(error)")
+                    //                        }
+                    let message = "Successful Save!"
+                    print(message)
+                    self.alertMessage = message
+                    print("Successful return to downLoadCKStep")
+                    NetLoader.sharedInstance().isImporting = false
+                } else {
+                    self.alertMessage = "There was an error: \(error?.localizedDescription)"
+                }
+            })
+            
+            self.alertUser()
+        })
     }
     
     // MARK: - Table View

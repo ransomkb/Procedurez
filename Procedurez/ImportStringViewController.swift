@@ -39,7 +39,7 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
         NetLoader.sharedInstance().json = JSONString
         NetLoader.sharedInstance().isImporting = true
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
             // Verify / Vet and save to CoreData.
             NetLoader.sharedInstance().importJSON(self.JSONString!) { (success, errorString) -> Void in
@@ -57,7 +57,7 @@ class ImportStringViewController: UIViewController, UITextViewDelegate {
                     self.alertUser()
                 }
             }
-        }
+        //}
     }
     
     override func viewDidLoad() {

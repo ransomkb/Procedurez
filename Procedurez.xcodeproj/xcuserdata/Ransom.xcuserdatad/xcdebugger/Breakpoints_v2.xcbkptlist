@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Procedurez/NetLoader.swift"
-            timestampString = "484023054.222553"
+            timestampString = "484275508.220859"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "748"
-            endingLineNumber = "748"
+            startingLineNumber = "767"
+            endingLineNumber = "767"
             landmarkName = "importJSON(_:completionhandler:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Procedurez/NetLoader.swift"
-            timestampString = "484023054.222553"
+            timestampString = "484275508.220859"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "708"
-            endingLineNumber = "708"
+            startingLineNumber = "725"
+            endingLineNumber = "725"
             landmarkName = "loadJSONDataIntoCoreData(_:lhtCompletionhandler:)"
             landmarkType = "5">
             <Locations>
@@ -70,33 +70,113 @@
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Procedurez.NetLoader.(loadHowTo (__ObjC.NSData, lhtCompletionhandler : (success : Swift.Bool, errorString : Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()).(closure #1)"
+                  symbolName = "Procedurez.NetLoader.(loadJSONDataIntoCoreData (__ObjC.NSData, lhtCompletionhandler : (success : Swift.Bool, errorString : Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()).(closure #1)"
                   moduleName = "Procedurez"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Ransom/Documents/Developing/WorkSpaces/Udacity/Procedurez/Procedurez/NetLoader.swift"
-                  timestampString = "483984112.73545"
+                  timestampString = "484273726.112303"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "636"
-                  endingLineNumber = "636"
-                  offsetFromSymbolStart = "736">
+                  startingLineNumber = "723"
+                  endingLineNumber = "723"
+                  offsetFromSymbolStart = "596">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Procedurez.NetLoader.(loadHowTo (__ObjC.NSData, lhtCompletionhandler : (success : Swift.Bool, errorString : Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()).(closure #1).(closure #1)"
+                  symbolName = "Procedurez.NetLoader.(loadJSONDataIntoCoreData (__ObjC.NSData, lhtCompletionhandler : (success : Swift.Bool, errorString : Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()).(closure #1).(closure #1)"
                   moduleName = "Procedurez"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Ransom/Documents/Developing/WorkSpaces/Udacity/Procedurez/Procedurez/NetLoader.swift"
-                  timestampString = "483984112.735639"
+                  timestampString = "484273726.11246"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "640"
-                  endingLineNumber = "640"
-                  offsetFromSymbolStart = "38">
+                  startingLineNumber = "724"
+                  endingLineNumber = "724"
+                  offsetFromSymbolStart = "79">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Procedurez/NetLoader.swift"
+            timestampString = "484275508.220859"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "734"
+            endingLineNumber = "734"
+            landmarkName = "loadJSONDataIntoCoreData(_:lhtCompletionhandler:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Procedurez/NetLoader.swift"
+            timestampString = "484275508.220859"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "861"
+            endingLineNumber = "861"
+            landmarkName = "parseJSONAsDictionary(_:parent:ckParent:pjadCompletionhandler:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Procedurez.NetLoader.parseJSONAsDictionary (__ObjC.NSDictionary, parent : Swift.Optional&lt;Procedurez.Step&gt;, ckParent : Swift.Optional&lt;__ObjC.CKRecord&gt;, pjadCompletionhandler : (success : Swift.Bool, errorString : Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Procedurez"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Ransom/Documents/Developing/WorkSpaces/Udacity/Procedurez/Procedurez/NetLoader.swift"
+                  timestampString = "484273726.147405"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "859"
+                  endingLineNumber = "859"
+                  offsetFromSymbolStart = "9210">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Procedurez.NetLoader.(parseJSONAsDictionary (__ObjC.NSDictionary, parent : Swift.Optional&lt;Procedurez.Step&gt;, ckParent : Swift.Optional&lt;__ObjC.CKRecord&gt;, pjadCompletionhandler : (success : Swift.Bool, errorString : Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()).(closure #1)"
+                  moduleName = "Procedurez"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Ransom/Documents/Developing/WorkSpaces/Udacity/Procedurez/Procedurez/NetLoader.swift"
+                  timestampString = "484273726.147629"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "860"
+                  endingLineNumber = "860"
+                  offsetFromSymbolStart = "63">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Procedurez/NetLoader.swift"
+            timestampString = "484275508.220859"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "863"
+            endingLineNumber = "863"
+            landmarkName = "parseJSONAsDictionary(_:parent:ckParent:pjadCompletionhandler:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
